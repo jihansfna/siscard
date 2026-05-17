@@ -16,9 +16,16 @@ class Employee extends Model
         'line',
         'position',
         'join_date',
+        'end_date',
         'image',
         'birth_place',
         'birth_date',
         'address',
+    ];
+
+    protected $casts = [
+        'join_date' => 'date',
+        'end_date' => 'date',
+        'birth_date' => 'date',
     ];
 }

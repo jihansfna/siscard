@@ -113,7 +113,7 @@ document.addEventListener('keydown', (event) => {
 });
 
 document.addEventListener('click', (event) => {
-    const downloadButton = event.target.closest('[data-download-qr]');
+    const downloadButton = event.target.closest('[data-download-card]');
 
     if (!downloadButton) {
         return;
@@ -127,19 +127,17 @@ document.addEventListener('click', (event) => {
         '"': '&quot;',
         "'": '&apos;',
     })[character]);
-    const fileName = downloadButton.dataset.qrFilename || 'siscard-qr.svg';
+    const fileName = downloadButton.dataset.qrFilename || `Member_Card_${qrValue}.svg`;
     const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320">
-            <rect width="320" height="320" fill="#ffffff"/>
-            <rect x="24" y="24" width="72" height="72" fill="#0f172a"/>
-            <rect x="44" y="44" width="32" height="32" fill="#ffffff"/>
-            <rect x="224" y="24" width="72" height="72" fill="#0f172a"/>
-            <rect x="244" y="44" width="32" height="32" fill="#ffffff"/>
-            <rect x="24" y="224" width="72" height="72" fill="#0f172a"/>
-            <rect x="44" y="244" width="32" height="32" fill="#ffffff"/>
-            <path fill="#0f172a" d="M124 28h24v24h-24zM172 28h24v24h-24zM124 76h72v24h-72zM124 124h24v24h-24zM172 124h48v24h-48zM244 124h24v24h-24zM124 172h96v24h-96zM244 172h24v48h-24zM124 220h24v48h-24zM172 220h24v24h-24zM220 244h76v24h-76zM172 276h24v20h-24zM220 292h48v4h-48z"/>
-            <rect x="92" y="132" width="136" height="56" rx="8" fill="#ffffff"/>
-            <text x="160" y="166" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1e293b">${escapedQrValue}</text>
+        <svg xmlns="http://www.w3.org/2000/svg" width="400" height="250" viewBox="0 0 400 250">
+            <rect width="400" height="250" rx="15" fill="#1b007c"/>
+            <rect x="10" y="10" width="380" height="230" rx="10" fill="#ffffff" fill-opacity="0.1"/>
+            <text x="200" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#ffffff">KARTU ANGGOTA SISCARD</text>
+            <rect x="20" y="60" width="80" height="100" rx="5" fill="#ffffff" fill-opacity="0.2"/>
+            <text x="110" y="80" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff">${escapedQrValue}</text>
+            <text x="110" y="100" font-family="Arial, sans-serif" font-size="12" fill="#cbd5e1">MEMBER ID</text>
+            <image x="280" y="60" width="100" height="100" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${qrValue}"/>
+            <text x="20" y="220" font-family="Arial, sans-serif" font-size="10" fill="#ffffff" fill-opacity="0.6">PT. Sat Nusapersada Tbk</text>
         </svg>
     `.trim();
     const blob = new Blob([svg], { type: 'image/svg+xml' });

@@ -20,6 +20,10 @@ class Member extends Model
         'sign_image',
     ];
 
+    protected $casts = [
+        'approved_at' => 'datetime',
+    ];
+
     public function employee()
     {
         return $this->belongsTo(Employee::class);

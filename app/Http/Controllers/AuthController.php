@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -118,12 +120,24 @@ class AuthController extends Controller
             ]);
         }
 
+        // Block login if employee is inactive (non-admin role)
+        if ($user->role !== 'admin') {
+            $employee = Employee::where('badge', $user->badge)->first();
+            if ($employee && $employee->end_date && Carbon::parse($employee->end_date)->lt(now()->startOfDay())) {
+                $error = ['badge' => 'Akun Anda sudah dinonaktifkan karena masa kerja telah berakhir. Silakan hubungi HRD.'];
+                if ($isApi) {
+                    return response()->json(['message' => $error['badge']], 403);
+                }
+                return back()->withInput($request->only('badge'))->withErrors($error);
+            }
+        }
+
         // Web login
         Auth::login($user, $request->boolean('remember'));
         $request->session()->regenerate();
 
         return redirect()->intended(route($this->homeRoute($user)))
-            ->with('success', 'Login berhasil!');
+            ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
     }
 
     public function logout(Request $request)

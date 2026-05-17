@@ -29,12 +29,20 @@ class MemberController extends Controller
                     $query->where('status', $statusMap[$status]);
                 }
             })
-            ->latest()
+            ->orderBy('created_at', 'asc')
             ->paginate(10);
+
+        $today = now()->toDateString();
 
         $availableEmployees = \App\Models\Employee::whereNotIn('id', function($query) {
             $query->select('employee_id')->from('members')->whereNull('deleted_at');
-        })->get();
+        })
+        ->where(function($query) use ($today) {
+            // Include employees with no end_date OR end_date >= today
+            $query->whereNull('end_date')
+                  ->orWhere('end_date', '>=', $today);
+        })
+        ->get();
 
         return view('dashboard.members', compact('members', 'availableEmployees'));
     }
@@ -46,13 +54,30 @@ class MemberController extends Controller
             'employee_ids.*' => 'exists:employees,id',
         ]);
 
+        $today = now()->toDateString();
+
+        // Filter out any inactive employees (end_date < today)
+        $activeEmployees = \App\Models\Employee::whereIn('id', $request->employee_ids)
+            ->where(function($query) use ($today) {
+                $query->whereNull('end_date')
+                      ->orWhere('end_date', '>=', $today);
+            })
+            ->pluck('id')
+            ->toArray();
+
+        $inactiveCount = count($request->employee_ids) - count($activeEmployees);
+
+        if (empty($activeEmployees)) {
+            return back()->withErrors(['employee_ids' => 'Semua employee yang dipilih sudah tidak aktif (end_date sudah lewat).']);
+        }
+
         $defaultRole = \App\Models\MemberRole::firstOrCreate(
             ['name' => 'Member'],
             ['is_single' => false, 'is_sign' => false]
         );
 
         $membersToInsert = [];
-        foreach ($request->employee_ids as $empId) {
+        foreach ($activeEmployees as $empId) {
             $membersToInsert[] = [
                 'uuid' => \Illuminate\Support\Str::uuid(),
                 'employee_id' => $empId,
@@ -66,6 +91,24 @@ class MemberController extends Controller
 
         \App\Models\Member::insert($membersToInsert);
 
-        return back()->with('success', count($request->employee_ids) . ' Member berhasil ditambahkan.');
+        $message = count($activeEmployees) . ' Member berhasil ditambahkan.';
+        if ($inactiveCount > 0) {
+            $message .= ' ' . $inactiveCount . ' employee dilewati karena sudah tidak aktif.';
+        }
+
+        return back()->with('success', $message);
+    }
+
+    public function bulkDestroy(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:members,id',
+        ]);
+
+        \App\Models\Member::whereIn('id', $request->ids)->delete();
+
+        return redirect()->route('dashboard.members')
+            ->with('success', count($request->ids) . ' member berhasil dihapus.');
     }
 }

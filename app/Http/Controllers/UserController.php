@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Employee;
+use App\Models\Member;
+use App\Models\Feedback;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
     public function index()
     {
         $user = auth()->user();
-        $employee = \App\Models\Employee::where('badge', $user->badge)->first();
+        $employee = Employee::where('badge', $user->badge)->first();
         
         $accessStatus = 'no_access';
         $memberId = null;
@@ -17,28 +21,38 @@ class UserController extends Controller
         $feedbacks = collect();
 
         if ($employee) {
-            $member = \App\Models\Member::where('employee_id', $employee->id)->first();
-            if ($member) {
-                $accessStatus = $member->status; // 'pending' or 'registered' etc.
-                $memberId = $member->id;
-                
-                if ($accessStatus === 'registered') {
-                    $feedbacks = \App\Models\Feedback::where('member_id', $memberId)->latest()->get();
+            // Check if employee has passed their end_date
+            if ($employee->end_date && Carbon::parse($employee->end_date)->lt(now()->startOfDay())) {
+                $accessStatus = 'inactive';
+            } else {
+                $member = Member::where('employee_id', $employee->id)->first();
+                if ($member) {
+                    $accessStatus = $member->status; // 'pending' or 'registered' etc.
+                    $memberId = $member->id;
+                    
+                    if ($accessStatus === 'registered') {
+                        $feedbacks = Feedback::where('member_id', $memberId)->latest()->get();
+                    }
                 }
             }
         }
 
-        return view('user', compact('accessStatus', 'memberId', 'feedbacks'));
+        return view('home', compact('accessStatus', 'memberId', 'feedbacks', 'employee'));
     }
 
     public function confirmMembership(Request $request, $id)
     {
-        $member = \App\Models\Member::findOrFail($id);
+        $member = Member::findOrFail($id);
         
         // Pastikan member ini milik user yang sedang login
-        $employee = \App\Models\Employee::where('badge', auth()->user()->badge)->first();
+        $employee = Employee::where('badge', auth()->user()->badge)->first();
         if (!$employee || $member->employee_id !== $employee->id) {
             abort(403);
+        }
+
+        // Pastikan karyawan masih aktif
+        if ($employee->end_date && Carbon::parse($employee->end_date)->lt(now()->startOfDay())) {
+            abort(403, 'Masa kerja Anda telah berakhir.');
         }
 
         $member->update(['status' => 'registered']);

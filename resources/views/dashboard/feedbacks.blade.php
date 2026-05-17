@@ -17,13 +17,6 @@
             </div>
         </div>
 
-        @if(session('success'))
-            <div class="mb-4 p-4 rounded-xl bg-green-50 border border-green-200 text-green-700 text-sm font-semibold flex items-center gap-3">
-                <x-heroicon-s-check-circle class="w-5 h-5 flex-shrink-0" />
-                {{ session('success') }}
-            </div>
-        @endif
-
         @if($errors->any())
             <div class="mb-4 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-semibold flex items-start gap-3">
                 <x-heroicon-s-exclamation-circle class="w-5 h-5 flex-shrink-0 mt-0.5" />
@@ -35,11 +28,29 @@
             </div>
         @endif
 
+        <!-- Bulk Delete Actions Bar -->
+        <div id="bulkDeleteBar" class="hidden items-center justify-between bg-red-50 border border-red-100 rounded-xl p-4 mb-4 transition-all duration-300">
+            <div class="flex items-center gap-2 text-red-700 text-sm font-semibold">
+                <x-heroicon-o-trash class="w-5 h-5 text-red-500" />
+                <span id="selectedCount">0</span> data terpilih
+            </div>
+            <button type="submit" form="bulkDeleteForm" class="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition-all shadow-md shadow-red-600/20 active:scale-95">
+                <span>Hapus Terpilih</span>
+            </button>
+        </div>
+
+        <form id="bulkDeleteForm" action="{{ route('dashboard.feedbacks.bulk_destroy') }}" method="POST" class="hidden" onsubmit="return confirm('Apakah Anda yakin ingin menghapus saran terpilih?');">
+            @csrf
+        </form>
+
         <div class="border border-gray-200 rounded-xl overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-gray-600">
                     <thead class="bg-gray-50 text-gray-700 text-xs uppercase font-semibold border-b border-gray-200">
                         <tr>
+                            <th class="px-4 py-3 w-10">
+                                <input type="checkbox" id="selectAllFeedbacks" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500" onclick="toggleSelectAllFeedbacks(this)">
+                            </th>
                             <th class="px-4 py-3 w-10">No</th>
                             <th class="px-4 py-3">Pengirim</th>
                             <th class="px-4 py-3">Isi Saran</th>
@@ -51,6 +62,9 @@
                     <tbody class="divide-y divide-gray-100">
                         @forelse($feedbacks as $index => $fb)
                             <tr class="hover:bg-gray-50/50 transition-colors">
+                                <td class="px-4 py-3">
+                                    <input type="checkbox" name="ids[]" value="{{ $fb->id }}" form="bulkDeleteForm" class="feedback-checkbox rounded border-gray-300 text-primary-600 focus:ring-primary-500" onclick="updateBulkDeleteBar()">
+                                </td>
                                 <td class="px-4 py-3 text-gray-500">{{ $feedbacks->firstItem() + $index }}</td>
                                 <td class="px-4 py-3">
                                     <div class="font-bold text-gray-800">{{ $fb->member->employee->name ?? 'Unknown' }}</div>
@@ -84,7 +98,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-4 py-8 text-center text-gray-500">
+                                <td colspan="7" class="px-4 py-8 text-center text-gray-500">
                                     <div class="flex flex-col items-center justify-center">
                                         <x-heroicon-o-chat-bubble-left-ellipsis class="w-10 h-10 text-gray-300 mb-3" />
                                         <p>Belum ada feedback dari anggota.</p>
@@ -154,6 +168,33 @@
         function closeCompleteModal() {
             document.getElementById('completeFeedbackModal').classList.add('hidden');
             document.getElementById('completeFeedbackModal').classList.remove('flex');
+        }
+
+        function toggleSelectAllFeedbacks(source) {
+            const checkboxes = document.querySelectorAll('.feedback-checkbox');
+            checkboxes.forEach(cb => cb.checked = source.checked);
+            updateBulkDeleteBar();
+        }
+
+        function updateBulkDeleteBar() {
+            const checkboxes = document.querySelectorAll('.feedback-checkbox');
+            const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+            const bar = document.getElementById('bulkDeleteBar');
+            const countSpan = document.getElementById('selectedCount');
+            const selectAll = document.getElementById('selectAllFeedbacks');
+
+            if (checkedCount > 0) {
+                bar.classList.remove('hidden');
+                bar.classList.add('flex');
+                countSpan.textContent = checkedCount;
+            } else {
+                bar.classList.add('hidden');
+                bar.classList.remove('flex');
+            }
+
+            if (selectAll) {
+                selectAll.checked = (checkedCount === checkboxes.length && checkboxes.length > 0);
+            }
         }
     </script>
 </x-app-layout>

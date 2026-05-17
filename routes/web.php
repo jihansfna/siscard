@@ -25,6 +25,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('dashboard')->group(function (
         return view('dashboard');
     })->name('dashboard');
 
+    // Bulk Delete Routes
+    Route::post('/employees/bulk-delete', [\App\Http\Controllers\MasterEmployeeController::class, 'bulkDestroy'])->name('dashboard.employees.bulk_destroy');
+    Route::post('/members/bulk-delete', [\App\Http\Controllers\MemberController::class, 'bulkDestroy'])->name('dashboard.members.bulk_destroy');
+    Route::post('/feedbacks/bulk-delete', [\App\Http\Controllers\FeedbackController::class, 'bulkDestroy'])->name('dashboard.feedbacks.bulk_destroy');
+
     // Master Employee CRUD
     Route::resource('employees', \App\Http\Controllers\MasterEmployeeController::class)->names('dashboard.employees');
 
@@ -41,7 +46,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('dashboard')->group(function (
 });
 
 // --- User routes (role: user / Employee) ---
-Route::middleware(['auth', 'role:user'])->prefix('user')->group(function () {
+Route::middleware(['auth', 'role:user'])->prefix('home')->group(function () {
     Route::get('/', [\App\Http\Controllers\UserController::class, 'index'])->name('user.home');
     Route::post('/confirm-membership/{id}', [\App\Http\Controllers\UserController::class, 'confirmMembership'])->name('user.confirm_membership');
     Route::post('/feedbacks', [\App\Http\Controllers\FeedbackController::class, 'store'])->name('user.feedbacks.store');

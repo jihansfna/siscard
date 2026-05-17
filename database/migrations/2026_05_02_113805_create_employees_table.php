@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('line')->nullable();
             $table->string('position')->nullable();
             $table->date('join_date')->nullable();
+            $table->date('end_date')->nullable();
             $table->string('image')->nullable();
             $table->string('birth_place')->nullable();
             $table->date('birth_date')->nullable();

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Feedback;
 use App\Models\Employee;
 use App\Models\Member;
+use Carbon\Carbon;
 
 class FeedbackController extends Controller
 {
@@ -22,7 +23,7 @@ class FeedbackController extends Controller
                        ->orWhere('badge', 'like', "%{$q}%");
                 });
             })
-            ->latest()
+            ->orderBy('created_at', 'asc')
             ->paginate(10);
             
         return view('dashboard.feedbacks', compact('feedbacks'));
@@ -52,6 +53,11 @@ class FeedbackController extends Controller
 
         $employee = Employee::where('badge', auth()->user()->badge)->first();
         if (!$employee) return back()->withErrors(['message' => 'Anda tidak memiliki akses.']);
+
+        // Block if employee is inactive
+        if ($employee->end_date && Carbon::parse($employee->end_date)->lt(now()->startOfDay())) {
+            return back()->withErrors(['message' => 'Masa kerja Anda telah berakhir. Akun dinonaktifkan.']);
+        }
         
         $member = Member::where('employee_id', $employee->id)->first();
         if (!$member || $member->status !== 'registered') {
@@ -65,5 +71,18 @@ class FeedbackController extends Controller
         ]);
 
         return back()->with('success', 'Saran berhasil dikirim. Menunggu respon HRD.');
+    }
+
+    public function bulkDestroy(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:feedbacks,id',
+        ]);
+
+        Feedback::whereIn('id', $request->ids)->delete();
+
+        return redirect()->route('dashboard.feedbacks')
+            ->with('success', count($request->ids) . ' saran berhasil dihapus.');
     }
 }
