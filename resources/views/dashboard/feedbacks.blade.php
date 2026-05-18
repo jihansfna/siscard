@@ -39,7 +39,7 @@
             </button>
         </div>
 
-        <form id="bulkDeleteForm" action="{{ route('dashboard.feedbacks.bulk_destroy') }}" method="POST" class="hidden" onsubmit="return confirm('Apakah Anda yakin ingin menghapus saran terpilih?');">
+        <form id="bulkDeleteForm" action="{{ route('dashboard.feedbacks.bulk_destroy') }}" method="POST" class="hidden">
             @csrf
         </form>
 
@@ -84,16 +84,35 @@
                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">Waiting</span>
                                     @endif
                                 </td>
-                                <td class="px-4 py-3">
-                                    @if($fb->status === 'Waiting')
-                                        <button type="button" title="Mark As Completed" onclick="openCompleteModal('{{ $fb->id }}')" class="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors">
-                                            <x-heroicon-o-check-circle class="w-5 h-5" />
+                                <td class="px-4 py-3 whitespace-nowrap">
+                                    <div class="flex items-center gap-1">
+                                        @php
+                                            $feedbackData = [
+                                                'id' => $fb->id,
+                                                'name' => $fb->member->employee->name ?? 'Unknown',
+                                                'badge' => $fb->member->employee->badge ?? '-',
+                                                'description' => $fb->description,
+                                                'file' => $fb->file,
+                                                'created_at' => $fb->created_at->format('d F Y, H:i'),
+                                                'status' => $fb->status,
+                                                'remark' => $fb->remark ?? '',
+                                                'image' => $fb->member->employee->image ?? null,
+                                            ];
+                                        @endphp
+                                        <button type="button" title="Lihat Detail" data-feedback="{{ json_encode($feedbackData) }}" onclick="openFeedbackDetail(this)" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer">
+                                            <x-heroicon-o-eye class="w-5 h-5" />
                                         </button>
-                                    @else
-                                        <button type="button" title="Telah Diselesaikan" disabled class="p-1.5 text-green-500 opacity-50 cursor-not-allowed">
-                                            <x-heroicon-s-check-circle class="w-5 h-5" />
-                                        </button>
-                                    @endif
+                                        
+                                        @if($fb->status === 'Waiting')
+                                            <button type="button" title="Tandai Sebagai Selesai" onclick="openCompleteModal('{{ $fb->id }}')" class="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors cursor-pointer">
+                                                <x-heroicon-o-check-circle class="w-5 h-5" />
+                                            </button>
+                                        @else
+                                            <button type="button" title="Telah Diselesaikan" disabled class="p-1.5 text-green-500 opacity-50 cursor-not-allowed">
+                                                <x-heroicon-s-check-circle class="w-5 h-5" />
+                                            </button>
+                                        @endif
+                                    </div>
                                 </td>
                             </tr>
                         @empty
@@ -157,6 +176,111 @@
         </div>
     </div>
 
+    <!-- Feedback Detail Off-Canvas Drawer -->
+    <div id="feedbackDetailDrawer" onclick="if(event.target === this) closeFeedbackDetail()" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm transition-opacity">
+        <div class="fixed inset-y-0 right-0 w-full max-w-xl bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col" id="drawerContent">
+            <!-- Header -->
+            <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-white z-10 sticky top-0">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800 leading-none">Feedback and Suggestions</h3>
+                    <div class="mt-2.5">
+                        <span id="detailStatusBadge" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold"></span>
+                    </div>
+                </div>
+                <button type="button" onclick="closeFeedbackDetail()" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors absolute top-4 right-4 cursor-pointer">
+                    <x-heroicon-o-x-mark class="w-6 h-6" />
+                </button>
+            </div>
+            
+            <!-- Body -->
+            <div class="p-6 overflow-y-auto flex-1 bg-gray-50/50 space-y-5">
+                <!-- Sender Info Section (Clean & Card-less) -->
+                <div class="flex items-center gap-3.5 pb-4 border-b border-gray-200/80">
+                    <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 shadow-sm border border-gray-200 bg-primary-800 text-white flex items-center justify-center">
+                        <img id="detailSenderImage" src="" alt="Profile" class="w-full h-full object-cover hidden">
+                        <div id="detailSenderFallback" class="w-full h-full flex items-center justify-center font-bold text-sm">
+                            -
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Pengirim</p>
+                        <h5 class="font-bold text-gray-800 text-sm leading-tight mt-0.5" id="detailSenderName">-</h5>
+                        <p class="text-[11px] text-gray-500 font-semibold mt-0.5" id="detailSenderBadge">-</p>
+                    </div>
+                </div>
+
+                <!-- Feedback Details (Clean & Card-less) -->
+                <div class="space-y-5">
+                    <div>
+                        <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Tanggal Terkirim</p>
+                        <p class="font-bold text-gray-800 text-sm" id="detailDate">-</p>
+                    </div>
+                    
+                    <div>
+                        <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Isi Masukan / Saran</p>
+                        <p class="text-gray-600 text-sm leading-relaxed whitespace-pre-wrap font-normal" id="detailDescription">-</p>
+                    </div>
+
+                    <!-- File / Document Attached -->
+                    <div id="detailFileContainer" class="hidden pt-1">
+                        <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Dokumen / File</p>
+                        <div class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <x-heroicon-o-document-text class="w-5.5 h-5.5 text-primary-600 flex-shrink-0" />
+                                <div class="min-w-0">
+                                    <p class="text-xs font-bold text-gray-800 truncate" id="detailFileName">-</p>
+                                    <p class="text-[10px] text-gray-400 font-semibold leading-none mt-0.5">Berkas lampiran dari anggota</p>
+                                </div>
+                            </div>
+                            <a id="detailDownloadLink" href="" download class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-xs font-bold transition-all cursor-pointer">
+                                <span>Unduh</span>
+                                <x-heroicon-o-arrow-down-tray class="w-3.5 h-3.5" />
+                            </a>
+                        </div>
+                        <!-- File Preview if Image -->
+                        <div id="detailImagePreviewContainer" class="mt-3 hidden">
+                            <p class="text-[10px] font-semibold text-gray-400 mb-1.5">Pratinjau Gambar:</p>
+                            <div class="border border-gray-200 rounded-xl overflow-hidden max-h-48 bg-white flex items-center justify-center p-2">
+                                <img id="detailImagePreview" src="" alt="Pratinjau" class="max-w-full max-h-44 object-contain rounded">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-gray-200">
+
+                <!-- Admin Response Remark Section (Clean & Card-less) -->
+                <div id="detailResponseContainer" class="space-y-3">
+                    <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider" id="detailResponseTitle">Balasan HRD</p>
+                    
+                    <!-- If already completed -->
+                    <div id="completedResponseArea" class="hidden">
+                        <div class="p-4 bg-primary-50/40 border border-primary-100/80 rounded-2xl shadow-sm">
+                            <div class="flex items-start gap-3">
+                                <div class="p-1.5 bg-primary-100 rounded-xl text-primary-700 flex-shrink-0">
+                                    <x-heroicon-s-chat-bubble-left-ellipsis class="w-4 h-4" />
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <p class="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap font-medium" id="detailRemarkText">-</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- If waiting, show placeholder info -->
+                    <div id="waitingResponseArea" class="hidden">
+                        <div class="p-4 bg-amber-50/30 border border-amber-100/80 rounded-2xl shadow-sm flex items-start gap-3">
+                            <div class="p-1.5 bg-amber-100 rounded-xl text-amber-700 flex-shrink-0">
+                                <x-heroicon-o-exclamation-triangle class="w-4 h-4" />
+                            </div>
+                            <p class="text-amber-800 text-xs font-semibold leading-relaxed">Belum ada tanggapan. Silakan gunakan tombol centang (✓) pada kolom aksi di tabel untuk memberikan tanggapan dan menyelesaikan aduan ini.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         function openCompleteModal(id) {
             const form = document.getElementById('completeFeedbackForm');
@@ -168,6 +292,110 @@
         function closeCompleteModal() {
             document.getElementById('completeFeedbackModal').classList.add('hidden');
             document.getElementById('completeFeedbackModal').classList.remove('flex');
+        }
+
+        function openFeedbackDetail(btn) {
+            const feedback = JSON.parse(btn.dataset.feedback);
+            
+            // Set sender info
+            document.getElementById('detailSenderName').textContent = feedback.name;
+            document.getElementById('detailSenderBadge').textContent = 'Badge: ' + feedback.badge;
+            
+            // Set sender image/fallback
+            const senderImage = document.getElementById('detailSenderImage');
+            const senderFallback = document.getElementById('detailSenderFallback');
+            if (feedback.image) {
+                senderImage.src = '/storage/' + feedback.image;
+                senderImage.classList.remove('hidden');
+                senderFallback.classList.add('hidden');
+            } else {
+                senderImage.classList.add('hidden');
+                senderFallback.classList.remove('hidden');
+                senderFallback.textContent = feedback.name.charAt(0).toUpperCase();
+            }
+            
+            // Set date and description
+            document.getElementById('detailDate').textContent = feedback.created_at;
+            document.getElementById('detailDescription').textContent = feedback.description;
+            
+            // Set status badge
+            const statusBadge = document.getElementById('detailStatusBadge');
+            if (feedback.status === 'Completed') {
+                statusBadge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800';
+                statusBadge.textContent = 'Completed';
+            } else {
+                statusBadge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800';
+                statusBadge.textContent = 'Waiting';
+            }
+            
+            // File Handling
+            const fileContainer = document.getElementById('detailFileContainer');
+            const imagePreviewContainer = document.getElementById('detailImagePreviewContainer');
+            
+            if (feedback.file) {
+                fileContainer.classList.remove('hidden');
+                
+                // Get filename from path
+                const fileName = feedback.file.split('/').pop();
+                document.getElementById('detailFileName').textContent = fileName;
+                
+                const fileUrl = '/storage/' + feedback.file;
+                document.getElementById('detailDownloadLink').href = fileUrl;
+                
+                // Check if file is image
+                const ext = fileName.split('.').pop().toLowerCase();
+                if (['jpg', 'jpeg', 'png'].includes(ext)) {
+                    document.getElementById('detailImagePreview').src = fileUrl;
+                    imagePreviewContainer.classList.remove('hidden');
+                } else {
+                    imagePreviewContainer.classList.add('hidden');
+                }
+            } else {
+                fileContainer.classList.add('hidden');
+                imagePreviewContainer.classList.add('hidden');
+            }
+            
+            // Response Area
+            const completedArea = document.getElementById('completedResponseArea');
+            const waitingArea = document.getElementById('waitingResponseArea');
+            const responseContainer = document.getElementById('detailResponseContainer');
+            
+            document.getElementById('detailResponseTitle').textContent = 'Balasan HRD';
+            if (feedback.status === 'Completed') {
+                responseContainer.classList.remove('hidden');
+                completedArea.classList.remove('hidden');
+                waitingArea.classList.add('hidden');
+                
+                const remarkText = document.getElementById('detailRemarkText');
+                if (feedback.remark) {
+                    remarkText.textContent = feedback.remark;
+                    remarkText.className = 'text-gray-700 text-sm leading-relaxed whitespace-pre-wrap font-medium';
+                } else {
+                    remarkText.textContent = 'Saran telah ditandai selesai tanpa komentar.';
+                    remarkText.className = 'text-gray-400 text-xs italic font-medium';
+                }
+            } else {
+                responseContainer.classList.remove('hidden');
+                completedArea.classList.add('hidden');
+                waitingArea.classList.remove('hidden');
+            }
+            
+            // Open drawer
+            const drawer = document.getElementById('feedbackDetailDrawer');
+            const content = document.getElementById('drawerContent');
+            drawer.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('translate-x-full');
+            }, 10);
+        }
+
+        function closeFeedbackDetail() {
+            const drawer = document.getElementById('feedbackDetailDrawer');
+            const content = document.getElementById('drawerContent');
+            content.classList.add('translate-x-full');
+            setTimeout(() => {
+                drawer.classList.add('hidden');
+            }, 300);
         }
 
         function toggleSelectAllFeedbacks(source) {
@@ -196,5 +424,13 @@
                 selectAll.checked = (checkedCount === checkboxes.length && checkboxes.length > 0);
             }
         }
+
+        // Close components on ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeCompleteModal();
+                closeFeedbackDetail();
+            }
+        });
     </script>
 </x-app-layout>

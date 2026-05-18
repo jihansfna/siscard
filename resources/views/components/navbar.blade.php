@@ -1,16 +1,33 @@
 @props(['activePage' => 'Dashboard', 'adminName' => 'Admin'])
 
 <header class="flex items-center justify-between gap-4 min-h-[4rem] px-6 py-3 bg-white border-b-2 border-primary-800 shadow-xl shadow-primary-900/10 z-30 sticky top-0">
-    <div>
-        <span class="block text-[0.7rem] font-extrabold text-gray-500 uppercase tracking-widest">SISCARD</span>
-        <h1 class="mt-0.5 text-lg font-extrabold text-primary-800 leading-tight">{{ $activePage }}</h1>
+    <div class="flex items-center gap-3">
+        @if(Auth::user() && Auth::user()->role === 'admin')
+            <!-- Mobile Menu Toggle Button -->
+            <button type="button" onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-xl text-primary-800 hover:bg-primary-50 hover:text-primary-950 transition-colors focus:outline-none cursor-pointer" aria-label="Buka Menu">
+                <x-heroicon-o-bars-3 class="w-6 h-6" />
+            </button>
+        @endif
+        <div>
+            <span class="block text-[0.7rem] font-extrabold text-gray-500 uppercase tracking-widest leading-none">SISCARD</span>
+            <h1 class="mt-1 text-lg font-extrabold text-primary-800 leading-none">{{ $activePage }}</h1>
+        </div>
     </div>
+
+    @php
+    $user = Auth::user();
+    $employee = $user ? \App\Models\Employee::where('badge', $user->badge)->first() : null;
+    @endphp
 
     <!-- Right Profile Section with Dropdown -->
     <div class="relative inline-block text-left" id="profileDropdownContainer">
         <button type="button" onclick="toggleProfileDropdown()" class="flex items-center gap-3 text-sm font-bold text-gray-600 hover:text-primary-800 transition-all focus:outline-none py-1.5 px-2.5 rounded-xl hover:bg-gray-50/80 active:scale-95 duration-200">
-            <div class="grid place-items-center w-9 h-9 rounded-full bg-gradient-to-br from-primary-800 to-primary-500 text-white font-extrabold shadow-md">
-                {{ strtoupper(substr($adminName, 0, 1)) }}
+            <div class="w-9 h-9 rounded-full overflow-hidden flex-shrink-0 bg-gradient-to-br from-primary-800 to-primary-500 text-white font-extrabold shadow-md flex items-center justify-center border border-gray-100">
+                @if($employee && $employee->image)
+                    <img src="{{ asset('storage/' . $employee->image) }}" alt="Profile" class="w-full h-full object-cover">
+                @else
+                    <span>{{ strtoupper(substr($adminName, 0, 1)) }}</span>
+                @endif
             </div>
             <span class="hidden sm:block text-left">
                 <span class="block text-[10px] text-gray-400 font-bold uppercase tracking-wider leading-none mb-1">{{ Auth::user()->role === 'admin' ? 'Administrator' : 'Employee' }}</span>

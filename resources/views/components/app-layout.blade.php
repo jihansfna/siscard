@@ -12,6 +12,8 @@
     <body class="font-sans antialiased bg-gray-50 text-gray-900">
         <div class="flex min-h-screen overflow-x-hidden bg-gradient-to-br from-indigo-50/50 via-white to-blue-50/30">
             @if(Auth::user() && Auth::user()->role === 'admin')
+                <!-- Sidebar Backdrop -->
+                <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-40 transition-opacity duration-300 opacity-0 pointer-events-none md:hidden"></div>
                 <!-- Sidebar -->
                 <x-sidebar />
             @endif
@@ -39,7 +41,7 @@
 
                 const toast = document.createElement('div');
                 toast.id = 'toastNotification';
-                toast.className = 'fixed top-6 right-6 z-[100] max-w-sm w-full transform translate-x-full opacity-0 transition-all duration-500 ease-out pointer-events-none';
+                toast.className = 'fixed top-4 right-4 left-4 md:left-auto md:right-6 md:top-6 z-[100] w-auto md:w-full md:max-w-sm transform translate-x-full opacity-0 transition-all duration-500 ease-out pointer-events-none';
                 toast.setAttribute('role', 'alert');
 
                 const isSuccess = type === 'success';
@@ -106,6 +108,42 @@
                 }
             };
 
+            // Toggle Sidebar for Mobile/Responsive View
+            window.toggleSidebar = function() {
+                const sidebar = document.getElementById('sidebarMenu');
+                const backdrop = document.getElementById('sidebarBackdrop');
+                
+                if (!sidebar || !backdrop) return;
+                
+                const isOpen = sidebar.classList.contains('translate-x-0');
+                
+                if (isOpen) {
+                    sidebar.classList.remove('translate-x-0');
+                    sidebar.classList.add('-translate-x-full');
+                    
+                    backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+                    backdrop.classList.add('opacity-0', 'pointer-events-none');
+                    document.body.classList.remove('overflow-hidden');
+                } else {
+                    sidebar.classList.remove('-translate-x-full');
+                    sidebar.classList.add('translate-x-0');
+                    
+                    backdrop.classList.remove('opacity-0', 'pointer-events-none');
+                    backdrop.classList.add('opacity-100', 'pointer-events-auto');
+                    document.body.classList.add('overflow-hidden');
+                }
+            };
+
+            // Close sidebar on ESC key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    const sidebar = document.getElementById('sidebarMenu');
+                    if (sidebar && sidebar.classList.contains('translate-x-0')) {
+                        toggleSidebar();
+                    }
+                }
+            });
+
             // Trigger session success toast if present
             @if(session('success'))
                 document.addEventListener('DOMContentLoaded', function() {
@@ -139,6 +177,116 @@
                     }
                 }
             });
+        </script>
+
+        <!-- Global Premium Delete Confirmation Modal -->
+        <div id="globalConfirmDeleteModal" onclick="if(event.target === this) closeConfirmDeleteModal()" class="fixed inset-0 z-[150] hidden bg-gray-900/50 backdrop-blur-sm transition-opacity duration-300 opacity-0 items-center justify-center p-4">
+            <div id="globalConfirmDeleteContent" class="bg-white rounded-2xl p-6 shadow-2xl max-w-sm w-full border border-gray-100 flex flex-col items-center text-center transform scale-95 opacity-0 transition-all duration-300">
+                <div class="w-12 h-12 bg-red-50 text-red-600 rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                    </svg>
+                </div>
+                <h4 class="text-lg font-bold text-gray-900">Hapus Data?</h4>
+                <p class="text-sm text-gray-500 mt-2 leading-relaxed">Apakah Anda yakin ingin menghapus data ini? Tindakan ini bersifat permanen dan tidak dapat dibatalkan.</p>
+                <div class="grid grid-cols-2 gap-3 w-full mt-6">
+                    <button type="button" id="confirmDeleteCancelBtn" onclick="closeConfirmDeleteModal()" class="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-xl transition-all cursor-pointer">
+                        Batal
+                    </button>
+                    <button type="button" id="confirmDeleteSubmitBtn" onclick="executePendingDelete()" class="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition-all cursor-pointer shadow-lg shadow-red-600/10 flex items-center justify-center gap-2">
+                        <span class="btn-text">Hapus</span>
+                        <svg class="btn-spinner animate-spin h-3.5 w-3.5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Global custom confirm delete interceptor
+            document.addEventListener('submit', function(event) {
+                const form = event.target;
+                const methodInput = form.querySelector('input[name="_method"]');
+                
+                const isDeleteAction = (methodInput && methodInput.value.toUpperCase() === 'DELETE') || 
+                                       (form.action && (form.action.includes('bulk-delete') || form.action.includes('destroy') || form.action.includes('delete')));
+                
+                if (isDeleteAction) {
+                    if (form.dataset.confirmed === 'true') {
+                        return;
+                    }
+                    
+                    event.preventDefault();
+                    window.pendingDeleteForm = form;
+                    
+                    const modal = document.getElementById('globalConfirmDeleteModal');
+                    const content = document.getElementById('globalConfirmDeleteContent');
+                    
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                    setTimeout(() => {
+                        modal.classList.remove('opacity-0');
+                        content.classList.remove('scale-95', 'opacity-0');
+                    }, 10);
+                }
+            });
+
+            window.executePendingDelete = function() {
+                if (window.pendingDeleteForm) {
+                    const submitBtn = document.getElementById('confirmDeleteSubmitBtn');
+                    const cancelBtn = document.getElementById('confirmDeleteCancelBtn');
+                    
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+                        const text = submitBtn.querySelector('.btn-text');
+                        const spinner = submitBtn.querySelector('.btn-spinner');
+                        if (text) text.innerText = 'Hapus...';
+                        if (spinner) spinner.classList.remove('hidden');
+                    }
+                    if (cancelBtn) {
+                        cancelBtn.disabled = true;
+                        cancelBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                        cancelBtn.removeAttribute('onclick');
+                    }
+
+                    window.pendingDeleteForm.dataset.confirmed = 'true';
+                    window.pendingDeleteForm.submit();
+                }
+            };
+
+            window.closeConfirmDeleteModal = function() {
+                const modal = document.getElementById('globalConfirmDeleteModal');
+                const content = document.getElementById('globalConfirmDeleteContent');
+                
+                modal.classList.add('opacity-0');
+                content.classList.add('scale-95', 'opacity-0');
+                
+                setTimeout(() => {
+                    modal.classList.remove('flex');
+                    modal.classList.add('hidden');
+                    window.pendingDeleteForm = null;
+                    
+                    // Reset modal buttons state
+                    const submitBtn = document.getElementById('confirmDeleteSubmitBtn');
+                    const cancelBtn = document.getElementById('confirmDeleteCancelBtn');
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+                        const text = submitBtn.querySelector('.btn-text');
+                        const spinner = submitBtn.querySelector('.btn-spinner');
+                        if (text) text.innerText = 'Hapus';
+                        if (spinner) spinner.classList.add('hidden');
+                    }
+                    if (cancelBtn) {
+                        cancelBtn.disabled = false;
+                        cancelBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        cancelBtn.setAttribute('onclick', 'closeConfirmDeleteModal()');
+                    }
+                }, 300);
+            };
         </script>
     </body>
 </html>

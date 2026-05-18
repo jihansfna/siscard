@@ -56,7 +56,7 @@
             </button>
         </div>
 
-        <form id="bulkDeleteForm" action="{{ route('dashboard.members.bulk_destroy') }}" method="POST" class="hidden" onsubmit="return confirm('Apakah Anda yakin ingin menghapus member terpilih?');">
+        <form id="bulkDeleteForm" action="{{ route('dashboard.members.bulk_destroy') }}" method="POST" class="hidden">
             @csrf
         </form>
 

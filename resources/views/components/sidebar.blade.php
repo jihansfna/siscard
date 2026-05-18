@@ -18,11 +18,17 @@ $sidebarLabel = $role === 'admin' ? 'Dashboard Admin' : 'Member Area';
 $currentUrl = request()->url();
 @endphp
 
-<aside class="w-64 flex-shrink-0 flex flex-col justify-between border-r border-gray-200 bg-white shadow-xl shadow-gray-200/50 hidden md:flex min-h-screen fixed z-20 h-full">
+<aside id="sidebarMenu" class="w-64 flex-shrink-0 flex flex-col border-r border-gray-200 bg-white shadow-xl shadow-gray-200/50 min-h-screen fixed inset-y-0 left-0 z-50 h-full transition-transform duration-300 transform -translate-x-full md:translate-x-0">
     <div>
-        <div class="border-b border-gray-100 p-6">
-            <h2 class="text-2xl font-bold text-primary-800 tracking-tight">SPSI</h2>
-            <span class="block mt-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ $sidebarLabel }}</span>
+        <div class="border-b border-gray-100 p-6 flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-primary-800 tracking-tight">SPSI</h2>
+                <span class="block mt-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ $sidebarLabel }}</span>
+            </div>
+            <!-- Mobile Close Button -->
+            <button type="button" onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors focus:outline-none cursor-pointer" aria-label="Tutup Menu">
+                <x-heroicon-o-x-mark class="w-6 h-6" />
+            </button>
         </div>
 
         <nav class="p-4 space-y-1">
@@ -38,29 +44,5 @@ $currentUrl = request()->url();
                 </a>
             @endforeach
         </nav>
-    </div>
-
-    <div class="border-t border-gray-100 p-4">
-        {{-- Role indicator --}}
-        <div class="mb-3 px-4 py-2 rounded-xl bg-gray-50 border border-gray-100">
-            <p class="text-[0.65rem] font-bold text-gray-400 uppercase tracking-wider">Role</p>
-            <p class="text-sm font-bold {{ $role === 'admin' ? 'text-primary-700' : 'text-green-700' }}">
-                {{ $role === 'admin' ? 'Administrator' : 'Employee' }}
-            </p>
-        </div>
-
-        <form method="POST" action="{{ route('logout') }}" class="form-with-loading">
-            @csrf
-            <button type="submit" class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-gray-600 transition-all duration-200 hover:bg-red-50 hover:text-red-600">
-                <div class="flex items-center gap-3">
-                    <x-heroicon-o-arrow-right-on-rectangle class="w-5 h-5 flex-shrink-0" />
-                    <span class="btn-text">Logout</span>
-                </div>
-                <svg class="btn-spinner animate-spin h-5 w-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-            </button>
-        </form>
     </div>
 </aside>

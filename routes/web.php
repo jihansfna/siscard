@@ -50,4 +50,5 @@ Route::middleware(['auth', 'role:user'])->prefix('home')->group(function () {
     Route::get('/', [\App\Http\Controllers\UserController::class, 'index'])->name('user.home');
     Route::post('/confirm-membership/{id}', [\App\Http\Controllers\UserController::class, 'confirmMembership'])->name('user.confirm_membership');
     Route::post('/feedbacks', [\App\Http\Controllers\FeedbackController::class, 'store'])->name('user.feedbacks.store');
+    Route::delete('/feedbacks/{feedback}', [\App\Http\Controllers\FeedbackController::class, 'destroyUser'])->name('user.feedbacks.destroy');
 });

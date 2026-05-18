@@ -49,6 +49,7 @@ class FeedbackController extends Controller
     {
         $request->validate([
             'description' => 'required|string',
+            'document' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg,zip|max:5120',
         ]);
 
         $employee = Employee::where('badge', auth()->user()->badge)->first();
@@ -64,9 +65,15 @@ class FeedbackController extends Controller
             return back()->withErrors(['message' => 'Anda belum terdaftar sebagai member aktif.']);
         }
 
+        $filePath = null;
+        if ($request->hasFile('document')) {
+            $filePath = $request->file('document')->store('feedbacks', 'public');
+        }
+
         Feedback::create([
             'member_id' => $member->id,
             'description' => $request->description,
+            'file' => $filePath,
             'status' => 'Waiting',
         ]);
 
@@ -84,5 +91,28 @@ class FeedbackController extends Controller
 
         return redirect()->route('dashboard.feedbacks')
             ->with('success', count($request->ids) . ' saran berhasil dihapus.');
+    }
+
+    // USER: Delete a feedback
+    public function destroyUser(Feedback $feedback)
+    {
+        $employee = Employee::where('badge', auth()->user()->badge)->first();
+        if (!$employee) {
+            abort(403, 'Unauthorized');
+        }
+
+        $member = Member::where('employee_id', $employee->id)->first();
+        if (!$member || $feedback->member_id !== $member->id) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Delete attachment if present
+        if ($feedback->file) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($feedback->file);
+        }
+
+        $feedback->delete();
+
+        return back()->with('success', 'Saran Anda berhasil dihapus.');
     }
 }
