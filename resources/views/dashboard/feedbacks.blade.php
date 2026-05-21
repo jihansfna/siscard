@@ -14,6 +14,25 @@
                         <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari nama atau badge..." class="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50">
                     </div>
                 </form>
+
+                {{-- Export Dropdown --}}
+                <div class="relative" id="exportDropdownContainer">
+                    <button type="button" onclick="toggleDropdown('exportDropdown')" class="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-emerald-600/20 active:scale-95">
+                        <x-heroicon-o-arrow-down-tray class="w-4 h-4" />
+                        <span>Export</span>
+                        <x-heroicon-o-chevron-down class="w-3 h-3" />
+                    </button>
+                    <div id="exportDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50 hidden transition-all">
+                        <a href="{{ route('dashboard.export.feedbacks.excel') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                            <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM9.5 11.5l2 3.5-2 3.5h1.5l1.25-2.5L13.5 18.5H15l-2-3.5 2-3.5h-1.5l-1.25 2.5-1.25-2.5H9.5z"/></svg>
+                            <span>Export Excel</span>
+                        </a>
+                        <a href="{{ route('dashboard.export.feedbacks.pdf') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                            <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM10.5 11c-.83 0-1.5.67-1.5 1.5v4c0 .83.67 1.5 1.5 1.5h3c.83 0 1.5-.67 1.5-1.5v-4c0-.83-.67-1.5-1.5-1.5h-3z"/></svg>
+                            <span>Export PDF</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -430,6 +449,19 @@
             if (event.key === 'Escape') {
                 closeCompleteModal();
                 closeFeedbackDetail();
+            }
+        });
+
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const container = document.getElementById('exportDropdownContainer');
+            if (container && !container.contains(e.target)) {
+                document.getElementById('exportDropdown').classList.add('hidden');
             }
         });
     </script>

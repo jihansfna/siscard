@@ -15,6 +15,31 @@
                     </div>
                 </form>
 
+                {{-- Export Dropdown --}}
+                <div class="relative" id="exportDropdownContainer">
+                    <button type="button" onclick="toggleDropdown('exportDropdown')" class="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-emerald-600/20 active:scale-95">
+                        <x-heroicon-o-arrow-down-tray class="w-4 h-4" />
+                        <span>Export</span>
+                        <x-heroicon-o-chevron-down class="w-3 h-3" />
+                    </button>
+                    <div id="exportDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50 hidden transition-all">
+                        <a href="{{ route('dashboard.export.employees.excel') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                            <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM9.5 11.5l2 3.5-2 3.5h1.5l1.25-2.5L13.5 18.5H15l-2-3.5 2-3.5h-1.5l-1.25 2.5-1.25-2.5H9.5z"/></svg>
+                            <span>Export Excel</span>
+                        </a>
+                        <a href="{{ route('dashboard.export.employees.pdf') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                            <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM10.5 11c-.83 0-1.5.67-1.5 1.5v4c0 .83.67 1.5 1.5 1.5h3c.83 0 1.5-.67 1.5-1.5v-4c0-.83-.67-1.5-1.5-1.5h-3z"/></svg>
+                            <span>Export PDF</span>
+                        </a>
+                    </div>
+                </div>
+
+                {{-- Import Button --}}
+                <button type="button" onclick="document.getElementById('importEmployeeModal').classList.remove('hidden'); document.getElementById('importEmployeeModal').classList.add('flex')" class="flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-amber-500/20 active:scale-95">
+                    <x-heroicon-o-arrow-up-tray class="w-4 h-4" />
+                    <span>Import</span>
+                </button>
+
                 <button type="button" onclick="document.getElementById('addEmployeeModal').classList.remove('hidden'); document.getElementById('addEmployeeModal').classList.add('flex')" class="flex items-center gap-3 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-primary-600/20 active:scale-95">
                     <span>Add Employee</span>
                     <x-heroicon-o-user-plus class="w-4 h-4" />
@@ -404,4 +429,144 @@
             }
         }
     </script>
+
+    {{-- Import Employee Modal --}}
+    <div id="importEmployeeModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 flex-shrink-0">
+                <h3 class="text-lg font-bold text-gray-800">Import Data Employee</h3>
+                <button type="button" onclick="closeImportModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <x-heroicon-o-x-mark class="w-6 h-6" />
+                </button>
+            </div>
+            <div class="p-6">
+                @if(session('import_errors'))
+                    <div class="mb-4 p-4 rounded-xl bg-yellow-50 border border-yellow-200 text-yellow-800 text-sm">
+                        <p class="font-bold mb-1">Beberapa baris dilewati:</p>
+                        <ul class="list-disc list-inside space-y-0.5 text-xs">
+                            @foreach(session('import_errors') as $err)
+                                <li>{{ $err }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-5">
+                    <div class="flex items-start gap-3">
+                        <x-heroicon-o-information-circle class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                        <div class="text-sm text-blue-800">
+                            <p class="font-bold mb-1">Petunjuk Import:</p>
+                            <ul class="list-disc list-inside space-y-0.5 text-xs">
+                                <li>Download template terlebih dahulu</li>
+                                <li>Isi data sesuai format template</li>
+                                <li>Kolom <strong>Badge</strong> dan <strong>Nama</strong> wajib diisi</li>
+                                <li>Format tanggal: <strong>dd/mm/yyyy</strong></li>
+                                <li>Badge yang sudah terdaftar akan otomatis dilewati</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="{{ route('dashboard.import.employees.template') }}" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 mb-5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-sm font-bold transition-all border border-gray-200">
+                    <x-heroicon-o-document-arrow-down class="w-4 h-4" />
+                    <span>Download Template Excel</span>
+                </a>
+
+                <form action="{{ route('dashboard.import.employees') }}" method="POST" enctype="multipart/form-data" class="form-with-loading" id="importEmployeeForm">
+                    @csrf
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">File Excel (.xlsx) <span class="text-red-500">*</span></label>
+                            <div id="importDropZone" class="relative border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-primary-400 transition-colors cursor-pointer" onclick="document.getElementById('importFileInput').click()">
+                                <input type="file" name="file" id="importFileInput" accept=".xlsx,.xls" required class="hidden" onchange="handleImportFileChange(this)">
+                                <x-heroicon-o-cloud-arrow-up class="w-10 h-10 text-gray-300 mx-auto mb-2" />
+                                <p class="text-sm text-gray-500 font-medium" id="importFileName">Klik atau drag file ke sini</p>
+                                <p class="text-xs text-gray-400 mt-1">Format: .xlsx atau .xls (max 5MB)</p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3 flex-shrink-0">
+                <button type="button" onclick="closeImportModal()" class="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-200 rounded-lg transition-colors">
+                    Batal
+                </button>
+                <button type="submit" form="importEmployeeForm" class="px-6 py-2.5 text-sm font-bold bg-amber-500 hover:bg-amber-600 text-white rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center gap-2">
+                    <span class="btn-text">Import Data</span>
+                    <svg class="btn-spinner animate-spin h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const container = document.getElementById('exportDropdownContainer');
+            if (container && !container.contains(e.target)) {
+                document.getElementById('exportDropdown').classList.add('hidden');
+            }
+        });
+
+        function closeImportModal() {
+            document.getElementById('importEmployeeModal').classList.add('hidden');
+            document.getElementById('importEmployeeModal').classList.remove('flex');
+        }
+
+        function handleImportFileChange(input) {
+            const fileNameEl = document.getElementById('importFileName');
+            const dropZone = document.getElementById('importDropZone');
+            if (input.files && input.files.length > 0) {
+                const file = input.files[0];
+                const ext = file.name.split('.').pop().toLowerCase();
+                
+                if (!['xlsx', 'xls'].includes(ext)) {
+                    input.value = '';
+                    fileNameEl.textContent = 'Format file tidak didukung!';
+                    fileNameEl.classList.add('text-red-500');
+                    dropZone.classList.add('border-red-400');
+                    dropZone.classList.remove('border-gray-300', 'border-green-400');
+                    return;
+                }
+
+                if (file.size > 5 * 1024 * 1024) {
+                    input.value = '';
+                    fileNameEl.textContent = 'File terlalu besar! Max 5MB';
+                    fileNameEl.classList.add('text-red-500');
+                    dropZone.classList.add('border-red-400');
+                    dropZone.classList.remove('border-gray-300', 'border-green-400');
+                    return;
+                }
+
+                fileNameEl.textContent = file.name;
+                fileNameEl.classList.remove('text-gray-500', 'text-red-500');
+                fileNameEl.classList.add('text-green-700', 'font-bold');
+                dropZone.classList.add('border-green-400', 'bg-green-50/30');
+                dropZone.classList.remove('border-gray-300', 'border-red-400');
+            } else {
+                fileNameEl.textContent = 'Klik atau drag file ke sini';
+                fileNameEl.classList.remove('text-green-700', 'font-bold', 'text-red-500');
+                fileNameEl.classList.add('text-gray-500');
+                dropZone.classList.remove('border-green-400', 'bg-green-50/30', 'border-red-400');
+                dropZone.classList.add('border-gray-300');
+            }
+        }
+
+        // Open import modal if there are import errors
+        @if(session('import_errors'))
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('importEmployeeModal').classList.remove('hidden');
+                document.getElementById('importEmployeeModal').classList.add('flex');
+            });
+        @endif
+    </script>
 </x-app-layout>
+
