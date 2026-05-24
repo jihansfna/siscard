@@ -16,14 +16,17 @@ Route::middleware('guest')->group(function () {
     Route::post('/password/reset', [AuthController::class, 'resetPassword'])->name('password.reset.submit');
 });
 
+// --- Public route: QR verification (no auth needed) ---
+Route::get('/verify/{token}', [\App\Http\Controllers\CardController::class, 'verify'])->name('card.verify')->where('token', '[A-Za-z0-9_\-]+');
+Route::get('/verify/{token}/pdf', [\App\Http\Controllers\CardController::class, 'verifyPdf'])->name('card.verify.pdf')->where('token', '[A-Za-z0-9_\-]+');
+Route::get('/qr-image', [\App\Http\Controllers\CardController::class, 'qrImage'])->name('qr.image');
+
 // --- Auth route (hanya bisa diakses jika sudah login) ---
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // --- Admin routes (role: admin / HRD) ---
 Route::middleware(['auth', 'role:admin'])->prefix('dashboard')->group(function () {
-    Route::get('/', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
     // Bulk Delete Routes
     Route::post('/employees/bulk-delete', [\App\Http\Controllers\MasterEmployeeController::class, 'bulkDestroy'])->name('dashboard.employees.bulk_destroy');
@@ -44,17 +47,23 @@ Route::middleware(['auth', 'role:admin'])->prefix('dashboard')->group(function (
 
     // Master Employee CRUD
     Route::resource('employees', \App\Http\Controllers\MasterEmployeeController::class)->names('dashboard.employees');
+    Route::patch('/employees/{employee}/set-inactive', [\App\Http\Controllers\MasterEmployeeController::class, 'setInactive'])->name('dashboard.employees.set_inactive');
 
-
+    // Members
     Route::get('/members', [\App\Http\Controllers\MemberController::class, 'index'])->name('dashboard.members');
     Route::post('/members', [\App\Http\Controllers\MemberController::class, 'store'])->name('dashboard.members.store');
+    Route::put('/members/{member}', [\App\Http\Controllers\MemberController::class, 'update'])->name('dashboard.members.update');
+
+    // Card download (admin)
+    Route::get('/members/{id}/card/download', [\App\Http\Controllers\CardController::class, 'download'])->name('dashboard.members.card.download');
+    Route::get('/members/{id}/card/preview', [\App\Http\Controllers\CardController::class, 'preview'])->name('dashboard.members.card.preview');
 
     Route::get('/feedbacks', [\App\Http\Controllers\FeedbackController::class, 'indexAdmin'])->name('dashboard.feedbacks');
     Route::post('/feedbacks/{feedback}/complete', [\App\Http\Controllers\FeedbackController::class, 'complete'])->name('dashboard.feedbacks.complete');
 
-    Route::get('/history', function () {
-        return view('dashboard.history');
-    })->name('dashboard.history');
+    Route::get('/history', [\App\Http\Controllers\HistoryController::class, 'index'])->name('dashboard.history');
+    Route::get('/export/history/excel', [\App\Http\Controllers\HistoryController::class, 'exportExcel'])->name('dashboard.export.history.excel');
+    Route::get('/export/history/pdf', [\App\Http\Controllers\HistoryController::class, 'exportPdf'])->name('dashboard.export.history.pdf');
 });
 
 // --- User routes (role: user / Employee) ---
@@ -63,4 +72,7 @@ Route::middleware(['auth', 'role:user'])->prefix('home')->group(function () {
     Route::post('/confirm-membership/{id}', [\App\Http\Controllers\UserController::class, 'confirmMembership'])->name('user.confirm_membership');
     Route::post('/feedbacks', [\App\Http\Controllers\FeedbackController::class, 'store'])->name('user.feedbacks.store');
     Route::delete('/feedbacks/{feedback}', [\App\Http\Controllers\FeedbackController::class, 'destroyUser'])->name('user.feedbacks.destroy');
+    
+    // Card download (user - own card)
+    Route::get('/card/download', [\App\Http\Controllers\CardController::class, 'downloadOwn'])->name('user.card.download');
 });

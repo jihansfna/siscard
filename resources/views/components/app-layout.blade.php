@@ -9,8 +9,8 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-gray-50 text-gray-900">
-        <div class="flex min-h-screen overflow-x-hidden bg-gradient-to-br from-indigo-50/50 via-white to-blue-50/30">
+    <body class="font-sans antialiased bg-gray-50 dark:bg-[#121212] text-gray-900 dark:text-gray-100 transition-colors">
+        <div class="flex min-h-screen overflow-x-hidden bg-gradient-to-br from-indigo-50/50 via-white to-blue-50/30 dark:from-[#121212] dark:via-[#1A1A1A] dark:to-[#121212] transition-colors">
             @if(Auth::user() && Auth::user()->role === 'admin')
                 <!-- Sidebar Backdrop -->
                 <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-40 transition-opacity duration-300 opacity-0 pointer-events-none md:hidden"></div>

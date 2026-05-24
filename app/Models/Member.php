@@ -33,4 +33,9 @@ class Member extends Model
     {
         return $this->belongsTo(MemberRole::class, 'member_role_id');
     }
+
+    public function logs()
+    {
+        return $this->hasMany(MemberLog::class)->orderBy('created_at', 'asc');
+    }
 }

@@ -1,6 +1,6 @@
 @props(['activePage' => 'Dashboard', 'adminName' => 'Admin'])
 
-<header class="flex items-center justify-between gap-4 min-h-[4rem] px-6 py-3 bg-white border-b-2 border-primary-800 shadow-xl shadow-primary-900/10 z-30 sticky top-0">
+<header class="flex items-center justify-between gap-4 min-h-[4rem] px-6 py-3 bg-white dark:bg-[#1A1A1A] border-b-2 border-primary-800 shadow-xl shadow-primary-900/10 z-30 sticky top-0 transition-colors">
     <div class="flex items-center gap-3">
         @if(Auth::user() && Auth::user()->role === 'admin')
             <!-- Mobile Menu Toggle Button -->
@@ -20,7 +20,14 @@
     @endphp
 
     <!-- Right Profile Section with Dropdown -->
-    <div class="relative inline-block text-left" id="profileDropdownContainer">
+    <div class="flex items-center gap-2">
+        <!-- Dark Mode Toggle -->
+        <button type="button" onclick="toggleDarkMode()" class="p-2 text-gray-400 hover:text-primary-800 hover:bg-gray-100 rounded-xl transition-colors focus:outline-none" aria-label="Toggle dark mode" title="Toggle Theme">
+            <x-heroicon-o-moon class="w-5 h-5 block dark:hidden" id="icon-moon" />
+            <x-heroicon-o-sun class="w-5 h-5 hidden dark:block" id="icon-sun" />
+        </button>
+
+        <div class="relative inline-block text-left" id="profileDropdownContainer">
         <button type="button" onclick="toggleProfileDropdown()" class="flex items-center gap-3 text-sm font-bold text-gray-600 hover:text-primary-800 transition-all focus:outline-none py-1.5 px-2.5 rounded-xl hover:bg-gray-50/80 active:scale-95 duration-200">
             <div class="w-9 h-9 rounded-full overflow-hidden flex-shrink-0 bg-gradient-to-br from-primary-800 to-primary-500 text-white font-extrabold shadow-md flex items-center justify-center border border-gray-100">
                 @if($employee && $employee->image)
@@ -58,10 +65,28 @@
                 </button>
             </form>
         </div>
+        </div>
     </div>
 </header>
 
 <script>
+    // Initialize dark mode
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+    }
+
+    function toggleDarkMode() {
+        if (document.documentElement.classList.contains('dark')) {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('color-theme', 'light');
+        } else {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('color-theme', 'dark');
+        }
+    }
+
     function toggleProfileDropdown() {
         const dropdown = document.getElementById('profileDropdownMenu');
         const chevron = document.getElementById('profileChevron');

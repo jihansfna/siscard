@@ -11,6 +11,7 @@ use App\Models\Employee;
 use App\Models\Member;
 use App\Models\Feedback;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class ExportImportController extends Controller
 {
@@ -43,7 +44,7 @@ class ExportImportController extends Controller
 
         $file = $request->file('file');
         $tempPath = $file->store('temp', 'local');
-        $fullPath = storage_path('app/' . $tempPath);
+        $fullPath = Storage::disk('local')->path($tempPath);
 
         try {
             $importer = (new EmployeeImport())->import($fullPath);

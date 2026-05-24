@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Member;
 use App\Models\Feedback;
+use App\Models\MemberLog;
 use Carbon\Carbon;
 
 class UserController extends Controller
@@ -18,6 +19,7 @@ class UserController extends Controller
         $accessStatus = 'no_access';
         $memberId = null;
 
+        $member = null;
         $feedbacks = collect();
 
         if ($employee) {
@@ -25,7 +27,7 @@ class UserController extends Controller
             if ($employee->end_date && Carbon::parse($employee->end_date)->lt(now()->startOfDay())) {
                 $accessStatus = 'inactive';
             } else {
-                $member = Member::where('employee_id', $employee->id)->first();
+                $member = Member::with('role')->where('employee_id', $employee->id)->first();
                 if ($member) {
                     $accessStatus = $member->status; // 'pending' or 'registered' etc.
                     $memberId = $member->id;
@@ -37,7 +39,7 @@ class UserController extends Controller
             }
         }
 
-        return view('home', compact('accessStatus', 'memberId', 'feedbacks', 'employee'));
+        return view('home', compact('accessStatus', 'memberId', 'feedbacks', 'employee', 'member'));
     }
 
     public function confirmMembership(Request $request, $id)
@@ -56,6 +58,14 @@ class UserController extends Controller
         }
 
         $member->update(['status' => 'registered']);
+
+        MemberLog::create([
+            'member_id' => $member->id,
+            'actor_id' => auth()->id(),
+            'activity' => 'Update Status',
+            'status' => 'registered',
+            'description' => 'Member has confirmed',
+        ]);
 
         return redirect()->route('user.home')->with('success', 'Berhasil mengkonfirmasi keanggotaan. Selamat datang!');
     }

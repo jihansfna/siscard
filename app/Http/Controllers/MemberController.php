@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Member;
+use App\Models\Employee;
+use App\Models\MemberRole;
+use App\Models\MemberLog;
+use Illuminate\Support\Str;
 
 class MemberController extends Controller
 {
@@ -10,8 +15,11 @@ class MemberController extends Controller
     {
         $q = $request->query('q');
         $status = $request->query('status');
+        $sort = $request->query('sort', 'desc');
 
-        $members = \App\Models\Member::with(['employee', 'role'])
+        $sortDirection = $sort === 'asc' ? 'asc' : 'desc';
+
+        $members = Member::with(['employee', 'role', 'logs.actor'])
             ->when($q, function($query, $q) {
                 $query->whereHas('employee', function($q2) use ($q) {
                     $q2->where('name', 'like', "%{$q}%")
@@ -29,12 +37,12 @@ class MemberController extends Controller
                     $query->where('status', $statusMap[$status]);
                 }
             })
-            ->orderBy('created_at', 'asc')
+            ->orderBy('updated_at', $sortDirection)
             ->paginate(10);
 
         $today = now()->toDateString();
 
-        $availableEmployees = \App\Models\Employee::whereNotIn('id', function($query) {
+        $availableEmployees = Employee::whereNotIn('id', function($query) {
             $query->select('employee_id')->from('members')->whereNull('deleted_at');
         })
         ->where(function($query) use ($today) {
@@ -44,7 +52,99 @@ class MemberController extends Controller
         })
         ->get();
 
-        return view('dashboard.members', compact('members', 'availableEmployees'));
+        $memberRoles = MemberRole::where('name', '!=', 'Member')->orderBy('name')->get();
+
+        // Get Ketua and Sekretaris for Card Preview display
+        $ketuaRole = MemberRole::where('name', 'Ketua')->first();
+        $sekretarisRole = MemberRole::where('name', 'Sekretaris')->first();
+
+        $ketua = null;
+        $sekretaris = null;
+
+        if ($ketuaRole) {
+            $ketua = Member::with('employee')
+                ->where('member_role_id', $ketuaRole->id)
+                ->where('status', 'registered')
+                ->whereNull('deleted_at')
+                ->first();
+        }
+
+        if ($sekretarisRole) {
+            $sekretaris = Member::with('employee')
+                ->where('member_role_id', $sekretarisRole->id)
+                ->where('status', 'registered')
+                ->whereNull('deleted_at')
+                ->first();
+        }
+
+        return view('dashboard.members', compact('members', 'availableEmployees', 'memberRoles', 'ketua', 'sekretaris', 'sort'));
+    }
+
+    public function update(Request $request, Member $member)
+    {
+        $request->validate([
+            'member_role_id' => 'required|exists:member_roles,id',
+            'sign_image' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+        ]);
+
+        $newRole = MemberRole::findOrFail($request->member_role_id);
+
+        // Enforce is_single: if the new role is single-holder, demote the current holder
+        if ($newRole->is_single) {
+            $defaultRole = MemberRole::where('name', 'Member')->first();
+            if ($defaultRole) {
+                // Find old holders of this specific role
+                $oldHolders = Member::where('member_role_id', $newRole->id)
+                    ->where('id', '!=', $member->id)
+                    ->whereNull('deleted_at')
+                    ->get();
+                
+                foreach ($oldHolders as $oldHolder) {
+                    // Delete signature file from storage
+                    if ($oldHolder->sign_image) {
+                        $oldPath = storage_path('app/public/' . $oldHolder->sign_image);
+                        if (file_exists($oldPath)) {
+                            unlink($oldPath);
+                        }
+                    }
+                    
+                    // Demote to Member and clear signature
+                    $oldHolder->update([
+                        'member_role_id' => $defaultRole->id,
+                        'sign_image' => null
+                    ]);
+                }
+            }
+        }
+
+        $data = [
+            'member_role_id' => $request->member_role_id,
+        ];
+
+        // Handle signature upload
+        if ($request->hasFile('sign_image')) {
+            // Delete old signature if exists
+            if ($member->sign_image) {
+                $oldPath = storage_path('app/public/' . $member->sign_image);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+            $data['sign_image'] = $request->file('sign_image')->store('signatures', 'public');
+        }
+
+        $member->update($data);
+
+        MemberLog::create([
+            'member_id' => $member->id,
+            'actor_id' => auth()->id(),
+            'activity' => 'Update',
+            'status' => $member->status,
+            'description' => 'Role updated to "' . $newRole->name . '"' . ($request->hasFile('sign_image') ? ' and signature updated.' : '.'),
+        ]);
+
+        $message = 'Role member berhasil diperbarui menjadi "' . $newRole->name . '".';
+        return back()->with('success', $message);
     }
 
     public function store(Request $request)
@@ -57,7 +157,7 @@ class MemberController extends Controller
         $today = now()->toDateString();
 
         // Filter out any inactive employees (end_date < today)
-        $activeEmployees = \App\Models\Employee::whereIn('id', $request->employee_ids)
+        $activeEmployees = Employee::whereIn('id', $request->employee_ids)
             ->where(function($query) use ($today) {
                 $query->whereNull('end_date')
                       ->orWhere('end_date', '>=', $today);
@@ -71,7 +171,7 @@ class MemberController extends Controller
             return back()->withErrors(['employee_ids' => 'Semua employee yang dipilih sudah tidak aktif (end_date sudah lewat).']);
         }
 
-        $defaultRole = \App\Models\MemberRole::firstOrCreate(
+        $defaultRole = MemberRole::firstOrCreate(
             ['name' => 'Member'],
             ['is_single' => false, 'is_sign' => false]
         );
@@ -79,7 +179,7 @@ class MemberController extends Controller
         $membersToInsert = [];
         foreach ($activeEmployees as $empId) {
             $membersToInsert[] = [
-                'uuid' => \Illuminate\Support\Str::uuid(),
+                'uuid' => Str::uuid(),
                 'employee_id' => $empId,
                 'member_role_id' => $defaultRole->id,
                 'status' => 'pending',
@@ -89,7 +189,31 @@ class MemberController extends Controller
             ];
         }
 
-        \App\Models\Member::insert($membersToInsert);
+        Member::insert($membersToInsert);
+
+        $insertedMembers = Member::whereIn('employee_id', $activeEmployees)->get();
+        $logsToInsert = [];
+        foreach ($insertedMembers as $m) {
+            $logsToInsert[] = [
+                'member_id' => $m->id,
+                'actor_id' => auth()->id(),
+                'activity' => 'Create',
+                'status' => 'pending',
+                'description' => 'Member added',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+            $logsToInsert[] = [
+                'member_id' => $m->id,
+                'actor_id' => auth()->id(),
+                'activity' => 'Status Update',
+                'status' => 'pending',
+                'description' => 'Waiting for confirmation from member',
+                'created_at' => now()->addSecond(),
+                'updated_at' => now()->addSecond(),
+            ];
+        }
+        MemberLog::insert($logsToInsert);
 
         $message = count($activeEmployees) . ' Member berhasil ditambahkan.';
         if ($inactiveCount > 0) {
@@ -106,7 +230,22 @@ class MemberController extends Controller
             'ids.*' => 'exists:members,id',
         ]);
 
-        \App\Models\Member::whereIn('id', $request->ids)->delete();
+        $members = Member::with('employee')->whereIn('id', $request->ids)->get();
+        $logsToInsert = [];
+        foreach ($members as $m) {
+            $logsToInsert[] = [
+                'member_id' => $m->id,
+                'actor_id' => auth()->id(),
+                'activity' => 'Delete',
+                'status' => $m->status,
+                'description' => 'Menghapus data member: ' . ($m->employee ? $m->employee->name : 'Unknown'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        MemberLog::insert($logsToInsert);
+
+        Member::whereIn('id', $request->ids)->delete();
 
         return redirect()->route('dashboard.members')
             ->with('success', count($request->ids) . ' member berhasil dihapus.');

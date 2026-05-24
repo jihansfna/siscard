@@ -27,6 +27,29 @@
                     </div>
                 </form>
 
+                {{-- Sort Dropdown --}}
+                <div class="relative" id="sortDropdownContainer">
+                    <button type="button" onclick="toggleDropdown('sortDropdown')" class="flex items-center gap-2 px-4 py-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold transition-all">
+                        <x-heroicon-o-arrows-up-down class="w-4 h-4" />
+                        <span>Sort</span>
+                        <x-heroicon-o-chevron-down class="w-3 h-3 text-gray-400" />
+                    </button>
+                    <div id="sortDropdown" class="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50 hidden transition-all">
+                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'desc']) }}" class="flex items-center justify-between px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                            <span>Data Terbaru</span>
+                            @if(request('sort', 'desc') === 'desc')
+                                <x-heroicon-m-check class="w-4 h-4 text-primary-600" />
+                            @endif
+                        </a>
+                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'asc']) }}" class="flex items-center justify-between px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                            <span>Data Terlama</span>
+                            @if(request('sort') === 'asc')
+                                <x-heroicon-m-check class="w-4 h-4 text-primary-600" />
+                            @endif
+                        </a>
+                    </div>
+                </div>
+
                 {{-- Export Dropdown --}}
                 <div class="relative" id="exportDropdownContainer">
                     <button type="button" onclick="toggleDropdown('exportDropdown')" class="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-emerald-600/20 active:scale-95">
@@ -126,6 +149,7 @@
                                 <td class="px-4 py-3">
                                     @php
                                         $memberData = [
+                                            'id' => $member->id,
                                             'name' => $member->employee->name,
                                             'badge' => $member->employee->badge,
                                             'status' => $member->status,
@@ -136,7 +160,23 @@
                                             'birth_date' => $member->employee->birth_date?->format('d F Y') ?? '-',
                                             'join_date' => $member->employee->join_date?->format('d F Y') ?? '-',
                                             'address' => $member->employee->address ?? '-',
-                                            'role' => $member->role->name ?? '-'
+                                            'role' => $member->role->name ?? '-',
+                                            'member_role_id' => $member->member_role_id,
+                                            'sign_image' => $member->sign_image,
+                                            'verify_token' => \App\Http\Controllers\CardController::encryptToken($member->uuid),
+                                             'qr_base64' => 'data:image/svg+xml;base64,' . base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::size(200)->margin(1)->errorCorrection('H')->generate(url('/verify/' . \App\Http\Controllers\CardController::encryptToken($member->uuid)))),
+                                            'card_download_url' => route('dashboard.members.card.download', $member->id),
+                                            'update_url' => route('dashboard.members.update', $member->id),
+                                            'logs' => $member->logs->map(function($log) {
+                                                return [
+                                                    'activity' => $log->activity,
+                                                    'description' => $log->description,
+                                                    'actor_name' => $log->actor ? $log->actor->name : 'System',
+                                                    'actor_badge' => $log->actor ? $log->actor->badge : '',
+                                                    'created_at_date' => $log->created_at->format('l'),
+                                                    'created_at_time' => $log->created_at->format('d F Y, H.i'),
+                                                ];
+                                            })->toArray(),
                                         ];
                                     @endphp
                                     <button class="inline-flex p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="View Member Details" data-member="{{ json_encode($memberData) }}" onclick="openMemberDetail(this)">
@@ -389,6 +429,25 @@
             }
         }
 
+        function switchMemberTab(tab) {
+            const infoBtn = document.getElementById('tabInfoBtn');
+            const historyBtn = document.getElementById('tabHistoryBtn');
+            const infoContent = document.getElementById('tabInfoContent');
+            const historyContent = document.getElementById('tabHistoryContent');
+
+            if (tab === 'info') {
+                infoBtn.className = 'py-3 text-sm font-bold text-primary-600 border-b-2 border-primary-600';
+                historyBtn.className = 'py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent';
+                infoContent.classList.remove('hidden');
+                historyContent.classList.add('hidden');
+            } else {
+                historyBtn.className = 'py-3 text-sm font-bold text-primary-600 border-b-2 border-primary-600';
+                infoBtn.className = 'py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent';
+                historyContent.classList.remove('hidden');
+                infoContent.classList.add('hidden');
+            }
+        }
+
         function openMemberDetail(btn) {
             const member = JSON.parse(btn.dataset.member);
             
@@ -418,6 +477,7 @@
             document.getElementById('detailStatusBadge').className = 'inline-flex items-center px-2.5 py-0.5 rounded text-xs font-semibold ' + sColor;
             document.getElementById('detailStatusBadge').textContent = sLabel;
             
+            // Profile image
             if (member.image) {
                 document.getElementById('detailImage').src = '/storage/' + member.image;
                 document.getElementById('detailImage').classList.remove('hidden');
@@ -428,17 +488,123 @@
                 document.getElementById('detailImageFallback').textContent = member.name.charAt(0).toUpperCase();
             }
             
-            document.getElementById('detailQrCode').src = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + member.badge;
+            // QR Code - encrypted token URL (loaded instantly from pre-generated base64)
+            document.getElementById('detailQrCode').src = member.qr_base64;
             
             document.getElementById('detailBirth').textContent = member.birth_place + ', ' + member.birth_date;
             document.getElementById('detailJoinDate').textContent = member.join_date;
             document.getElementById('detailRole').textContent = member.role;
             document.getElementById('detailAddress').textContent = member.address;
             
+            // Signature image display
+            if (member.sign_image) {
+                document.getElementById('detailSign').classList.add('hidden');
+                document.getElementById('detailSignImage').src = '/storage/' + member.sign_image;
+                document.getElementById('detailSignImage').classList.remove('hidden');
+            } else {
+                document.getElementById('detailSign').textContent = '-';
+                document.getElementById('detailSign').classList.remove('hidden');
+                document.getElementById('detailSignImage').classList.add('hidden');
+            }
+            
+            // Store member data for edit modal
+            currentMemberData = member;
+            
+            // Download card button & dynamic status message
+            const downloadBtn = document.getElementById('downloadCardBtn');
+            const msgContainer = document.getElementById('cardNotRegisteredMsg');
+            const msgText = document.getElementById('cardNotRegisteredMsgText');
+            
+            if (member.status === 'registered') {
+                downloadBtn.href = member.card_download_url;
+                downloadBtn.classList.remove('opacity-50', 'pointer-events-none');
+                msgContainer.classList.add('hidden');
+                document.getElementById('cardPreviewContainer').classList.remove('opacity-40');
+            } else {
+                downloadBtn.href = '#';
+                downloadBtn.classList.add('opacity-50', 'pointer-events-none');
+                msgContainer.classList.remove('hidden');
+                document.getElementById('cardPreviewContainer').classList.add('opacity-40');
+                
+                // Set custom message based on status
+                if (member.status === 'pending') {
+                    msgText.textContent = 'Menunggu konfirmasi admin. Kartu digital belum dapat dicetak.';
+                    msgContainer.className = 'mb-4 p-4 border rounded-xl text-sm font-semibold flex items-center gap-3 bg-blue-50 border-blue-200 text-blue-800';
+                } else if (member.status === 'inactive') {
+                    msgText.textContent = 'Member sudah tidak aktif. Akses kartu digital telah dicabut.';
+                    msgContainer.className = 'mb-4 p-4 border rounded-xl text-sm font-semibold flex items-center gap-3 bg-red-50 border-red-200 text-red-800';
+                } else if (member.status === 'rejected') {
+                    msgText.textContent = 'Pendaftaran ditolak. Kartu digital tidak tersedia.';
+                    msgContainer.className = 'mb-4 p-4 border rounded-xl text-sm font-semibold flex items-center gap-3 bg-red-50 border-red-200 text-red-800';
+                } else {
+                    msgText.textContent = 'Kartu digital belum dapat di-generate. Status keanggotaan harus "Registered".';
+                    msgContainer.className = 'mb-4 p-4 border rounded-xl text-sm font-semibold flex items-center gap-3 bg-amber-50 border-amber-200 text-amber-800';
+                }
+            }
+            
+            // Card front preview - Photo
+            if (member.image) {
+                document.getElementById('cardPhotoImg').src = '/storage/' + member.image;
+                document.getElementById('cardPhotoImg').classList.remove('hidden');
+                document.getElementById('cardPhotoFallback').classList.add('hidden');
+            } else {
+                document.getElementById('cardPhotoImg').classList.add('hidden');
+                document.getElementById('cardPhotoFallback').classList.remove('hidden');
+                document.getElementById('cardPhotoFallback').textContent = member.name.charAt(0).toUpperCase();
+            }
+            
+            // Card front QR (loaded instantly from pre-generated base64)
+            document.getElementById('cardFrontQr').src = member.qr_base64;
+            
+            // Card data
             document.getElementById('cardBadge').textContent = member.badge;
             document.getElementById('cardName').textContent = member.name;
             document.getElementById('cardBirth').textContent = member.birth_place + ' / ' + member.birth_date;
             document.getElementById('cardAddress').textContent = member.address;
+
+            // Ensure we open Info tab by default
+            switchMemberTab('info');
+            
+            // Render History Timeline
+            const timelineContainer = document.getElementById('detailHistoryTimeline');
+            timelineContainer.innerHTML = '';
+            
+            if (member.logs && member.logs.length > 0) {
+                // Backend is ascending. To show newest at the top, reverse the array.
+                const sortedLogs = [...member.logs].reverse();
+                
+                sortedLogs.forEach(log => {
+                    const item = document.createElement('div');
+                    item.className = 'relative pl-8';
+                    item.innerHTML = `
+                        <!-- Red Dot -->
+                        <div class="absolute w-4 h-4 bg-red-600 rounded-full -left-[9px] top-1 border-4 border-white shadow-sm"></div>
+                        
+                        <!-- Content -->
+                        <div class="flex flex-col sm:flex-row sm:items-start gap-x-6 gap-y-2">
+                            <!-- Date & Time -->
+                            <div class="w-32 flex-shrink-0 pt-0.5">
+                                <p class="text-sm font-bold text-gray-900">${log.created_at_date}</p>
+                                <p class="text-xs font-medium text-gray-500">${log.created_at_time}</p>
+                            </div>
+                            
+                            <!-- Main Detail -->
+                            <div class="flex-1">
+                                <h5 class="text-sm font-bold text-gray-800 mb-2">${log.description}</h5>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-6 h-6 rounded-full bg-red-600 flex items-center justify-center text-[10px] text-white font-bold overflow-hidden">
+                                        ${log.actor_name.charAt(0).toUpperCase()}
+                                    </div>
+                                    <span class="text-xs text-gray-600 font-medium">${log.actor_name} ${log.actor_badge ? '(' + log.actor_badge + ')' : ''}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    timelineContainer.appendChild(item);
+                });
+            } else {
+                timelineContainer.innerHTML = '<p class="text-sm text-gray-500 ml-4">No history records found.</p>';
+            }
 
             const drawer = document.getElementById('memberDetailDrawer');
             const content = document.getElementById('drawerContent');
@@ -464,15 +630,20 @@
 
         // Close dropdown when clicking outside
         document.addEventListener('click', function(e) {
-            const container = document.getElementById('exportDropdownContainer');
-            if (container && !container.contains(e.target)) {
+            const exportContainer = document.getElementById('exportDropdownContainer');
+            if (exportContainer && !exportContainer.contains(e.target)) {
                 document.getElementById('exportDropdown').classList.add('hidden');
+            }
+
+            const sortContainer = document.getElementById('sortDropdownContainer');
+            if (sortContainer && !sortContainer.contains(e.target)) {
+                document.getElementById('sortDropdown').classList.add('hidden');
             }
         });
     </script>
 
     <!-- Member Detail Off-Canvas Modal -->
-    <div id="memberDetailDrawer" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm transition-opacity">
+    <div id="memberDetailDrawer" onclick="if(event.target === this) closeMemberDetail()" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm transition-opacity">
         <div class="fixed inset-y-0 right-0 w-full max-w-2xl bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col" id="drawerContent">
             <!-- Header -->
             <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white z-10 sticky top-0">
@@ -484,19 +655,19 @@
                     </div>
                     <p class="text-xs text-gray-400 mt-2" id="detailAddedInfo">Added by ...</p>
                 </div>
-                <button type="button" onclick="closeMemberDetail()" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors absolute top-4 right-4">
+                <button type="button" onclick="closeMemberDetail()" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors absolute top-4 right-4 cursor-pointer">
                     <x-heroicon-o-x-mark class="w-6 h-6" />
                 </button>
             </div>
             
             <!-- Tabs -->
             <div class="px-6 border-b border-gray-100 flex gap-6 bg-white sticky top-[120px] z-10">
-                <button class="py-3 text-sm font-bold text-primary-600 border-b-2 border-primary-600">Information</button>
-                <button class="py-3 text-sm font-medium text-gray-500 hover:text-gray-700">History</button>
+                <button type="button" onclick="switchMemberTab('info')" id="tabInfoBtn" class="py-3 text-sm font-bold text-primary-600 border-b-2 border-primary-600">Information</button>
+                <button type="button" onclick="switchMemberTab('history')" id="tabHistoryBtn" class="py-3 text-sm font-medium text-gray-500 hover:text-gray-700">History</button>
             </div>
 
             <!-- Body -->
-            <div class="p-6 overflow-y-auto flex-1 bg-gray-50/50">
+            <div class="p-6 overflow-y-auto flex-1 bg-gray-50/50" id="tabInfoContent">
                 <h4 class="text-base font-bold text-gray-800 mb-4">User Information</h4>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
@@ -543,49 +714,107 @@
                     </div>
                     <div>
                         <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Image of Signature</p>
-                        <p class="font-bold text-gray-900 text-sm" id="detailSign">-</p>
+                        <div id="detailSignContainer">
+                            <p class="font-bold text-gray-900 text-sm" id="detailSign">-</p>
+                            <img id="detailSignImage" src="" alt="Signature" class="hidden mt-1 max-w-[120px] max-h-[60px] border border-gray-200 rounded bg-white p-1">
+                        </div>
                     </div>
                 </div>
 
+                <!-- Action Buttons -->
                 <hr class="border-gray-200 mb-6">
-                <h4 class="text-base font-bold text-gray-800 mb-4">Card Preview</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Card Front Preview Mockup -->
-                    <div class="border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden p-4 relative h-48 flex items-center justify-center">
+                <div class="flex items-center gap-3 mb-8">
+                    <button type="button" onclick="openEditMemberModal()" class="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-primary-600/20 active:scale-95 cursor-pointer">
+                        <x-heroicon-o-pencil-square class="w-4 h-4" />
+                        <span>Edit Member</span>
+                    </button>
+                </div>
+
+                <!-- Card Preview + Download -->
+                <hr class="border-gray-200 mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h4 class="text-base font-bold text-gray-800">Card Preview</h4>
+                    <a id="downloadCardBtn" href="#" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-lg shadow-emerald-600/20 active:scale-95 no-underline">
+                        <x-heroicon-o-arrow-down-tray class="w-4 h-4" />
+                        <span>Unduh Kartu Digital</span>
+                    </a>
+                </div>
+                
+                <div id="cardNotRegisteredMsg" class="hidden mb-4 p-4 border rounded-xl text-sm font-semibold flex items-center gap-3 bg-amber-50 border-amber-200 text-amber-800">
+                    <x-heroicon-o-exclamation-triangle class="w-5 h-5 flex-shrink-0" />
+                    <span id="cardNotRegisteredMsgText">Kartu digital belum dapat di-generate. Status keanggotaan harus "Registered".</span>
+                </div>
+
+                <div id="cardPreviewContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Card Front Preview -->
+                    <div class="border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden p-4 relative h-52 flex items-center justify-center">
                         <div class="relative z-10 w-full">
                             <div class="text-center mb-2">
-                                <p class="text-[10px] font-bold text-gray-800">KARTU ANGGOTA</p>
-                                <p class="text-xs font-bold text-primary-800">FSP LEM SPSI - KOTA BATAM</p>
+                                <p class="text-[10px] font-bold text-gray-800 leading-tight">KARTU ANGGOTA</p>
+                                <p class="text-[10px] font-bold text-orange-500 leading-tight">DEWAN PIMPINAN CABANG</p>
+                                <p class="text-xs font-bold text-gray-800 leading-tight">Federasi SP LEM SPSI - KOTA BATAM</p>
+                                <p class="text-[8px] font-bold text-gray-700 leading-tight">(DPC FSP LEM - SPSI - BTM)</p>
+                                <p class="text-[5px] text-gray-400 mt-0.5 leading-tight">(Branch Leader Executive Union Worker's Metal, Electronic and Machine Federation - All Indonesia Worker's Union)</p>
                             </div>
-                            <div class="flex gap-2">
-                                <div class="w-16 h-20 bg-red-600 rounded-sm"></div>
-                                <div class="flex-1">
-                                    <p class="text-[8px] font-bold">NO. KTA: <span id="cardBadge" class="text-blue-600"></span></p>
-                                    <div class="w-12 h-12 border border-gray-300 mt-1 bg-white"></div>
+                            <p class="text-[7px] font-bold mt-1 mb-1">NO. KTA: <span id="cardBadge" class="text-blue-600"></span></p>
+                            <div class="flex gap-2 items-start mt-1">
+                                <div class="flex-shrink-0">
+                                    <div class="w-14 h-[70px] bg-red-600 rounded-sm overflow-hidden" id="cardFrontPhoto">
+                                        <img id="cardPhotoImg" src="" class="w-full h-full object-cover hidden" alt="" style="image-rendering: auto;">
+                                        <div id="cardPhotoFallback" class="w-14 h-[70px] bg-red-600 flex items-center justify-center text-white font-bold text-lg"></div>
+                                    </div>
                                 </div>
-                                <div class="w-12 h-12 bg-blue-100 rounded-full flex-shrink-0"></div>
+                                <div class="flex-1 flex flex-col items-center justify-center">
+                                    <img id="cardFrontQr" src="" alt="QR" class="w-14 h-14 border border-gray-200 bg-white p-0.5 rounded" style="image-rendering: auto;">
+                                </div>
+                                <div class="flex-shrink-0 flex flex-col items-center">
+                                    <img src="{{ asset('logo_lem_spsi.jpg') }}" class="w-14 h-14 rounded-full object-contain" alt="Logo LEM SPSI" style="image-rendering: auto;">
+                                    <p class="text-[6px] text-center text-gray-500 mt-0.5 font-bold">SP LEM - SPSI</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Card Back Preview Mockup -->
-                    <div class="border border-gray-200 rounded-xl bg-white shadow-sm p-4 relative h-48 flex flex-col justify-between">
-                        <div class="flex justify-between items-center mb-2 border-b border-gray-100 pb-1">
-                            <div class="w-6 h-6 bg-blue-100 rounded-full"></div>
+
+                    <!-- Card Back Preview -->
+                    <div class="border border-gray-200 rounded-xl bg-white shadow-sm p-4 relative h-52 flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-1.5 border-b border-gray-100 pb-1">
+                            <img src="{{ asset('logo_lem_spsi.jpg') }}" class="w-6 h-6 rounded-full object-contain" alt="Logo LEM">
                             <div class="text-center">
                                 <p class="text-[8px] font-bold">PIMPINAN UNIT KERJA</p>
-                                <p class="text-[9px] font-bold">PT. SATNUSA PERSADA TBK</p>
+                                <p class="text-[8px] font-bold">SP LEM SPSI</p>
+                                <p class="text-[9px] font-bold">PT.SATNUSA PERSADA TBK</p>
                             </div>
-                            <div class="w-6 h-6 bg-red-100 rounded-full"></div>
+                            <img src="{{ asset('logo_kspsi.png') }}" class="w-6 h-6 rounded-full object-contain" alt="Logo KSPSI">
                         </div>
-                        <div class="text-[8px] space-y-1">
-                            <div class="flex"><div class="w-12">Nama</div><div>: <span id="cardName"></span></div></div>
-                            <div class="flex"><div class="w-12">Tempat/Tgl</div><div>: <span id="cardBirth"></span></div></div>
-                            <div class="flex"><div class="w-12">P.U.K</div><div>: PT. Satnusa Persada Tbk</div></div>
-                            <div class="flex"><div class="w-12">Alamat</div><div class="flex-1 truncate">: <span id="cardAddress"></span></div></div>
+                        <div class="text-[8px] space-y-0.5 flex-1">
+                            <div class="flex"><div class="w-14 font-semibold">Nama</div><div>: <span id="cardName"></span></div></div>
+                            <div class="flex"><div class="w-14 font-semibold">Tempat/Tgl</div><div>: <span id="cardBirth"></span></div></div>
+                            <div class="flex"><div class="w-14 font-semibold">P.U.K</div><div>: PT. Satnusa Persada Tbk</div></div>
+                            <div class="flex"><div class="w-14 font-semibold">Alamat</div><div class="flex-1 truncate">: <span id="cardAddress"></span></div></div>
                         </div>
-                        <div class="flex justify-between mt-2 pt-2 border-t border-gray-100">
-                            <div class="text-[8px] text-center"><p>Ketua</p><div class="h-6"></div><p>Miharso</p></div>
-                            <div class="text-[8px] text-center"><p>Sekretaris</p><div class="h-6"></div><p>Rizo Marko</p></div>
+                        <div class="flex justify-between mt-1 pt-1 border-t border-gray-100">
+                            <div class="text-[8px] text-center">
+                                <p class="font-semibold">Ketua</p>
+                                <div id="cardKetuaSign" class="h-6 flex items-center justify-center">
+                                    @if(isset($ketua) && $ketua->sign_image)
+                                        <img id="cardKetuaSignImg" src="{{ asset('storage/' . $ketua->sign_image) }}" class="max-h-5" alt="Tanda Tangan Ketua">
+                                    @else
+                                        <img id="cardKetuaSignImg" src="" class="max-h-5 hidden" alt="">
+                                    @endif
+                                </div>
+                                <p class="font-bold text-gray-800" id="cardKetuaName">{{ isset($ketua) ? $ketua->employee->name : '' }}</p>
+                            </div>
+                            <div class="text-[8px] text-center">
+                                <p class="font-semibold">Sekretaris</p>
+                                <div id="cardSekretarisSign" class="h-6 flex items-center justify-center">
+                                    @if(isset($sekretaris) && $sekretaris->sign_image)
+                                        <img id="cardSekretarisSignImg" src="{{ asset('storage/' . $sekretaris->sign_image) }}" class="max-h-5" alt="Tanda Tangan Sekretaris">
+                                    @else
+                                        <img id="cardSekretarisSignImg" src="" class="max-h-5 hidden" alt="">
+                                    @endif
+                                </div>
+                                <p class="font-bold text-gray-800" id="cardSekretarisName">{{ isset($sekretaris) ? $sekretaris->employee->name : '' }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -594,6 +823,180 @@
                     <span>Back View</span>
                 </div>
             </div>
+
+            <!-- History Tab Content -->
+            <div class="p-6 overflow-y-auto flex-1 bg-gray-50/50 hidden" id="tabHistoryContent">
+                <div class="relative border-l-2 border-red-500 ml-4 py-2 space-y-8" id="detailHistoryTimeline">
+                    <!-- Logs will be injected here via JS -->
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- Edit Member Popup Modal -->
+    <div id="editMemberModal" onclick="if(event.target === this) closeEditMemberModal()" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-gray-900/60 backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform scale-95 opacity-0 transition-all duration-200" id="editModalContent">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800">Edit Member</h3>
+                    <p class="text-xs text-gray-500 mt-0.5" id="editModalSubtitle">-</p>
+                </div>
+                <button type="button" onclick="closeEditMemberModal()" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors cursor-pointer">
+                    <x-heroicon-o-x-mark class="w-5 h-5" />
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <form id="editMemberForm" method="POST" enctype="multipart/form-data" class="form-with-loading">
+                @csrf
+                @method('PUT')
+                <div class="p-6 space-y-5">
+                    <!-- Role Selector -->
+                    <div>
+                        <label for="editRole" class="block text-sm font-bold text-gray-700 mb-2">Role <span class="text-red-500">*</span></label>
+                        <select id="editRole" name="member_role_id" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
+                            @foreach($memberRoles as $role)
+                                <option value="{{ $role->id }}" 
+                                    data-is-sign="{{ $role->is_sign ? '1' : '0' }}"
+                                    data-is-single="{{ $role->is_single ? '1' : '0' }}">
+                                    {{ $role->name }}
+                                    @if($role->is_sign) — Tanda tangan muncul di kartu @endif
+                                    @if($role->is_single) (Maks. 1 orang) @endif
+                                </option>
+                            @endforeach
+                        </select>
+                        <p class="text-[11px] text-gray-400 mt-1.5" id="editRoleHint">Pilih role untuk member ini.</p>
+                    </div>
+
+                    <!-- Signature Upload -->
+                    <div id="signatureUploadSection">
+                        <label for="editSignImage" class="block text-sm font-bold text-gray-700 mb-2">Upload Tanda Tangan</label>
+                        
+                        <!-- Current Signature Preview -->
+                        <div id="currentSignPreview" class="hidden mb-3 p-3 bg-gray-50 border border-gray-200 rounded-xl">
+                            <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Tanda Tangan Saat Ini</p>
+                            <img id="currentSignImg" src="" alt="Current Signature" class="max-w-[140px] max-h-[70px] border border-gray-200 rounded bg-white p-1">
+                        </div>
+
+                        <input type="file" id="editSignImage" name="sign_image" accept="image/png,image/jpeg" class="block w-full text-xs text-gray-500
+                            file:mr-3 file:py-2.5 file:px-4
+                            file:rounded-xl file:border-0
+                            file:text-xs file:font-bold
+                            file:bg-primary-50 file:text-primary-800
+                            hover:file:bg-primary-100
+                            border border-gray-200 bg-gray-50 rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" />
+                        <p class="text-[11px] text-gray-400 mt-1.5">Format PNG/JPG, maksimal 2MB. Tanda tangan akan muncul pada kartu digital.</p>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="px-6 py-4 border-t border-gray-100 bg-gray-50/80 flex items-center justify-end gap-3">
+                    <button type="button" onclick="closeEditMemberModal()" class="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-6 py-2.5 text-sm font-bold bg-primary-600 hover:bg-primary-700 text-white rounded-xl shadow-lg shadow-primary-600/20 transition-all flex items-center gap-2 cursor-pointer">
+                        <span class="btn-text">Simpan Perubahan</span>
+                        <svg class="btn-spinner animate-spin h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ===== Edit Member Modal =====
+        let currentMemberData = null;
+
+        function openEditMemberModal() {
+            if (!currentMemberData) return;
+
+            // Set form action
+            document.getElementById('editMemberForm').action = currentMemberData.update_url;
+            document.getElementById('editModalSubtitle').textContent = currentMemberData.name + ' — ' + currentMemberData.badge;
+            
+            // Set current role
+            document.getElementById('editRole').value = currentMemberData.member_role_id;
+            document.getElementById('editSignImage').value = '';
+            
+            // Show current signature if exists
+            if (currentMemberData.sign_image) {
+                document.getElementById('currentSignImg').src = '/storage/' + currentMemberData.sign_image;
+                document.getElementById('currentSignPreview').classList.remove('hidden');
+            } else {
+                document.getElementById('currentSignPreview').classList.add('hidden');
+            }
+            
+            updateRoleHint();
+
+            // Show modal with animation
+            const modal = document.getElementById('editMemberModal');
+            const content = document.getElementById('editModalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeEditMemberModal() {
+            const modal = document.getElementById('editMemberModal');
+            const content = document.getElementById('editModalContent');
+            content.classList.add('scale-95', 'opacity-0');
+            content.classList.remove('scale-100', 'opacity-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        function updateRoleHint() {
+            const select = document.getElementById('editRole');
+            
+            // If the current member's role isn't in the options (e.g. 'Member' role was filtered out),
+            // fallback to the first available option to prevent JS crash.
+            if (select.selectedIndex === -1 && select.options.length > 0) {
+                select.selectedIndex = 0;
+            }
+            
+            const selected = select.options[select.selectedIndex];
+            if (!selected) return;
+            
+            const isSign = selected.dataset.isSign === '1';
+            const isSingle = selected.dataset.isSingle === '1';
+            const hint = document.getElementById('editRoleHint');
+            
+            let hintText = '';
+            if (isSign && isSingle) {
+                hintText = '⚠️ Role ini hanya bisa dipegang 1 orang. Tanda tangan akan muncul di kartu digital.';
+            } else if (isSingle) {
+                hintText = '⚠️ Role ini hanya bisa dipegang 1 orang.';
+            } else if (isSign) {
+                hintText = 'Tanda tangan role ini akan muncul di kartu digital.';
+            } else {
+                hintText = 'Role standar anggota SPSI.';
+            }
+            hint.textContent = hintText;
+        }
+
+        // Update hint when role changes
+        document.addEventListener('DOMContentLoaded', function() {
+            const roleSelect = document.getElementById('editRole');
+            if (roleSelect) {
+                roleSelect.addEventListener('change', updateRoleHint);
+            }
+        });
+
+        // Close edit modal on Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const editModal = document.getElementById('editMemberModal');
+                if (editModal && !editModal.classList.contains('hidden')) {
+                    closeEditMemberModal();
+                }
+            }
+        });
+    </script>
 </x-app-layout>

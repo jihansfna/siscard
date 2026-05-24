@@ -107,6 +107,44 @@
                                         <x-heroicon-o-pencil-square class="w-5 h-5" />
                                     </button>
 
+                                    <!-- Set Inactive Button (only if active) -->
+                                    @if(!$employee->end_date || $employee->end_date->gt(now()->startOfDay()))
+                                        <button type="button" onclick="document.getElementById('inactiveEmployeeModal-{{ $employee->id }}').classList.remove('hidden'); document.getElementById('inactiveEmployeeModal-{{ $employee->id }}').classList.add('flex')" class="inline-flex p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Set Inactive">
+                                            <x-heroicon-o-no-symbol class="w-5 h-5" />
+                                        </button>
+
+                                        <!-- Inactive Confirmation Modal -->
+                                        <div id="inactiveEmployeeModal-{{ $employee->id }}" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/60 backdrop-blur-sm text-left">
+                                            <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col transform scale-100">
+                                                <div class="p-6">
+                                                    <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-4 mx-auto">
+                                                        <x-heroicon-o-exclamation-triangle class="w-6 h-6 text-red-600" />
+                                                    </div>
+                                                    <h3 class="text-lg font-bold text-gray-900 text-center mb-2">Nonaktifkan Employee?</h3>
+                                                    <p class="text-sm text-gray-500 text-center">
+                                                        Apakah Anda yakin ingin menonaktifkan <strong>{{ $employee->name }}</strong>? Akses ke sistem akan dicabut dan status member otomatis menjadi Inactive.
+                                                    </p>
+                                                </div>
+                                                <div class="px-6 py-4 bg-gray-50 flex justify-center gap-3">
+                                                    <button type="button" onclick="document.getElementById('inactiveEmployeeModal-{{ $employee->id }}').classList.add('hidden'); document.getElementById('inactiveEmployeeModal-{{ $employee->id }}').classList.remove('flex')" class="px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-xl transition-all">
+                                                        Batal
+                                                    </button>
+                                                    <form action="{{ route('dashboard.employees.set_inactive', $employee->id) }}" method="POST" class="m-0 form-with-loading">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit" class="px-4 py-2 text-sm font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl shadow-lg shadow-red-600/20 transition-all flex items-center gap-2">
+                                                            <span class="btn-text">Ya, Nonaktifkan</span>
+                                                            <svg class="btn-spinner animate-spin h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                            </svg>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+
                                     <!-- Edit Employee Modal -->
                                     <div id="editEmployeeModal-{{ $employee->id }}" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 backdrop-blur-sm text-left">
                                         <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden max-h-[90vh] flex flex-col">

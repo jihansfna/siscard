@@ -1,7 +1,5 @@
 <?php
 
-// database/migrations/2026_05_06_000004_create_member_logs_table.php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,20 +12,22 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('member_id')
+                ->nullable() // Can be nullable if it's a general member action where member was deleted
                 ->constrained()
-                ->cascadeOnDelete();
+                ->nullOnDelete();
 
-            $table->enum('status', [
-                'pending',
-                'active',
-                'inactive',
-                'rejected'
-            ]);
+            $table->foreignId('actor_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+
+            $table->string('activity'); // e.g., 'created', 'updated', 'status_changed', 'deleted', 'exported'
+
+            $table->string('status')->nullable(); // new status if applicable
+
+            $table->text('description')->nullable(); // detail description
 
             $table->text('remark')
-                ->nullable();
-
-            $table->string('created_by')
                 ->nullable();
 
             $table->timestamps();

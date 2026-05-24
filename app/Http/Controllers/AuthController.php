@@ -124,7 +124,7 @@ class AuthController extends Controller
         if ($user->role !== 'admin') {
             $employee = Employee::where('badge', $user->badge)->first();
             if ($employee && $employee->end_date && Carbon::parse($employee->end_date)->lt(now()->startOfDay())) {
-                $error = ['badge' => 'Akun Anda sudah dinonaktifkan karena masa kerja telah berakhir. Silakan hubungi HRD.'];
+                $error = ['badge' => 'Status akun Anda saat ini adalah Tidak Aktif (Inactive). Silakan hubungi HRD untuk informasi lebih lanjut.'];
                 if ($isApi) {
                     return response()->json(['message' => $error['badge']], 403);
                 }

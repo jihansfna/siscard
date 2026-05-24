@@ -47,4 +47,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the activity logs performed by the user.
+     */
+    public function memberLogs()
+    {
+        return $this->hasMany(MemberLog::class, 'actor_id');
+    }
 }

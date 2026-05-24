@@ -13,6 +13,8 @@
     --color-primary-900: #312e81;
 }
 
+@custom-variant dark (&:is(.dark *));
+
 @layer base {
     body {
         @apply antialiased text-gray-900 bg-gray-50;

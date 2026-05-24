@@ -106,20 +106,17 @@
 
                 <div class="mt-6 pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div class="flex items-center gap-4">
-                        <img id="qrCodeImage" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ Auth::user()->badge }}" alt="QR Code" class="w-20 h-20 rounded border border-gray-200">
+                        <img id="qrCodeImage" src="{{ route('qr.image', ['data' => ($member ? url('/verify/' . \App\Http\Controllers\CardController::encryptToken($member->uuid)) : Auth::user()->badge), 'size' => 400]) }}" alt="QR Code" class="w-20 h-20 rounded border border-gray-200" style="image-rendering: auto;">
                         <div>
                             <p class="text-sm font-semibold text-gray-800">QR Code Saya</p>
-                            <p class="text-xs text-gray-500">Gunakan QR ini untuk identifikasi.</p>
+                            <p class="text-xs text-gray-500">Scan QR untuk verifikasi keanggotaan SPSI.</p>
                         </div>
                     </div>
-                    <button type="button" 
-                        data-download-card 
-                        data-qr-value="{{ Auth::user()->badge }}" 
-                        data-qr-filename="Member_Card_{{ Auth::user()->badge }}.svg"
-                        class="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors shadow-sm shadow-primary-600/20">
-                        <span>Download Card</span>
-                        <x-heroicon-o-credit-card class="w-4 h-4" />
-                    </button>
+                    <a href="{{ route('user.card.download') }}" 
+                        class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors shadow-sm shadow-emerald-600/20 no-underline">
+                        <x-heroicon-o-arrow-down-tray class="w-4 h-4" />
+                        <span>Unduh Kartu Digital</span>
+                    </a>
                 </div>
             </div>
         </div>

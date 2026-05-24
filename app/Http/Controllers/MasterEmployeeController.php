@@ -3,13 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Employee;
+use App\Models\User;
+use App\Models\Member;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class MasterEmployeeController extends Controller
 {
     public function index(Request $request)
     {
         $search = $request->query('q');
-        $employees = \App\Models\Employee::when($search, function ($query, $search) {
+        $employees = Employee::when($search, function ($query, $search) {
             return $query->where('name', 'like', "%{$search}%")
                          ->orWhere('badge', 'like', "%{$search}%");
         })->orderBy('created_at', 'asc')->paginate(10);
@@ -42,14 +47,14 @@ class MasterEmployeeController extends Controller
             $validated['image'] = $request->file('image')->store('employees', 'public');
         }
 
-        \App\Models\Employee::create($validated);
+        Employee::create($validated);
 
         // Create associated user account with default password
-        \App\Models\User::firstOrCreate(
+        User::firstOrCreate(
             ['badge' => $validated['badge']],
             [
                 'name' => $validated['name'],
-                'password' => \Illuminate\Support\Facades\Hash::make('P4ssword'),
+                'password' => Hash::make('P4ssword'),
                 'role' => 'user'
             ]
         );
@@ -58,12 +63,12 @@ class MasterEmployeeController extends Controller
             ->with('success', 'Employee berhasil ditambahkan.');
     }
 
-    public function edit(\App\Models\Employee $employee)
+    public function edit(Employee $employee)
     {
         return view('dashboard.employees.edit', compact('employee'));
     }
 
-    public function update(Request $request, \App\Models\Employee $employee)
+    public function update(Request $request, Employee $employee)
     {
         $validated = $request->validate([
             'badge' => 'required|string|unique:employees,badge,' . $employee->id,
@@ -81,7 +86,7 @@ class MasterEmployeeController extends Controller
 
         if ($request->hasFile('image')) {
             if ($employee->image) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($employee->image);
+                Storage::disk('public')->delete($employee->image);
             }
             $validated['image'] = $request->file('image')->store('employees', 'public');
         }
@@ -90,7 +95,7 @@ class MasterEmployeeController extends Controller
         $employee->update($validated);
 
         // Update associated user account if it exists
-        $user = \App\Models\User::where('badge', $oldBadge)->first();
+        $user = User::where('badge', $oldBadge)->first();
         if ($user) {
             $user->update([
                 'badge' => $validated['badge'],
@@ -102,13 +107,13 @@ class MasterEmployeeController extends Controller
             ->with('success', 'Data Employee berhasil diperbarui.');
     }
 
-    public function destroy(\App\Models\Employee $employee)
+    public function destroy(Employee $employee)
     {
         $badge = $employee->badge;
         $employee->delete();
         
         // Also delete the associated user account
-        \App\Models\User::where('badge', $badge)->delete();
+        User::where('badge', $badge)->delete();
 
         return redirect()->route('dashboard.employees.index')
             ->with('success', 'Data Employee berhasil dihapus.');
@@ -121,16 +126,31 @@ class MasterEmployeeController extends Controller
             'ids.*' => 'exists:employees,id',
         ]);
 
-        $employees = \App\Models\Employee::whereIn('id', $request->ids)->get();
+        $employees = Employee::whereIn('id', $request->ids)->get();
         $badges = $employees->pluck('badge')->toArray();
 
         // Delete associated user accounts
-        \App\Models\User::whereIn('badge', $badges)->delete();
+        User::whereIn('badge', $badges)->delete();
 
         // Delete the employees
-        \App\Models\Employee::whereIn('id', $request->ids)->delete();
+        Employee::whereIn('id', $request->ids)->delete();
 
         return redirect()->route('dashboard.employees.index')
             ->with('success', count($request->ids) . ' data employee berhasil dihapus.');
+    }
+
+    public function setInactive(Employee $employee)
+    {
+        // 1. Set employee end_date to yesterday so they become inactive immediately
+        $employee->update(['end_date' => now()->subDay()->startOfDay()]);
+
+        // 2. Set Member status to inactive
+        $member = Member::where('employee_id', $employee->id)->first();
+        if ($member) {
+            $member->update(['status' => 'inactive']);
+        }
+
+        return redirect()->route('dashboard.employees.index')
+            ->with('success', 'Employee ' . $employee->name . ' telah dinonaktifkan dan akses login dicabut.');
     }
 }

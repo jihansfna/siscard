@@ -6,7 +6,7 @@ $adminMenu = [
     ['name' => 'Master Employees', 'href' => route('dashboard.employees.index'), 'icon' => 'user-group'],
     ['name' => 'Members', 'href' => route('dashboard.members'), 'icon' => 'users'],
     ['name' => 'Feedbacks', 'href' => route('dashboard.feedbacks'), 'icon' => 'chat-bubble-left-ellipsis'],
-    ['name' => 'History', 'href' => route('dashboard.history'), 'icon' => 'clock'],
+    // ['name' => 'History', 'href' => route('dashboard.history'), 'icon' => 'clock'],
 ];
 
 $userMenu = [
@@ -18,12 +18,12 @@ $sidebarLabel = $role === 'admin' ? 'Dashboard Admin' : 'Member Area';
 $currentUrl = request()->url();
 @endphp
 
-<aside id="sidebarMenu" class="w-64 flex-shrink-0 flex flex-col border-r border-gray-200 bg-white shadow-xl shadow-gray-200/50 min-h-screen fixed inset-y-0 left-0 z-50 h-full transition-transform duration-300 transform -translate-x-full md:translate-x-0">
+<aside id="sidebarMenu" class="w-64 flex-shrink-0 flex flex-col border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1A1A1A] shadow-xl shadow-gray-200/50 dark:shadow-none min-h-screen fixed inset-y-0 left-0 z-50 h-full transition-all duration-300 transform -translate-x-full md:translate-x-0">
     <div>
-        <div class="border-b border-gray-100 p-6 flex items-center justify-between">
+        <div class="border-b border-gray-100 dark:border-gray-800 p-6 flex items-center justify-between">
             <div>
-                <h2 class="text-2xl font-bold text-primary-800 tracking-tight">SPSI</h2>
-                <span class="block mt-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ $sidebarLabel }}</span>
+                <h2 class="text-2xl font-bold text-primary-800 dark:text-primary-400 tracking-tight">SPSI</h2>
+                <span class="block mt-1 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ $sidebarLabel }}</span>
             </div>
             <!-- Mobile Close Button -->
             <button type="button" onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors focus:outline-none cursor-pointer" aria-label="Tutup Menu">
