@@ -13,9 +13,9 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // 1. Total Anggota (Registered)
-        $totalAnggota = Member::where('status', 'registered')->count();
-        $totalAnggotaThisMonth = Member::where('status', 'registered')
+        // 1. Total Members (Registered)
+        $totalMembers = Member::where('status', 'registered')->count();
+        $totalMembersThisMonth = Member::where('status', 'registered')
             ->whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', Carbon::now()->year)
             ->count();
@@ -30,12 +30,12 @@ class DashboardController extends Controller
             ->count();
             
         $downloadsDiff = $downloadsToday - $downloadsYesterday;
-        $downloadsDiffText = $downloadsDiff >= 0 ? "+{$downloadsDiff} dari kemarin" : "{$downloadsDiff} dari kemarin";
+        $downloadsDiffText = $downloadsDiff >= 0 ? "+{$downloadsDiff} from yesterday" : "{$downloadsDiff} from yesterday";
 
-        // 3. Pending Konfirmasi
+        // 3. Pending Verification
         $pendingMembers = Member::where('status', 'pending')->count();
 
-        // 4. Saran Masuk
+        // 4. Feedbacks Received
         $totalFeedbacks = Feedback::count();
         $pendingFeedbacks = Feedback::where('status', 'pending')->count();
 
@@ -61,25 +61,25 @@ class DashboardController extends Controller
             'average' => count(array_filter($scansPerDay)) > 0 ? round(array_sum($scansPerDay) / count(array_filter($scansPerDay)), 1) : 0
         ];
 
-        // 6. Status Anggota (Donut Chart)
+        // 6. Member Status (Donut Chart)
         $allMembers = Member::count();
         if ($allMembers > 0) {
-            $aktif = round((Member::where('status', 'registered')->count() / $allMembers) * 100);
-            $tidakAktif = round((Member::where('status', 'inactive')->count() / $allMembers) * 100);
+            $active = round((Member::where('status', 'registered')->count() / $allMembers) * 100);
+            $inactive = round((Member::where('status', 'inactive')->count() / $allMembers) * 100);
             // using rejected/pending for the rest
-            $keluar = round((Member::whereIn('status', ['rejected', 'pending'])->count() / $allMembers) * 100);
+            $exited = round((Member::whereIn('status', ['rejected', 'pending'])->count() / $allMembers) * 100);
         } else {
-            $aktif = 0; $tidakAktif = 0; $keluar = 0;
+            $active = 0; $inactive = 0; $exited = 0;
         }
 
         $donutData = [
-            'aktif' => $aktif,
-            'tidakAktif' => $tidakAktif,
-            'keluar' => $keluar
+            'active' => $active,
+            'inactive' => $inactive,
+            'exited' => $exited
         ];
 
         return view('dashboard', compact(
-            'totalAnggota', 'totalAnggotaThisMonth',
+            'totalMembers', 'totalMembersThisMonth',
             'downloadsToday', 'downloadsDiffText',
             'pendingMembers',
             'totalFeedbacks', 'pendingFeedbacks',

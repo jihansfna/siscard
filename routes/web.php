@@ -53,6 +53,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('dashboard')->group(function (
     Route::get('/members', [\App\Http\Controllers\MemberController::class, 'index'])->name('dashboard.members');
     Route::post('/members', [\App\Http\Controllers\MemberController::class, 'store'])->name('dashboard.members.store');
     Route::put('/members/{member}', [\App\Http\Controllers\MemberController::class, 'update'])->name('dashboard.members.update');
+    Route::get('/members/{member}/logs', [\App\Http\Controllers\MemberController::class, 'logs'])->name('dashboard.members.logs');
 
     // Card download (admin)
     Route::get('/members/{id}/card/download', [\App\Http\Controllers\CardController::class, 'download'])->name('dashboard.members.card.download');

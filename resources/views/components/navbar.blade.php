@@ -1,16 +1,15 @@
 @props(['activePage' => 'Dashboard', 'adminName' => 'Admin'])
 
-<header class="flex items-center justify-between gap-4 min-h-[4rem] px-6 py-3 bg-white dark:bg-[#1A1A1A] border-b-2 border-primary-800 shadow-xl shadow-primary-900/10 z-30 sticky top-0 transition-colors">
+<header class="flex items-center justify-between gap-4 min-h-[4rem] px-6 py-3 bg-white dark:bg-[#1A1A1A] border-b-2 border-primary-800 z-30 sticky top-0 transition-colors">
     <div class="flex items-center gap-3">
         @if(Auth::user() && Auth::user()->role === 'admin')
             <!-- Mobile Menu Toggle Button -->
-            <button type="button" onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-xl text-primary-800 hover:bg-primary-50 hover:text-primary-950 transition-colors focus:outline-none cursor-pointer" aria-label="Buka Menu">
+            <button type="button" onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-xl text-primary-800 hover:bg-primary-50 hover:text-primary-950 transition-colors focus:outline-none cursor-pointer" aria-label="Open Menu">
                 <x-heroicon-o-bars-3 class="w-6 h-6" />
             </button>
         @endif
         <div>
-            <span class="block text-[0.7rem] font-extrabold text-gray-500 uppercase tracking-widest leading-none">SISCARD</span>
-            <h1 class="mt-1 text-lg font-extrabold text-primary-800 leading-none">{{ $activePage }}</h1>
+            <h1 class="text-lg font-extrabold text-primary-800 dark:text-primary-400 leading-none">{{ $activePage === 'Dashboard' ? 'Dashboard Overview' : $activePage }}</h1>
         </div>
     </div>
 
@@ -28,8 +27,8 @@
         </button>
 
         <div class="relative inline-block text-left" id="profileDropdownContainer">
-        <button type="button" onclick="toggleProfileDropdown()" class="flex items-center gap-3 text-sm font-bold text-gray-600 hover:text-primary-800 transition-all focus:outline-none py-1.5 px-2.5 rounded-xl hover:bg-gray-50/80 active:scale-95 duration-200">
-            <div class="w-9 h-9 rounded-full overflow-hidden flex-shrink-0 bg-gradient-to-br from-primary-800 to-primary-500 text-white font-extrabold shadow-md flex items-center justify-center border border-gray-100">
+        <button type="button" onclick="toggleProfileDropdown()" class="flex items-center gap-3 text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-800 dark:hover:text-primary-400 transition-all focus:outline-none py-1.5 px-2.5 rounded-xl hover:bg-gray-50/80 dark:hover:bg-[#242424] active:scale-95 duration-200">
+            <div class="w-9 h-9 rounded-full overflow-hidden flex-shrink-0 bg-gradient-to-br from-primary-800 to-primary-500 text-white font-extrabold shadow-md flex items-center justify-center border border-gray-100 dark:border-[#242424]">
                 @if($employee && $employee->image)
                     <img src="{{ asset('storage/' . $employee->image) }}" alt="Profile" class="w-full h-full object-cover">
                 @else
@@ -37,25 +36,25 @@
                 @endif
             </div>
             <span class="hidden sm:block text-left">
-                <span class="block text-[10px] text-gray-400 font-bold uppercase tracking-wider leading-none mb-1">{{ Auth::user()->role === 'admin' ? 'Administrator' : 'Employee' }}</span>
-                <span class="block font-extrabold text-gray-800 leading-none">{{ $adminName }}</span>
+                <span class="block text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider leading-none mb-1">{{ Auth::user()->role === 'admin' ? 'Administrator' : 'Employee' }}</span>
+                <span class="block font-extrabold text-gray-800 dark:text-white leading-none">{{ $adminName }}</span>
             </span>
             <x-heroicon-o-chevron-down class="w-4 h-4 text-gray-400 transition-transform duration-300" id="profileChevron" />
         </button>
 
         <!-- Dropdown Menu -->
-        <div id="profileDropdownMenu" class="absolute right-0 mt-2 w-48 rounded-2xl bg-white border border-gray-100 shadow-xl py-2 hidden origin-top-right transform scale-95 opacity-0 transition-all duration-150 ease-out z-50">
+        <div id="profileDropdownMenu" class="absolute right-0 mt-2 w-48 rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-100 dark:border-gray-700/50 shadow-xl py-2 hidden origin-top-right transform scale-95 opacity-0 transition-all duration-150 ease-out z-50">
             <!-- Signed in info for small screens -->
-            <div class="px-4 py-2 border-b border-gray-100 sm:hidden">
-                <p class="text-[0.65rem] font-bold text-gray-400 uppercase tracking-wider">Signed in as</p>
-                <p class="text-sm font-bold text-gray-800 truncate">{{ $adminName }}</p>
+            <div class="px-4 py-2 border-b border-gray-100 dark:border-gray-700/50 sm:hidden">
+                <p class="text-[0.65rem] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Signed in as</p>
+                <p class="text-sm font-bold text-gray-800 dark:text-white truncate">{{ $adminName }}</p>
             </div>
             
 
 
             <form method="POST" action="{{ route('logout') }}" class="form-with-loading m-0">
                 @csrf
-                <button type="submit" class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-bold text-red-600 hover:bg-red-50 transition-all text-left">
+                <button type="submit" class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-all text-left">
                     <x-heroicon-o-arrow-right-on-rectangle class="w-4.5 h-4.5" />
                     <span class="btn-text">Logout</span>
                     <svg class="btn-spinner animate-spin h-4 w-4 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

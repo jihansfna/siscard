@@ -52,7 +52,7 @@ class CardController extends Controller
         if ($member->status !== 'registered') {
             return response()->json([
                 'success' => false,
-                'message' => 'Kartu digital belum dapat di-generate. Status keanggotaan belum "Registered".'
+                'message' => 'Digital card cannot be generated yet. Membership status is not "Registered".'
             ], 422);
         }
 
@@ -72,7 +72,7 @@ class CardController extends Controller
         $member = Member::with(['employee', 'role'])->findOrFail($id);
 
         if ($member->status !== 'registered') {
-            return back()->with('error', 'Kartu digital belum dapat diunduh. Status keanggotaan belum "Registered".');
+            return back()->with('error', 'Digital card cannot be downloaded yet. Membership status is not "Registered".');
         }
 
         $cardData = $this->buildCardData($member);
@@ -101,7 +101,7 @@ class CardController extends Controller
         $employee = Employee::where('badge', $user->badge)->first();
 
         if (!$employee) {
-            return back()->with('error', 'Data employee tidak ditemukan.');
+            return back()->with('error', 'Employee data not found.');
         }
 
         $member = Member::with(['employee', 'role'])
@@ -109,11 +109,11 @@ class CardController extends Controller
             ->first();
 
         if (!$member) {
-            return back()->with('error', 'Anda belum terdaftar sebagai member SPSI.');
+            return back()->with('error', 'You are not registered as an SPSI member.');
         }
 
         if ($member->status !== 'registered') {
-            return back()->with('error', 'Kartu digital belum dapat diunduh. Status keanggotaan belum "Registered".');
+            return back()->with('error', 'Digital card cannot be downloaded yet. Membership status is not "Registered".');
         }
 
         $cardData = $this->buildCardData($member);
@@ -146,7 +146,7 @@ class CardController extends Controller
         if (!$uuid) {
             return view('card.verify', [
                 'verified' => false,
-                'message' => 'Data anggota tidak ditemukan. Token verifikasi tidak valid atau sudah kedaluwarsa.',
+                'message' => 'Member data not found. Verification token is invalid or expired.',
             ]);
         }
 
@@ -157,7 +157,7 @@ class CardController extends Controller
         if (!$member) {
             return view('card.verify', [
                 'verified' => false,
-                'message' => 'Data anggota tidak ditemukan.',
+                'message' => 'Member data not found.',
             ]);
         }
 
@@ -212,7 +212,7 @@ class CardController extends Controller
         $uuid = self::decryptToken($token);
 
         if (!$uuid) {
-            abort(404, 'Data anggota tidak ditemukan. Token verifikasi tidak valid.');
+            abort(404, 'Member data not found. Verification token is invalid.');
         }
 
         $member = Member::with(['employee', 'role'])
@@ -220,7 +220,7 @@ class CardController extends Controller
             ->first();
 
         if (!$member) {
-            abort(404, 'Data anggota tidak ditemukan.');
+            abort(404, 'Member data not found.');
         }
 
         $cardData = $this->buildCardData($member);

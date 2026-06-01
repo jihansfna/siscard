@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="title">Members</x-slot>
 
-    <section class="bg-white border border-blue-100 rounded-2xl p-6 shadow-sm">
+    <section class="text-gray-800 dark:text-gray-200 transition-colors">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <h2 class="text-xl font-bold text-gray-800">Members Management</h2>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Members Management</h2>
 
             <div class="flex flex-wrap items-center gap-3">
                 <form class="flex items-center gap-2" method="GET" action="{{ route('dashboard.members') }}">
@@ -11,11 +11,11 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                             <x-heroicon-o-magnifying-glass class="w-5 h-5" />
                         </div>
-                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Search member..." class="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50">
+                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Search member..." class="pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700/50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 dark:bg-[#242424] dark:text-white dark:placeholder-gray-500 transition-colors">
                     </div>
 
                     <div class="relative hidden sm:block">
-                        <select name="status" onchange="this.form.submit()" class="pl-3 pr-8 py-2 border border-gray-200 rounded-lg text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50">
+                        <select name="status" onchange="this.form.submit()" class="pl-3 pr-8 py-2 border border-gray-200 dark:border-gray-700/50 rounded-lg text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 dark:bg-[#242424] dark:text-white transition-colors">
                             <option value="All Status" {{ request('status') == 'All Status' ? 'selected' : '' }}>All Status</option>
                             <option value="Registered Member" {{ request('status') == 'Registered Member' ? 'selected' : '' }}>Registered Member</option>
                             <option value="Pending Verification" {{ request('status') == 'Pending Verification' ? 'selected' : '' }}>Pending Verification</option>
@@ -29,20 +29,20 @@
 
                 {{-- Sort Dropdown --}}
                 <div class="relative" id="sortDropdownContainer">
-                    <button type="button" onclick="toggleDropdown('sortDropdown')" class="flex items-center gap-2 px-4 py-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold transition-all">
+                    <button type="button" onclick="toggleDropdown('sortDropdown')" class="flex items-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-700/50 bg-gray-50 dark:bg-[#242424] hover:bg-gray-100 dark:hover:bg-[#2A2A2A] text-gray-700 dark:text-gray-300 rounded-lg text-sm font-semibold transition-all">
                         <x-heroicon-o-arrows-up-down class="w-4 h-4" />
                         <span>Sort</span>
                         <x-heroicon-o-chevron-down class="w-3 h-3 text-gray-400" />
                     </button>
-                    <div id="sortDropdown" class="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50 hidden transition-all">
-                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'desc']) }}" class="flex items-center justify-between px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                            <span>Data Terbaru</span>
+                    <div id="sortDropdown" class="absolute right-0 mt-2 w-40 bg-white dark:bg-[#242424] rounded-xl shadow-xl border border-gray-100 dark:border-gray-700/50 py-1 z-50 hidden transition-all">
+                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'desc']) }}" class="flex items-center justify-between px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">
+                            <span>Newest Data</span>
                             @if(request('sort', 'desc') === 'desc')
                                 <x-heroicon-m-check class="w-4 h-4 text-primary-600" />
                             @endif
                         </a>
-                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'asc']) }}" class="flex items-center justify-between px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                            <span>Data Terlama</span>
+                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'asc']) }}" class="flex items-center justify-between px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">
+                            <span>Oldest Data</span>
                             @if(request('sort') === 'asc')
                                 <x-heroicon-m-check class="w-4 h-4 text-primary-600" />
                             @endif
@@ -57,12 +57,12 @@
                         <span>Export</span>
                         <x-heroicon-o-chevron-down class="w-3 h-3" />
                     </button>
-                    <div id="exportDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50 hidden transition-all">
-                        <a href="{{ route('dashboard.export.members.excel') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                    <div id="exportDropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-[#242424] rounded-xl shadow-xl border border-gray-100 dark:border-gray-700/50 py-1 z-50 hidden transition-all">
+                        <a href="{{ route('dashboard.export.members.excel') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">
                             <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM9.5 11.5l2 3.5-2 3.5h1.5l1.25-2.5L13.5 18.5H15l-2-3.5 2-3.5h-1.5l-1.25 2.5-1.25-2.5H9.5z"/></svg>
                             <span>Export Excel</span>
                         </a>
-                        <a href="{{ route('dashboard.export.members.pdf') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                        <a href="{{ route('dashboard.export.members.pdf') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">
                             <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM10.5 11c-.83 0-1.5.67-1.5 1.5v4c0 .83.67 1.5 1.5 1.5h3c.83 0 1.5-.67 1.5-1.5v-4c0-.83-.67-1.5-1.5-1.5h-3z"/></svg>
                             <span>Export PDF</span>
                         </a>
@@ -91,10 +91,10 @@
         <div id="bulkDeleteBar" class="hidden items-center justify-between bg-red-50 border border-red-100 rounded-xl p-4 mb-4 transition-all duration-300">
             <div class="flex items-center gap-2 text-red-700 text-sm font-semibold">
                 <x-heroicon-o-trash class="w-5 h-5 text-red-500" />
-                <span id="selectedCount">0</span> data terpilih
+                <span id="selectedCount">0</span> selected data
             </div>
             <button type="submit" form="bulkDeleteForm" class="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition-all shadow-md shadow-red-600/20 active:scale-95">
-                <span>Hapus Terpilih</span>
+                <span>Delete Selected</span>
             </button>
         </div>
 
@@ -102,13 +102,13 @@
             @csrf
         </form>
 
-        <div class="border border-gray-200 rounded-xl overflow-hidden">
+        <div class="bg-white dark:bg-[#242424] border border-gray-200 dark:border-gray-700/50 rounded-xl overflow-hidden shadow-md shadow-gray-200/60 dark:shadow-none transition-all">
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm text-gray-600">
-                    <thead class="bg-gray-50 text-gray-700 text-xs uppercase font-semibold border-b border-gray-200">
+                <table class="w-full text-left text-sm text-gray-600 dark:text-gray-400">
+                    <thead class="bg-gray-50 dark:bg-[#1A1A1A] text-gray-700 dark:text-gray-300 text-xs uppercase font-semibold border-b border-gray-200 dark:border-gray-700/50">
                         <tr>
                             <th class="px-4 py-3 w-10">
-                                <input type="checkbox" id="selectAllMembers" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500" onclick="toggleSelectAllMembers(this)">
+                                <input type="checkbox" id="selectAllMembers" class="rounded border-gray-300 dark:border-gray-600 dark:bg-[#242424] text-primary-600 focus:ring-primary-500" onclick="toggleSelectAllMembers(this)">
                             </th>
                             <th class="px-4 py-3">No</th>
                             <th class="px-4 py-3">Employee</th>
@@ -119,31 +119,31 @@
                             <th class="px-4 py-3">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-100">
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-700/50">
                         @forelse ($members as $index => $member)
-                            <tr class="hover:bg-gray-50/50 transition-colors">
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-[#2A2A2A] transition-colors">
                                 <td class="px-4 py-3">
-                                    <input type="checkbox" name="ids[]" value="{{ $member->id }}" form="bulkDeleteForm" class="member-checkbox rounded border-gray-300 text-primary-600 focus:ring-primary-500" onclick="updateBulkDeleteBar()">
+                                    <input type="checkbox" name="ids[]" value="{{ $member->id }}" form="bulkDeleteForm" class="member-checkbox rounded border-gray-300 dark:border-gray-600 dark:bg-[#242424] text-primary-600 focus:ring-primary-500" onclick="updateBulkDeleteBar()">
                                 </td>
                                 <td class="px-4 py-3">{{ $members->firstItem() + $index }}</td>
                                 <td class="px-4 py-3">
-                                    <div class="font-medium text-gray-900">{{ $member->employee->name }}</div>
+                                    <div class="font-medium text-gray-900 dark:text-white">{{ $member->employee->name }}</div>
                                     <div class="text-xs text-gray-500">{{ $member->employee->badge }}</div>
                                 </td>
                                 <td class="px-4 py-3">{{ $member->employee->position ?? '-' }}</td>
                                 <td class="px-4 py-3">{{ $member->employee->department ?? '-' }}</td>
                                 <td class="px-4 py-3">
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/25 dark:text-blue-300">
                                         {{ $member->role->name ?? 'Member' }}
                                     </span>
                                 </td>
                                 <td class="px-4 py-3">
                                     @if($member->status == 'registered')
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Registered</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Registered</span>
                                     @elseif($member->status == 'pending')
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">Pending</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">Pending</span>
                                     @else
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">{{ ucfirst($member->status) }}</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-400">{{ ucfirst($member->status) }}</span>
                                     @endif
                                 </td>
                                 <td class="px-4 py-3">
@@ -153,6 +153,7 @@
                                             'name' => $member->employee->name,
                                             'badge' => $member->employee->badge,
                                             'status' => $member->status,
+                                            'uuid' => $member->uuid,
                                             'created_at' => $member->created_at->format('d F Y, H:i'),
                                             'added_by' => 'Admin',
                                             'image' => $member->employee->image,
@@ -164,19 +165,9 @@
                                             'member_role_id' => $member->member_role_id,
                                             'sign_image' => $member->sign_image,
                                             'verify_token' => \App\Http\Controllers\CardController::encryptToken($member->uuid),
-                                             'qr_base64' => 'data:image/svg+xml;base64,' . base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::size(200)->margin(1)->errorCorrection('H')->generate(url('/verify/' . \App\Http\Controllers\CardController::encryptToken($member->uuid)))),
                                             'card_download_url' => route('dashboard.members.card.download', $member->id),
                                             'update_url' => route('dashboard.members.update', $member->id),
-                                            'logs' => $member->logs->map(function($log) {
-                                                return [
-                                                    'activity' => $log->activity,
-                                                    'description' => $log->description,
-                                                    'actor_name' => $log->actor ? $log->actor->name : 'System',
-                                                    'actor_badge' => $log->actor ? $log->actor->badge : '',
-                                                    'created_at_date' => $log->created_at->format('l'),
-                                                    'created_at_time' => $log->created_at->format('d F Y, H.i'),
-                                                ];
-                                            })->toArray(),
+                                            'logs_url' => route('dashboard.members.logs', $member->id),
                                         ];
                                     @endphp
                                     <button class="inline-flex p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="View Member Details" data-member="{{ json_encode($memberData) }}" onclick="openMemberDetail(this)">
@@ -189,7 +180,7 @@
                                 <td colspan="8" class="px-4 py-8 text-center text-gray-500">
                                     <div class="flex flex-col items-center justify-center">
                                         <x-heroicon-o-users class="w-10 h-10 text-gray-300 mb-3" />
-                                        <p>Belum ada data member yang ditambahkan.</p>
+                                        <p>No member data available.</p>
                                     </div>
                                 </td>
                             </tr>
@@ -199,7 +190,7 @@
             </div>
             
             @if($members->hasPages())
-            <div class="p-4 border-t border-gray-100">
+            <div class="p-4 border-t border-gray-100 dark:border-gray-700/50">
                 {{ $members->links() }}
             </div>
             @endif
@@ -208,9 +199,9 @@
 
     <!-- Add Member Modal -->
     <div id="addMemberModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-gray-900/50 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-4xl overflow-hidden max-h-[90vh] flex flex-col">
-            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 flex-shrink-0">
-                <h3 class="text-lg font-bold text-gray-800">Add New Members</h3>
+        <div class="bg-white dark:bg-[#242424] rounded-2xl shadow-xl w-full max-w-4xl overflow-hidden max-h-[90vh] flex flex-col border border-transparent dark:border-gray-700/50">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700/50 flex-shrink-0">
+                <h3 class="text-lg font-bold text-gray-800 dark:text-white">Add New Members</h3>
                 <button type="button" onclick="closeAddMemberModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
                     <x-heroicon-o-x-mark class="w-6 h-6" />
                 </button>
@@ -219,12 +210,12 @@
                 @csrf
                 <div class="p-6 overflow-y-auto">
                     <div class="mb-4">
-                        <p class="text-sm text-gray-600">Pilih employee di bawah ini untuk ditambahkan sebagai Member. Hanya employee yang belum menjadi member dan masih aktif yang ditampilkan.</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Select employee below to add as Member. Only active non-member employees are shown.</p>
                     </div>
                     
                     <div class="border border-gray-200 rounded-xl overflow-hidden">
-                        <table class="w-full text-left text-sm text-gray-600">
-                            <thead class="bg-gray-50 text-gray-700 text-xs uppercase font-semibold border-b border-gray-200 sticky top-0">
+                        <table class="w-full text-left text-sm text-gray-600 dark:text-gray-400">
+                            <thead class="bg-gray-50 dark:bg-[#1A1A1A] text-gray-700 dark:text-gray-300 text-xs uppercase font-semibold border-b border-gray-200 dark:border-gray-700/50 sticky top-0">
                                 <tr>
                                     <th class="px-4 py-3 w-10">
                                         <input type="checkbox" id="selectAllEmployees" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500" onclick="toggleSelectAll(this)">
@@ -237,15 +228,15 @@
                                     <th class="px-4 py-3">End Date</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-100">
+                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700/50">
                                 @forelse ($availableEmployees as $index => $emp)
-                                    <tr class="hover:bg-gray-50/50 transition-colors available-employee-row">
+                                    <tr class="hover:bg-gray-50/50 dark:hover:bg-[#2A2A2A] transition-colors available-employee-row">
                                         <td class="px-4 py-3">
                                             <input type="checkbox" name="employee_ids[]" value="{{ $emp->id }}" class="employee-checkbox rounded border-gray-300 text-primary-600 focus:ring-primary-500" onclick="updateSelectAllHeaderState()">
                                         </td>
                                         <td class="px-4 py-3">{{ $index + 1 }}</td>
                                         <td class="px-4 py-3">
-                                            <div class="font-medium text-gray-900">{{ $emp->name }}</div>
+                                            <div class="font-medium text-gray-900 dark:text-white">{{ $emp->name }}</div>
                                             <div class="text-xs text-gray-500">{{ $emp->badge }}</div>
                                         </td>
                                         <td class="px-4 py-3">{{ $emp->position ?? '-' }}</td>
@@ -262,7 +253,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="7" class="px-4 py-8 text-center text-gray-500">
-                                            <p>Semua employee sudah terdaftar sebagai member atau sudah tidak aktif.</p>
+                                            <p>All employees are already registered as members or inactive.</p>
                                         </td>
                                     </tr>
                                 @endforelse
@@ -270,7 +261,7 @@
                         </table>
 
                         <!-- Client-side pagination for available employees in modal -->
-                        <div class="flex items-center justify-between px-4 py-3 bg-gray-50 border-t border-gray-100 hidden" id="availableEmployeesPagination">
+                        <div class="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border-t border-gray-100 dark:border-gray-700/50 hidden" id="availableEmployeesPagination">
                             <span class="text-xs text-gray-500 font-medium" id="availPageInfo">Showing 1 to 5 of 9 employees</span>
                             <div class="flex gap-2">
                                 <button type="button" onclick="changeAvailPage(-1)" id="availPrevBtn" class="px-3 py-1.5 text-xs font-bold bg-white border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all">Previous</button>
@@ -279,12 +270,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3 flex-shrink-0">
+                <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700/50 bg-gray-50 dark:bg-[#1A1A1A] flex justify-end gap-3 flex-shrink-0">
                     <button type="button" onclick="closeAddMemberModal()" class="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-200 rounded-lg transition-colors">
-                        Batal
+                        Cancel
                     </button>
                     <button type="submit" class="px-6 py-2.5 text-sm font-bold bg-primary-600 hover:bg-primary-700 text-white rounded-xl shadow-lg shadow-primary-600/20 transition-all flex items-center gap-2">
-                        <span class="btn-text">Tambahkan Terpilih</span>
+                        <span class="btn-text">Add Selected</span>
                         <svg class="btn-spinner animate-spin h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -458,14 +449,14 @@
             document.getElementById('detailAddedInfo').textContent = 'Added by ' + member.added_by + ', ' + member.created_at;
             
             const statusColors = {
-                'registered': 'bg-green-100 text-green-800',
-                'pending': 'bg-yellow-100 text-yellow-800',
-                'inactive': 'bg-gray-100 text-gray-800',
-                'rejected': 'bg-red-100 text-red-800'
+                'registered': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+                'pending': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+                'inactive': 'bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-400',
+                'rejected': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
             };
             const statusLabels = {
                 'registered': 'Registered',
-                'pending': 'Waiting Confirmation',
+                'pending': 'Pending Verification',
                 'inactive': 'Inactive',
                 'rejected': 'Rejected'
             };
@@ -478,18 +469,39 @@
             document.getElementById('detailStatusBadge').textContent = sLabel;
             
             // Profile image
+            const detailImg = document.getElementById('detailImage');
+            const detailImgFallback = document.getElementById('detailImageFallback');
+            const detailImgLoading = document.getElementById('detailImageLoading');
+            
+            detailImg.classList.add('hidden');
+            detailImgFallback.classList.add('hidden');
+
             if (member.image) {
-                document.getElementById('detailImage').src = '/storage/' + member.image;
-                document.getElementById('detailImage').classList.remove('hidden');
-                document.getElementById('detailImageFallback').classList.add('hidden');
+                detailImgLoading.classList.remove('hidden');
+                detailImg.onload = function() {
+                    detailImgLoading.classList.add('hidden');
+                    detailImg.classList.remove('hidden');
+                };
+                detailImg.src = '/storage/' + member.image;
             } else {
-                document.getElementById('detailImage').classList.add('hidden');
-                document.getElementById('detailImageFallback').classList.remove('hidden');
-                document.getElementById('detailImageFallback').textContent = member.name.charAt(0).toUpperCase();
+                detailImgLoading.classList.add('hidden');
+                detailImgFallback.classList.remove('hidden');
+                detailImgFallback.textContent = member.name.charAt(0).toUpperCase();
             }
             
-            // QR Code - encrypted token URL (loaded instantly from pre-generated base64)
-            document.getElementById('detailQrCode').src = member.qr_base64;
+            // QR Code — lazy-loaded via route
+            const qrUrl = "{{ route('qr.image') }}" + "?data=" + encodeURIComponent(window.location.origin + '/verify/' + member.verify_token) + "&size=400";
+            const detailQrCode = document.getElementById('detailQrCode');
+            const detailQrCodeLoading = document.getElementById('detailQrCodeLoading');
+            
+            detailQrCode.classList.add('hidden');
+            detailQrCodeLoading.classList.remove('hidden');
+            
+            detailQrCode.onload = function() {
+                detailQrCodeLoading.classList.add('hidden');
+                detailQrCode.classList.remove('hidden');
+            };
+            detailQrCode.src = qrUrl;
             
             document.getElementById('detailBirth').textContent = member.birth_place + ', ' + member.birth_date;
             document.getElementById('detailJoinDate').textContent = member.join_date;
@@ -497,14 +509,24 @@
             document.getElementById('detailAddress').textContent = member.address;
             
             // Signature image display
+            const detailSignImage = document.getElementById('detailSignImage');
+            const detailSign = document.getElementById('detailSign');
+            const detailSignLoading = document.getElementById('detailSignLoading');
+            
+            detailSignImage.classList.add('hidden');
+            detailSign.classList.add('hidden');
+
             if (member.sign_image) {
-                document.getElementById('detailSign').classList.add('hidden');
-                document.getElementById('detailSignImage').src = '/storage/' + member.sign_image;
-                document.getElementById('detailSignImage').classList.remove('hidden');
+                detailSignLoading.classList.remove('hidden');
+                detailSignImage.onload = function() {
+                    detailSignLoading.classList.add('hidden');
+                    detailSignImage.classList.remove('hidden');
+                };
+                detailSignImage.src = '/storage/' + member.sign_image;
             } else {
-                document.getElementById('detailSign').textContent = '-';
-                document.getElementById('detailSign').classList.remove('hidden');
-                document.getElementById('detailSignImage').classList.add('hidden');
+                detailSignLoading.classList.add('hidden');
+                detailSign.textContent = '-';
+                detailSign.classList.remove('hidden');
             }
             
             // Store member data for edit modal
@@ -528,33 +550,53 @@
                 
                 // Set custom message based on status
                 if (member.status === 'pending') {
-                    msgText.textContent = 'Menunggu konfirmasi admin. Kartu digital belum dapat dicetak.';
+                    msgText.textContent = 'Waiting for admin confirmation. Digital card cannot be generated yet.';
                     msgContainer.className = 'mb-4 p-4 border rounded-xl text-sm font-semibold flex items-center gap-3 bg-blue-50 border-blue-200 text-blue-800';
                 } else if (member.status === 'inactive') {
-                    msgText.textContent = 'Member sudah tidak aktif. Akses kartu digital telah dicabut.';
+                    msgText.textContent = 'Member is inactive. Digital card access revoked.';
                     msgContainer.className = 'mb-4 p-4 border rounded-xl text-sm font-semibold flex items-center gap-3 bg-red-50 border-red-200 text-red-800';
                 } else if (member.status === 'rejected') {
-                    msgText.textContent = 'Pendaftaran ditolak. Kartu digital tidak tersedia.';
+                    msgText.textContent = 'Registration rejected. Digital card not available.';
                     msgContainer.className = 'mb-4 p-4 border rounded-xl text-sm font-semibold flex items-center gap-3 bg-red-50 border-red-200 text-red-800';
                 } else {
-                    msgText.textContent = 'Kartu digital belum dapat di-generate. Status keanggotaan harus "Registered".';
+                    msgText.textContent = 'Digital card cannot be generated yet. Member status must be "Registered".';
                     msgContainer.className = 'mb-4 p-4 border rounded-xl text-sm font-semibold flex items-center gap-3 bg-amber-50 border-amber-200 text-amber-800';
                 }
             }
             
             // Card front preview - Photo
+            const cardPhotoImg = document.getElementById('cardPhotoImg');
+            const cardPhotoFallback = document.getElementById('cardPhotoFallback');
+            const cardPhotoLoading = document.getElementById('cardPhotoLoading');
+            
+            cardPhotoImg.classList.add('hidden');
+            cardPhotoFallback.classList.add('hidden');
+
             if (member.image) {
-                document.getElementById('cardPhotoImg').src = '/storage/' + member.image;
-                document.getElementById('cardPhotoImg').classList.remove('hidden');
-                document.getElementById('cardPhotoFallback').classList.add('hidden');
+                cardPhotoLoading.classList.remove('hidden');
+                cardPhotoImg.onload = function() {
+                    cardPhotoLoading.classList.add('hidden');
+                    cardPhotoImg.classList.remove('hidden');
+                };
+                cardPhotoImg.src = '/storage/' + member.image;
             } else {
-                document.getElementById('cardPhotoImg').classList.add('hidden');
-                document.getElementById('cardPhotoFallback').classList.remove('hidden');
-                document.getElementById('cardPhotoFallback').textContent = member.name.charAt(0).toUpperCase();
+                cardPhotoLoading.classList.add('hidden');
+                cardPhotoFallback.classList.remove('hidden');
+                cardPhotoFallback.textContent = member.name.charAt(0).toUpperCase();
             }
             
-            // Card front QR (loaded instantly from pre-generated base64)
-            document.getElementById('cardFrontQr').src = member.qr_base64;
+            // Card front QR
+            const cardFrontQr = document.getElementById('cardFrontQr');
+            const cardFrontQrLoading = document.getElementById('cardFrontQrLoading');
+            
+            cardFrontQr.classList.add('hidden');
+            cardFrontQrLoading.classList.remove('hidden');
+            
+            cardFrontQr.onload = function() {
+                cardFrontQrLoading.classList.add('hidden');
+                cardFrontQr.classList.remove('hidden');
+            };
+            cardFrontQr.src = qrUrl;
             
             // Card data
             document.getElementById('cardBadge').textContent = member.badge;
@@ -565,46 +607,54 @@
             // Ensure we open Info tab by default
             switchMemberTab('info');
             
-            // Render History Timeline
+            // Render History Timeline — lazy-loaded via AJAX
             const timelineContainer = document.getElementById('detailHistoryTimeline');
-            timelineContainer.innerHTML = '';
+            timelineContainer.innerHTML = '<p class="text-sm text-gray-400 ml-4 animate-pulse">Loading history...</p>';
             
-            if (member.logs && member.logs.length > 0) {
-                // Backend is ascending. To show newest at the top, reverse the array.
-                const sortedLogs = [...member.logs].reverse();
-                
-                sortedLogs.forEach(log => {
-                    const item = document.createElement('div');
-                    item.className = 'relative pl-8';
-                    item.innerHTML = `
-                        <!-- Red Dot -->
-                        <div class="absolute w-4 h-4 bg-red-600 rounded-full -left-[9px] top-1 border-4 border-white shadow-sm"></div>
+            fetch(member.logs_url)
+                .then(res => res.json())
+                .then(logs => {
+                    timelineContainer.innerHTML = '';
+                    
+                    if (logs && logs.length > 0) {
+                        const sortedLogs = [...logs].reverse();
                         
-                        <!-- Content -->
-                        <div class="flex flex-col sm:flex-row sm:items-start gap-x-6 gap-y-2">
-                            <!-- Date & Time -->
-                            <div class="w-32 flex-shrink-0 pt-0.5">
-                                <p class="text-sm font-bold text-gray-900">${log.created_at_date}</p>
-                                <p class="text-xs font-medium text-gray-500">${log.created_at_time}</p>
-                            </div>
-                            
-                            <!-- Main Detail -->
-                            <div class="flex-1">
-                                <h5 class="text-sm font-bold text-gray-800 mb-2">${log.description}</h5>
-                                <div class="flex items-center gap-2">
-                                    <div class="w-6 h-6 rounded-full bg-red-600 flex items-center justify-center text-[10px] text-white font-bold overflow-hidden">
-                                        ${log.actor_name.charAt(0).toUpperCase()}
+                        sortedLogs.forEach(log => {
+                            const item = document.createElement('div');
+                            item.className = 'relative pl-8';
+                            item.innerHTML = `
+                                <!-- Theme Dot -->
+                                <div class="absolute w-4 h-4 bg-emerald-500 rounded-full -left-[9px] top-1 border-4 border-white dark:border-[#1A1A1A] shadow-sm shadow-emerald-500/30"></div>
+                                
+                                <!-- Content -->
+                                <div class="flex flex-col sm:flex-row sm:items-start gap-x-6 gap-y-2">
+                                    <!-- Date & Time -->
+                                    <div class="w-32 flex-shrink-0 pt-0.5">
+                                        <p class="text-sm font-bold text-gray-900 dark:text-white">${log.created_at_date}</p>
+                                        <p class="text-xs font-medium text-gray-500 dark:text-gray-400">${log.created_at_time}</p>
                                     </div>
-                                    <span class="text-xs text-gray-600 font-medium">${log.actor_name} ${log.actor_badge ? '(' + log.actor_badge + ')' : ''}</span>
+                                    
+                                    <!-- Main Detail -->
+                                    <div class="flex-1">
+                                        <h5 class="text-sm font-bold text-gray-800 dark:text-gray-200 mb-2">${log.description}</h5>
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-6 h-6 rounded-full bg-emerald-600 flex items-center justify-center text-[10px] text-white font-bold overflow-hidden">
+                                                ${log.actor_name.charAt(0).toUpperCase()}
+                                            </div>
+                                            <span class="text-xs text-gray-600 dark:text-gray-400 font-medium">${log.actor_name} ${log.actor_badge ? '(' + log.actor_badge + ')' : ''}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    `;
-                    timelineContainer.appendChild(item);
+                            `;
+                            timelineContainer.appendChild(item);
+                        });
+                    } else {
+                        timelineContainer.innerHTML = '<p class="text-sm text-gray-500 ml-4">No activity history yet.</p>';
+                    }
+                })
+                .catch(() => {
+                    timelineContainer.innerHTML = '<p class="text-sm text-red-500 ml-4">Failed to load history.</p>';
                 });
-            } else {
-                timelineContainer.innerHTML = '<p class="text-sm text-gray-500 ml-4">No history records found.</p>';
-            }
 
             const drawer = document.getElementById('memberDetailDrawer');
             const content = document.getElementById('drawerContent');
@@ -644,12 +694,12 @@
 
     <!-- Member Detail Off-Canvas Modal -->
     <div id="memberDetailDrawer" onclick="if(event.target === this) closeMemberDetail()" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm transition-opacity">
-        <div class="fixed inset-y-0 right-0 w-full max-w-2xl bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col" id="drawerContent">
+        <div class="fixed inset-y-0 right-0 w-full max-w-2xl bg-white dark:bg-[#242424] shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col border-l border-transparent dark:border-gray-700/50" id="drawerContent">
             <!-- Header -->
-            <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white z-10 sticky top-0">
+            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700/50 flex items-center justify-between bg-white dark:bg-[#242424] z-10 sticky top-0">
                 <div>
-                    <h3 class="text-xl font-bold text-gray-800" id="detailNameTop">NAME</h3>
-                    <p class="text-sm text-gray-500" id="detailBadgeTop">BADGE</p>
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-white" id="detailNameTop">NAME</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400" id="detailBadgeTop">BADGE</p>
                     <div class="mt-2">
                         <span id="detailStatusBadgeTop" class="inline-flex items-center px-2 py-1 rounded text-xs font-semibold"></span>
                     </div>
@@ -661,68 +711,77 @@
             </div>
             
             <!-- Tabs -->
-            <div class="px-6 border-b border-gray-100 flex gap-6 bg-white sticky top-[120px] z-10">
+            <div class="px-6 border-b border-gray-100 dark:border-gray-700/50 flex gap-6 bg-white dark:bg-[#242424] sticky top-[120px] z-10">
                 <button type="button" onclick="switchMemberTab('info')" id="tabInfoBtn" class="py-3 text-sm font-bold text-primary-600 border-b-2 border-primary-600">Information</button>
-                <button type="button" onclick="switchMemberTab('history')" id="tabHistoryBtn" class="py-3 text-sm font-medium text-gray-500 hover:text-gray-700">History</button>
+                <button type="button" onclick="switchMemberTab('history')" id="tabHistoryBtn" class="py-3 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">History</button>
             </div>
 
             <!-- Body -->
-            <div class="p-6 overflow-y-auto flex-1 bg-gray-50/50" id="tabInfoContent">
-                <h4 class="text-base font-bold text-gray-800 mb-4">User Information</h4>
+            <div class="p-6 overflow-y-auto flex-1 bg-gray-50/50 dark:bg-[#1A1A1A]" id="tabInfoContent">
+                <h4 class="text-base font-bold text-gray-800 dark:text-white mb-4">User Information</h4>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                     <!-- Photo & Basic -->
                     <div class="flex flex-col items-center text-center">
-                        <div class="w-32 h-40 bg-red-600 rounded-lg overflow-hidden shadow-md mb-4 border-2 border-white">
-                            <img id="detailImage" src="" alt="Profile" class="w-full h-full object-cover hidden">
-                            <div id="detailImageFallback" class="w-full h-full flex items-center justify-center text-white text-4xl font-bold"></div>
+                        <div class="w-32 h-40 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden shadow-md mb-4 border-2 border-white relative">
+                            <div id="detailImageLoading" class="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 hidden">
+                                <svg class="animate-spin h-6 w-6 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            </div>
+                            <img id="detailImage" src="" alt="Profile" class="w-full h-full object-cover hidden relative z-10">
+                            <div id="detailImageFallback" class="w-full h-full flex items-center justify-center text-gray-400 text-4xl font-bold relative z-10 hidden"></div>
                         </div>
-                        <h5 class="font-bold text-gray-900 text-lg" id="detailName">NAME</h5>
-                        <p class="text-gray-600 font-medium" id="detailBadge">BADGE</p>
+                        <h5 class="font-bold text-gray-900 dark:text-white text-lg" id="detailName">NAME</h5>
+                        <p class="text-gray-600 dark:text-gray-400 font-medium" id="detailBadge">BADGE</p>
                     </div>
                     
                     <!-- QR Code -->
-                    <div class="flex flex-col items-center justify-center">
-                        <img id="detailQrCode" src="" alt="QR" class="w-32 h-32 mb-2 rounded border border-gray-200 shadow-sm p-1 bg-white">
+                    <div class="flex flex-col items-center justify-center relative">
+                        <div id="detailQrCodeLoading" class="w-32 h-32 mb-2 rounded border border-gray-200 shadow-sm p-1 bg-gray-50 dark:bg-gray-800 flex items-center justify-center hidden">
+                            <svg class="animate-spin h-6 w-6 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        </div>
+                        <img id="detailQrCode" src="" alt="QR" class="w-32 h-32 mb-2 rounded border border-gray-200 shadow-sm p-1 bg-white hidden">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 mb-8">
                     <div>
-                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Place and Date of Birth</p>
-                        <p class="font-bold text-gray-900 text-sm" id="detailBirth">-</p>
+                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Birth Place & Date</p>
+                        <p class="font-bold text-gray-900 dark:text-white text-sm" id="detailBirth">-</p>
                     </div>
                     <div>
-                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Status</p>
+                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Status</p>
                         <div><span id="detailStatusBadge" class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-semibold"></span></div>
                     </div>
                     <div>
-                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Join Date</p>
-                        <p class="font-bold text-gray-900 text-sm" id="detailJoinDate">-</p>
+                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Join Date</p>
+                        <p class="font-bold text-gray-900 dark:text-white text-sm" id="detailJoinDate">-</p>
                     </div>
                     <div>
-                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Role</p>
-                        <p class="font-bold text-gray-900 text-sm" id="detailRole">-</p>
+                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Role</p>
+                        <p class="font-bold text-gray-900 dark:text-white text-sm" id="detailRole">-</p>
                     </div>
                     <div>
-                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">PUK</p>
-                        <p class="font-bold text-gray-900 text-sm" id="detailPuk">PT. Sat Nusapersada Tbk</p>
+                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">PUK</p>
+                        <p class="font-bold text-gray-900 dark:text-white text-sm" id="detailPuk">PT. Sat Nusapersada Tbk</p>
                     </div>
                     <div>
-                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Address</p>
-                        <p class="font-bold text-gray-900 text-sm" id="detailAddress">-</p>
+                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Address</p>
+                        <p class="font-bold text-gray-900 dark:text-white text-sm" id="detailAddress">-</p>
                     </div>
                     <div>
-                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Image of Signature</p>
-                        <div id="detailSignContainer">
-                            <p class="font-bold text-gray-900 text-sm" id="detailSign">-</p>
-                            <img id="detailSignImage" src="" alt="Signature" class="hidden mt-1 max-w-[120px] max-h-[60px] border border-gray-200 rounded bg-white p-1">
+                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Signature</p>
+                        <div id="detailSignContainer" class="relative">
+                            <p class="font-bold text-gray-900 dark:text-white text-sm" id="detailSign">-</p>
+                            <div id="detailSignLoading" class="mt-1 w-16 h-8 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-800 flex items-center justify-center hidden">
+                                <svg class="animate-spin h-4 w-4 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            </div>
+                            <img id="detailSignImage" src="" alt="Signature" class="hidden mt-1 max-w-[120px] max-h-[60px] border border-gray-200 dark:border-gray-700 rounded bg-white p-1">
                         </div>
                     </div>
                 </div>
 
                 <!-- Action Buttons -->
-                <hr class="border-gray-200 mb-6">
+                <hr class="border-gray-200 dark:border-gray-700/50 mb-6">
                 <div class="flex items-center gap-3 mb-8">
                     <button type="button" onclick="openEditMemberModal()" class="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-primary-600/20 active:scale-95 cursor-pointer">
                         <x-heroicon-o-pencil-square class="w-4 h-4" />
@@ -731,23 +790,23 @@
                 </div>
 
                 <!-- Card Preview + Download -->
-                <hr class="border-gray-200 mb-6">
+                <hr class="border-gray-200 dark:border-gray-700/50 mb-6">
                 <div class="flex items-center justify-between mb-4">
-                    <h4 class="text-base font-bold text-gray-800">Card Preview</h4>
+                    <h4 class="text-base font-bold text-gray-800 dark:text-white">Card Preview</h4>
                     <a id="downloadCardBtn" href="#" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-lg shadow-emerald-600/20 active:scale-95 no-underline">
                         <x-heroicon-o-arrow-down-tray class="w-4 h-4" />
-                        <span>Unduh Kartu Digital</span>
+                        <span>Download Digital Card</span>
                     </a>
                 </div>
                 
-                <div id="cardNotRegisteredMsg" class="hidden mb-4 p-4 border rounded-xl text-sm font-semibold flex items-center gap-3 bg-amber-50 border-amber-200 text-amber-800">
+                <div id="cardNotRegisteredMsg" class="hidden mb-4 p-4 border rounded-xl text-sm font-semibold flex items-center gap-3 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-700/30 text-amber-800 dark:text-amber-300">
                     <x-heroicon-o-exclamation-triangle class="w-5 h-5 flex-shrink-0" />
                     <span id="cardNotRegisteredMsgText">Kartu digital belum dapat di-generate. Status keanggotaan harus "Registered".</span>
                 </div>
 
                 <div id="cardPreviewContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Card Front Preview -->
-                    <div class="border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden p-4 relative h-52 flex items-center justify-center">
+                    <div class="border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden p-4 relative h-52 flex items-center justify-center text-gray-800 dark:text-gray-800">
                         <div class="relative z-10 w-full">
                             <div class="text-center mb-2">
                                 <p class="text-[10px] font-bold text-gray-800 leading-tight">KARTU ANGGOTA</p>
@@ -758,14 +817,20 @@
                             </div>
                             <p class="text-[7px] font-bold mt-1 mb-1">NO. KTA: <span id="cardBadge" class="text-blue-600"></span></p>
                             <div class="flex gap-2 items-start mt-1">
-                                <div class="flex-shrink-0">
-                                    <div class="w-14 h-[70px] bg-red-600 rounded-sm overflow-hidden" id="cardFrontPhoto">
-                                        <img id="cardPhotoImg" src="" class="w-full h-full object-cover hidden" alt="" style="image-rendering: auto;">
-                                        <div id="cardPhotoFallback" class="w-14 h-[70px] bg-red-600 flex items-center justify-center text-white font-bold text-lg"></div>
+                                <div class="flex-shrink-0 relative">
+                                    <div class="w-14 h-[70px] bg-gray-100 rounded-sm overflow-hidden border border-gray-200" id="cardFrontPhoto">
+                                        <div id="cardPhotoLoading" class="absolute inset-0 flex items-center justify-center bg-gray-100 hidden">
+                                            <svg class="animate-spin h-4 w-4 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                        </div>
+                                        <img id="cardPhotoImg" src="" class="w-full h-full object-cover hidden relative z-10" alt="" style="image-rendering: auto;">
+                                        <div id="cardPhotoFallback" class="w-full h-full flex items-center justify-center text-gray-500 font-bold text-lg relative z-10 hidden"></div>
                                     </div>
                                 </div>
-                                <div class="flex-1 flex flex-col items-center justify-center">
-                                    <img id="cardFrontQr" src="" alt="QR" class="w-14 h-14 border border-gray-200 bg-white p-0.5 rounded" style="image-rendering: auto;">
+                                <div class="flex-1 flex flex-col items-center justify-center relative">
+                                    <div id="cardFrontQrLoading" class="w-14 h-14 border border-gray-200 bg-gray-50 rounded flex items-center justify-center hidden">
+                                        <svg class="animate-spin h-4 w-4 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                    </div>
+                                    <img id="cardFrontQr" src="" alt="QR" class="w-14 h-14 border border-gray-200 bg-white p-0.5 rounded hidden" style="image-rendering: auto;">
                                 </div>
                                 <div class="flex-shrink-0 flex flex-col items-center">
                                     <img src="{{ asset('logo_lem_spsi.jpg') }}" class="w-14 h-14 rounded-full object-contain" alt="Logo LEM SPSI" style="image-rendering: auto;">
@@ -776,15 +841,15 @@
                     </div>
 
                     <!-- Card Back Preview -->
-                    <div class="border border-gray-200 rounded-xl bg-white shadow-sm p-4 relative h-52 flex flex-col justify-between">
-                        <div class="flex justify-between items-center mb-1.5 border-b border-gray-100 pb-1">
-                            <img src="{{ asset('logo_lem_spsi.jpg') }}" class="w-6 h-6 rounded-full object-contain" alt="Logo LEM">
+                    <div class="border border-gray-200 rounded-xl bg-white shadow-sm p-4 relative h-52 flex flex-col justify-between text-gray-800 dark:text-gray-800">
+                        <div class="flex justify-between items-center mb-1.5 border-b border-gray-100 pb-1.5">
+                            <img src="{{ asset('logo_lem_spsi.jpg') }}" class="w-6 h-6 rounded-full object-contain mb-0.5" alt="Logo LEM">
                             <div class="text-center">
                                 <p class="text-[8px] font-bold">PIMPINAN UNIT KERJA</p>
                                 <p class="text-[8px] font-bold">SP LEM SPSI</p>
-                                <p class="text-[9px] font-bold">PT.SATNUSA PERSADA TBK</p>
+                                <p class="text-[9px] font-bold">PT XYZ</p>
                             </div>
-                            <img src="{{ asset('logo_kspsi.png') }}" class="w-6 h-6 rounded-full object-contain" alt="Logo KSPSI">
+                            <img src="{{ asset('logo_kspsi.png') }}" class="w-6 h-6 rounded-full object-contain mb-0.5" alt="Logo KSPSI">
                         </div>
                         <div class="text-[8px] space-y-0.5 flex-1">
                             <div class="flex"><div class="w-14 font-semibold">Nama</div><div>: <span id="cardName"></span></div></div>
@@ -792,28 +857,36 @@
                             <div class="flex"><div class="w-14 font-semibold">P.U.K</div><div>: PT. Satnusa Persada Tbk</div></div>
                             <div class="flex"><div class="w-14 font-semibold">Alamat</div><div class="flex-1 truncate">: <span id="cardAddress"></span></div></div>
                         </div>
-                        <div class="flex justify-between mt-1 pt-1 border-t border-gray-100">
-                            <div class="text-[8px] text-center">
-                                <p class="font-semibold">Ketua</p>
-                                <div id="cardKetuaSign" class="h-6 flex items-center justify-center">
-                                    @if(isset($ketua) && $ketua->sign_image)
-                                        <img id="cardKetuaSignImg" src="{{ asset('storage/' . $ketua->sign_image) }}" class="max-h-5" alt="Tanda Tangan Ketua">
-                                    @else
-                                        <img id="cardKetuaSignImg" src="" class="max-h-5 hidden" alt="">
-                                    @endif
+                        <div class="flex mt-1">
+                            <div class="w-[45%]"></div>
+                            <div class="w-[55%]">
+                                <p class="text-[7px] text-center text-gray-500 mb-0.5">Batam,</p>
+                                <div class="flex justify-around">
+                                    <div class="text-[8px] text-center">
+                                        <div id="cardKetuaSign" class="h-5 flex items-center justify-center">
+                                            @if(isset($ketua) && $ketua->sign_image)
+                                                <img id="cardKetuaSignImg" src="{{ asset('storage/' . $ketua->sign_image) }}" class="max-h-4" alt="TTD Ketua">
+                                            @else
+                                                <img id="cardKetuaSignImg" src="" class="max-h-4 hidden" alt="">
+                                            @endif
+                                        </div>
+                                        <p class="text-gray-800 text-[7px]" id="cardKetuaName">{{ isset($ketua) ? $ketua->employee->name : '' }}</p>
+                                        <div class="border-b border-gray-300 w-[90%] mx-auto mt-0.5 mb-0.5"></div>
+                                        <p class="text-gray-600 text-[7px]">Ketua</p>
+                                    </div>
+                                    <div class="text-[8px] text-center">
+                                        <div id="cardSekretarisSign" class="h-5 flex items-center justify-center">
+                                            @if(isset($sekretaris) && $sekretaris->sign_image)
+                                                <img id="cardSekretarisSignImg" src="{{ asset('storage/' . $sekretaris->sign_image) }}" class="max-h-4" alt="TTD Sekretaris">
+                                            @else
+                                                <img id="cardSekretarisSignImg" src="" class="max-h-4 hidden" alt="">
+                                            @endif
+                                        </div>
+                                        <p class="text-gray-800 text-[7px]" id="cardSekretarisName">{{ isset($sekretaris) ? $sekretaris->employee->name : '' }}</p>
+                                        <div class="border-b border-gray-300 w-[90%] mx-auto mt-0.5 mb-0.5"></div>
+                                        <p class="text-gray-600 text-[7px]">Sekretaris</p>
+                                    </div>
                                 </div>
-                                <p class="font-bold text-gray-800" id="cardKetuaName">{{ isset($ketua) ? $ketua->employee->name : '' }}</p>
-                            </div>
-                            <div class="text-[8px] text-center">
-                                <p class="font-semibold">Sekretaris</p>
-                                <div id="cardSekretarisSign" class="h-6 flex items-center justify-center">
-                                    @if(isset($sekretaris) && $sekretaris->sign_image)
-                                        <img id="cardSekretarisSignImg" src="{{ asset('storage/' . $sekretaris->sign_image) }}" class="max-h-5" alt="Tanda Tangan Sekretaris">
-                                    @else
-                                        <img id="cardSekretarisSignImg" src="" class="max-h-5 hidden" alt="">
-                                    @endif
-                                </div>
-                                <p class="font-bold text-gray-800" id="cardSekretarisName">{{ isset($sekretaris) ? $sekretaris->employee->name : '' }}</p>
                             </div>
                         </div>
                     </div>
@@ -825,8 +898,8 @@
             </div>
 
             <!-- History Tab Content -->
-            <div class="p-6 overflow-y-auto flex-1 bg-gray-50/50 hidden" id="tabHistoryContent">
-                <div class="relative border-l-2 border-red-500 ml-4 py-2 space-y-8" id="detailHistoryTimeline">
+            <div class="p-6 overflow-y-auto flex-1 bg-gray-50/50 dark:bg-[#1A1A1A] hidden" id="tabHistoryContent">
+                <div class="relative border-l-2 border-emerald-500 dark:border-emerald-500/40 ml-4 py-2 space-y-8" id="detailHistoryTimeline">
                     <!-- Logs will be injected here via JS -->
                 </div>
             </div>
@@ -835,12 +908,12 @@
 
     <!-- Edit Member Popup Modal -->
     <div id="editMemberModal" onclick="if(event.target === this) closeEditMemberModal()" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-gray-900/60 backdrop-blur-sm transition-opacity">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform scale-95 opacity-0 transition-all duration-200" id="editModalContent">
+        <div class="bg-white dark:bg-[#242424] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform scale-95 opacity-0 transition-all duration-200 border border-transparent dark:border-gray-700/50" id="editModalContent">
             <!-- Modal Header -->
-            <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700/50 flex items-center justify-between">
                 <div>
-                    <h3 class="text-lg font-bold text-gray-800">Edit Member</h3>
-                    <p class="text-xs text-gray-500 mt-0.5" id="editModalSubtitle">-</p>
+                    <h3 class="text-lg font-bold text-gray-800 dark:text-white">Edit Member</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5" id="editModalSubtitle">-</p>
                 </div>
                 <button type="button" onclick="closeEditMemberModal()" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors cursor-pointer">
                     <x-heroicon-o-x-mark class="w-5 h-5" />
@@ -854,49 +927,53 @@
                 <div class="p-6 space-y-5">
                     <!-- Role Selector -->
                     <div>
-                        <label for="editRole" class="block text-sm font-bold text-gray-700 mb-2">Role <span class="text-red-500">*</span></label>
-                        <select id="editRole" name="member_role_id" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
+                        <label for="editRole" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Role <span class="text-red-500">*</span></label>
+                        <select id="editRole" name="member_role_id" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all dark:text-white">
                             @foreach($memberRoles as $role)
                                 <option value="{{ $role->id }}" 
                                     data-is-sign="{{ $role->is_sign ? '1' : '0' }}"
                                     data-is-single="{{ $role->is_single ? '1' : '0' }}">
                                     {{ $role->name }}
-                                    @if($role->is_sign) — Tanda tangan muncul di kartu @endif
-                                    @if($role->is_single) (Maks. 1 orang) @endif
+                                    @if($role->is_sign) — Signature appears on card @endif
+                                    @if($role->is_single) (Max. 1 person) @endif
                                 </option>
                             @endforeach
                         </select>
-                        <p class="text-[11px] text-gray-400 mt-1.5" id="editRoleHint">Pilih role untuk member ini.</p>
+                        <p class="text-[11px] text-amber-600 dark:text-amber-400 mt-1.5 font-medium" id="editRoleHint">Select a role for this member.</p>
                     </div>
 
                     <!-- Signature Upload -->
                     <div id="signatureUploadSection">
-                        <label for="editSignImage" class="block text-sm font-bold text-gray-700 mb-2">Upload Tanda Tangan</label>
+                        <label for="editSignImage" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Upload Signature</label>
                         
                         <!-- Current Signature Preview -->
-                        <div id="currentSignPreview" class="hidden mb-3 p-3 bg-gray-50 border border-gray-200 rounded-xl">
-                            <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Tanda Tangan Saat Ini</p>
-                            <img id="currentSignImg" src="" alt="Current Signature" class="max-w-[140px] max-h-[70px] border border-gray-200 rounded bg-white p-1">
+                        <div id="currentSignPreview" class="hidden mb-3 p-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl">
+                            <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Current Signature</p>
+                            <div id="currentSignLoading" class="w-24 h-12 border border-gray-200 rounded bg-white dark:bg-[#242424] flex items-center justify-center hidden">
+                                <svg class="animate-spin h-5 w-5 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            </div>
+                            <img id="currentSignImg" src="" alt="Current Signature" class="max-w-[140px] max-h-[70px] border border-gray-200 rounded bg-white p-1 hidden">
                         </div>
 
-                        <input type="file" id="editSignImage" name="sign_image" accept="image/png,image/jpeg" class="block w-full text-xs text-gray-500
+                        <input type="file" id="editSignImage" name="sign_image" accept="image/png,image/jpeg" class="block w-full text-xs text-gray-500 dark:text-gray-400
                             file:mr-3 file:py-2.5 file:px-4
                             file:rounded-xl file:border-0
                             file:text-xs file:font-bold
                             file:bg-primary-50 file:text-primary-800
+                            dark:file:bg-primary-900/30 dark:file:text-primary-300
                             hover:file:bg-primary-100
-                            border border-gray-200 bg-gray-50 rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" />
-                        <p class="text-[11px] text-gray-400 mt-1.5">Format PNG/JPG, maksimal 2MB. Tanda tangan akan muncul pada kartu digital.</p>
+                            border border-gray-200 dark:border-gray-700/50 bg-gray-50 dark:bg-[#1A1A1A] rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" />
+                        <p class="text-[11px] text-gray-400 mt-1.5">Format PNG/JPG, max 2MB. Signature will appear on the digital card.</p>
                     </div>
                 </div>
 
                 <!-- Modal Footer -->
-                <div class="px-6 py-4 border-t border-gray-100 bg-gray-50/80 flex items-center justify-end gap-3">
+                <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700/50 bg-gray-50/80 dark:bg-[#1A1A1A] flex items-center justify-end gap-3">
                     <button type="button" onclick="closeEditMemberModal()" class="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer">
-                        Batal
+                        Cancel
                     </button>
                     <button type="submit" class="px-6 py-2.5 text-sm font-bold bg-primary-600 hover:bg-primary-700 text-white rounded-xl shadow-lg shadow-primary-600/20 transition-all flex items-center gap-2 cursor-pointer">
-                        <span class="btn-text">Simpan Perubahan</span>
+                        <span class="btn-text">Save Changes</span>
                         <svg class="btn-spinner animate-spin h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -923,11 +1000,22 @@
             document.getElementById('editSignImage').value = '';
             
             // Show current signature if exists
+            const currentSignImg = document.getElementById('currentSignImg');
+            const currentSignLoading = document.getElementById('currentSignLoading');
+            const currentSignPreview = document.getElementById('currentSignPreview');
+            
+            currentSignImg.classList.add('hidden');
+            
             if (currentMemberData.sign_image) {
-                document.getElementById('currentSignImg').src = '/storage/' + currentMemberData.sign_image;
-                document.getElementById('currentSignPreview').classList.remove('hidden');
+                currentSignLoading.classList.remove('hidden');
+                currentSignPreview.classList.remove('hidden');
+                currentSignImg.onload = function() {
+                    currentSignLoading.classList.add('hidden');
+                    currentSignImg.classList.remove('hidden');
+                };
+                currentSignImg.src = '/storage/' + currentMemberData.sign_image;
             } else {
-                document.getElementById('currentSignPreview').classList.add('hidden');
+                currentSignPreview.classList.add('hidden');
             }
             
             updateRoleHint();
@@ -970,13 +1058,13 @@
             
             let hintText = '';
             if (isSign && isSingle) {
-                hintText = '⚠️ Role ini hanya bisa dipegang 1 orang. Tanda tangan akan muncul di kartu digital.';
+                hintText = '⚠️ This role can only be held by 1 person. Signature will appear on digital card.';
             } else if (isSingle) {
-                hintText = '⚠️ Role ini hanya bisa dipegang 1 orang.';
+                hintText = '⚠️ This role can only be held by 1 person.';
             } else if (isSign) {
-                hintText = 'Tanda tangan role ini akan muncul di kartu digital.';
+                hintText = 'This role\'s signature will appear on the digital card.';
             } else {
-                hintText = 'Role standar anggota SPSI.';
+                hintText = 'Standard SPSI member role.';
             }
             hint.textContent = hintText;
         }

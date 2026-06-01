@@ -54,7 +54,7 @@ class UserController extends Controller
 
         // Pastikan karyawan masih aktif
         if ($employee->end_date && Carbon::parse($employee->end_date)->lt(now()->startOfDay())) {
-            abort(403, 'Masa kerja Anda telah berakhir.');
+            abort(403, 'Your employment period has ended.');
         }
 
         $member->update(['status' => 'registered']);
@@ -64,9 +64,9 @@ class UserController extends Controller
             'actor_id' => auth()->id(),
             'activity' => 'Update Status',
             'status' => 'registered',
-            'description' => 'Member has confirmed',
+            'description' => 'Member has confirmed membership',
         ]);
 
-        return redirect()->route('user.home')->with('success', 'Berhasil mengkonfirmasi keanggotaan. Selamat datang!');
+        return redirect()->route('user.home')->with('success', 'Successfully confirmed membership. Welcome!');
     }
 }

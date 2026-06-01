@@ -10,11 +10,11 @@ $adminMenu = [
 ];
 
 $userMenu = [
-    ['name' => 'Beranda', 'href' => route('user.home'), 'icon' => 'home'],
+    ['name' => 'Home', 'href' => route('user.home'), 'icon' => 'home'],
 ];
 
 $menu = $role === 'admin' ? $adminMenu : $userMenu;
-$sidebarLabel = $role === 'admin' ? 'Dashboard Admin' : 'Member Area';
+$sidebarLabel = $role === 'admin' ? 'Management System' : 'Member Area';
 $currentUrl = request()->url();
 @endphp
 
@@ -26,7 +26,7 @@ $currentUrl = request()->url();
                 <span class="block mt-1 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ $sidebarLabel }}</span>
             </div>
             <!-- Mobile Close Button -->
-            <button type="button" onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors focus:outline-none cursor-pointer" aria-label="Tutup Menu">
+            <button type="button" onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors focus:outline-none cursor-pointer" aria-label="Close Menu">
                 <x-heroicon-o-x-mark class="w-6 h-6" />
             </button>
         </div>
@@ -34,7 +34,7 @@ $currentUrl = request()->url();
         <nav class="p-4 space-y-1">
             @foreach ($menu as $item)
                 @php
-                    $isActive = $item['name'] === 'Dashboard' || $item['name'] === 'Beranda'
+                    $isActive = $item['name'] === 'Dashboard' || $item['name'] === 'Home'
                         ? request()->url() === $item['href']
                         : str_starts_with($currentUrl, $item['href']);
                 @endphp

@@ -114,11 +114,11 @@
         .back-header {
             width: 100%;
             border-bottom: 0.5pt solid #eee;
-            padding-bottom: 3pt;
+            padding-bottom: 4pt;
             margin-bottom: 5pt;
         }
-        .back-header-img-left { width: 25pt; height: 25pt; }
-        .back-header-img-right { width: 25pt; height: 25pt; }
+        .back-header-img-left { width: 25pt; height: 25pt; padding-bottom: 2pt; }
+        .back-header-img-right { width: 25pt; height: 25pt; padding-bottom: 2pt; }
         .back-header-text {
             text-align: center;
             line-height: 1.1;
@@ -144,37 +144,43 @@
 
         .back-footer {
             width: 100%;
-            margin-top: 3pt;
-            border-top: 0.5pt solid #eee;
-            padding-top: 3pt;
+            margin-top: 2pt;
+        }
+        .back-sig-city {
+            text-align: center;
+            font-size: 6pt;
+            margin-bottom: 2pt;
+            color: #333;
         }
         .back-sig-box {
             width: 50%;
             text-align: center;
-            vertical-align: top;
-        }
-        .back-sig-role {
-            font-size: 6pt;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 2pt;
+            vertical-align: bottom;
         }
         .back-sig-img-container {
-            height: 25pt;
+            height: 22pt;
             display: block;
         }
         .back-sig-img {
-            max-height: 25pt;
-            max-width: 60pt;
+            max-height: 22pt;
+            max-width: 50pt;
             margin: 0 auto;
             display: block;
         }
         .back-sig-name {
             font-size: 6pt;
-            font-weight: bold;
             color: #333;
-            display: inline-block;
-            margin-top: 2pt;
+            margin-top: 0pt;
+        }
+        .back-sig-role {
+            font-size: 6pt;
+            color: #333;
+            margin-top: 0pt;
+        }
+        .back-sig-line {
+            border-bottom: 0.3pt solid #999;
+            width: 85%;
+            margin: 1pt auto 0 auto;
         }
     </style>
 </head>
@@ -238,7 +244,7 @@
                 <td class="back-header-text">
                     <p class="t1">PIMPINAN UNIT KERJA</p>
                     <p class="t2">SP LEM SPSI</p>
-                    <p class="t3">PT.SATNUSA PERSADA TBK</p>
+                    <p class="t3">PT XYZ</p>
                 </td>
                 <td style="width: 30pt; text-align: right;">
                     @if($logoKspsi)
@@ -275,23 +281,33 @@
         <!-- Footer Signatures -->
         <table class="back-footer" cellpadding="0" cellspacing="0">
             <tr>
-                <td class="back-sig-box">
-                    <div class="back-sig-role">Ketua</div>
-                    <div class="back-sig-img-container">
-                        @if($ketuaSign)
-                            <img src="{{ $ketuaSign }}" class="back-sig-img" alt="TTD Ketua">
-                        @endif
-                    </div>
-                    <div class="back-sig-name">{{ $ketuaName }}</div>
-                </td>
-                <td class="back-sig-box">
-                    <div class="back-sig-role">Sekretaris</div>
-                    <div class="back-sig-img-container">
-                        @if($sekretarisSign)
-                            <img src="{{ $sekretarisSign }}" class="back-sig-img" alt="TTD Sekretaris">
-                        @endif
-                    </div>
-                    <div class="back-sig-name">{{ $sekretarisName }}</div>
+                <td style="width: 45%;"></td>
+                <td style="width: 55%; vertical-align: top;">
+                    <div class="back-sig-city">Batam,</div>
+                    <table style="width: 100%;" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td class="back-sig-box">
+                                <div class="back-sig-img-container">
+                                    @if($ketuaSign)
+                                        <img src="{{ $ketuaSign }}" class="back-sig-img" alt="TTD Ketua">
+                                    @endif
+                                </div>
+                                <div class="back-sig-name">{{ $ketuaName }}</div>
+                                <div class="back-sig-line"></div>
+                                <div class="back-sig-role">Ketua</div>
+                            </td>
+                            <td class="back-sig-box">
+                                <div class="back-sig-img-container">
+                                    @if($sekretarisSign)
+                                        <img src="{{ $sekretarisSign }}" class="back-sig-img" alt="TTD Sekretaris">
+                                    @endif
+                                </div>
+                                <div class="back-sig-name">{{ $sekretarisName }}</div>
+                                <div class="back-sig-line"></div>
+                                <div class="back-sig-role">Sekretaris</div>
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </table>

@@ -65,12 +65,12 @@
                     @csrf
 
                     <div class="space-y-2 group">
-                        <label for="name" class="block text-sm font-bold text-gray-700 group-focus-within:text-primary-700 transition-colors">Nama Lengkap</label>
+                        <label for="name" class="block text-sm font-bold text-gray-700 group-focus-within:text-primary-700 transition-colors">Full Name</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
                                 <x-heroicon-o-user class="w-5 h-5" />
                             </div>
-                            <input id="name" name="name" type="text" value="{{ old('name') }}" placeholder="Masukkan nama lengkap" autocomplete="name" required 
+                            <input id="name" name="name" type="text" value="{{ old('name') }}" placeholder="Enter full name" autocomplete="name" required 
                                 class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
                                 <x-heroicon-o-identification class="w-5 h-5" />
                             </div>
-                            <input id="badge" name="badge" type="text" value="{{ old('badge') }}" placeholder="Masukkan badge ID" autocomplete="username" required 
+                            <input id="badge" name="badge" type="text" value="{{ old('badge') }}" placeholder="Enter badge ID" autocomplete="username" required 
                                 class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
                         </div>
                     </div>
@@ -92,32 +92,32 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
                                 <x-heroicon-o-lock-closed class="w-5 h-5" />
                             </div>
-                            <input id="password" name="password" type="password" placeholder="Min. 8 karakter" autocomplete="new-password" required 
+                            <input id="password" name="password" type="password" placeholder="Min. 8 characters" autocomplete="new-password" required 
                                 class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
                         </div>
                     </div>
 
                     <div class="space-y-2 group">
-                        <label for="password_confirmation" class="block text-sm font-bold text-gray-700 group-focus-within:text-primary-700 transition-colors">Konfirmasi Password</label>
+                        <label for="password_confirmation" class="block text-sm font-bold text-gray-700 group-focus-within:text-primary-700 transition-colors">Confirm Password</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
                                 <x-heroicon-o-check-badge class="w-5 h-5" />
                             </div>
-                            <input id="password_confirmation" name="password_confirmation" type="password" placeholder="Ulangi password" autocomplete="new-password" required 
+                            <input id="password_confirmation" name="password_confirmation" type="password" placeholder="Repeat password" autocomplete="new-password" required 
                                 class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
                         </div>
                     </div>
 
                     <div class="pt-4">
                         <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-primary-600/30 hover:shadow-xl hover:shadow-primary-600/40 hover:-translate-y-0.5 transition-all duration-200 flex justify-center items-center gap-2">
-                            <span>Daftar Sekarang</span>
+                            <span>Register Now</span>
                             <x-heroicon-m-arrow-right class="w-5 h-5" />
                         </button>
                     </div>
 
                     <div class="text-center pt-6 border-t border-gray-100 mt-6">
                         <p class="text-sm font-medium text-gray-500">
-                            Sudah punya akun? <a href="{{ route('login') }}" class="font-bold text-primary-600 hover:text-primary-800 hover:underline transition-colors">Login di sini</a>
+                            Already have an account? <a href="{{ route('login') }}" class="font-bold text-primary-600 hover:text-primary-800 hover:underline transition-colors">Login here</a>
                         </p>
                     </div>
                 </form>

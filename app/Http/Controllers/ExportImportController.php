@@ -49,9 +49,9 @@ class ExportImportController extends Controller
         try {
             $importer = (new EmployeeImport())->import($fullPath);
             
-            $message = $importer->getImported() . ' data employee berhasil diimport.';
+            $message = $importer->getImported() . ' employee data successfully imported.';
             if ($importer->getSkipped() > 0) {
-                $message .= ' ' . $importer->getSkipped() . ' data dilewati.';
+                $message .= ' ' . $importer->getSkipped() . ' data skipped.';
             }
 
             // Clean up
@@ -68,7 +68,7 @@ class ExportImportController extends Controller
         } catch (\Exception $e) {
             @unlink($fullPath);
             return redirect()->route('dashboard.employees.index')
-                ->withErrors(['file' => 'Gagal mengimport file: ' . $e->getMessage()]);
+                ->withErrors(['file' => 'Failed to import file: ' . $e->getMessage()]);
         }
     }
 

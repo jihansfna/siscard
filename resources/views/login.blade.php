@@ -93,7 +93,7 @@
                     <div class="flex items-center justify-between pt-2">
                         <label class="flex items-center gap-2 cursor-pointer group">
                             <input type="checkbox" name="remember" id="remember" class="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 cursor-pointer">
-                            <span class="text-sm font-medium text-gray-600 group-hover:text-gray-900 transition-colors">Ingat saya</span>
+                            <span class="text-sm font-medium text-gray-600 group-hover:text-gray-900 transition-colors">Remember me</span>
                         </label>
                         
                         <button type="button" id="show-reset-btn" class="text-sm font-bold text-primary-600 hover:text-primary-800 transition-colors">Reset Password</button>
@@ -124,13 +124,13 @@
                             <input id="reset_badge" name="badge" type="text" placeholder="Enter your badge ID to reset" required 
                                 class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
                         </div>
-                        <p class="text-xs text-gray-500 mt-1">Password akan direset ke password default.</p>
+                        <p class="text-xs text-gray-500 mt-1">Password will be reset to default password.</p>
                     </div>
 
                     <div class="flex items-center justify-between pt-2">
                         <button type="button" id="show-login-btn" class="text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors flex items-center gap-1">
                             <x-heroicon-m-arrow-left class="w-4 h-4" />
-                            Kembali ke Login
+                            Back to Login
                         </button>
                     </div>
 

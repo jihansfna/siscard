@@ -38,7 +38,7 @@ class MasterEmployeeController extends Controller
             'join_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:join_date',
             'birth_place' => 'nullable|string|max:255',
-            'birth_date' => 'nullable|date',
+            'birth_date' => 'nullable|date|before:join_date',
             'address' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
@@ -60,7 +60,7 @@ class MasterEmployeeController extends Controller
         );
 
         return redirect()->route('dashboard.employees.index')
-            ->with('success', 'Employee berhasil ditambahkan.');
+            ->with('success', 'Employee successfully added.');
     }
 
     public function edit(Employee $employee)
@@ -79,7 +79,7 @@ class MasterEmployeeController extends Controller
             'join_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:join_date',
             'birth_place' => 'nullable|string|max:255',
-            'birth_date' => 'nullable|date',
+            'birth_date' => 'nullable|date|before:join_date',
             'address' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
@@ -104,7 +104,7 @@ class MasterEmployeeController extends Controller
         }
 
         return redirect()->route('dashboard.employees.index')
-            ->with('success', 'Data Employee berhasil diperbarui.');
+            ->with('success', 'Employee data successfully updated.');
     }
 
     public function destroy(Employee $employee)
@@ -116,7 +116,7 @@ class MasterEmployeeController extends Controller
         User::where('badge', $badge)->delete();
 
         return redirect()->route('dashboard.employees.index')
-            ->with('success', 'Data Employee berhasil dihapus.');
+            ->with('success', 'Employee data successfully deleted.');
     }
 
     public function bulkDestroy(Request $request)
@@ -136,7 +136,7 @@ class MasterEmployeeController extends Controller
         Employee::whereIn('id', $request->ids)->delete();
 
         return redirect()->route('dashboard.employees.index')
-            ->with('success', count($request->ids) . ' data employee berhasil dihapus.');
+            ->with('success', count($request->ids) . ' employee data successfully deleted.');
     }
 
     public function setInactive(Employee $employee)
@@ -151,6 +151,6 @@ class MasterEmployeeController extends Controller
         }
 
         return redirect()->route('dashboard.employees.index')
-            ->with('success', 'Employee ' . $employee->name . ' telah dinonaktifkan dan akses login dicabut.');
+            ->with('success', 'Employee ' . $employee->name . ' has been deactivated and login access revoked.');
     }
 }

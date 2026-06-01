@@ -19,7 +19,8 @@ class MemberController extends Controller
 
         $sortDirection = $sort === 'asc' ? 'asc' : 'desc';
 
-        $members = Member::with(['employee', 'role', 'logs.actor'])
+        // Optimized: removed 'logs.actor' — now loaded on-demand via AJAX
+        $members = Member::with(['employee', 'role'])
             ->when($q, function($query, $q) {
                 $query->whereHas('employee', function($q2) use ($q) {
                     $q2->where('name', 'like', "%{$q}%")
@@ -27,7 +28,6 @@ class MemberController extends Controller
                 });
             })
             ->when($status && $status !== 'All Status', function($query) use ($status) {
-                // Map frontend status to database enum
                 $statusMap = [
                     'Registered Member' => 'registered',
                     'Pending Verification' => 'pending',
@@ -42,42 +42,51 @@ class MemberController extends Controller
 
         $today = now()->toDateString();
 
-        $availableEmployees = Employee::whereNotIn('id', function($query) {
-            $query->select('employee_id')->from('members')->whereNull('deleted_at');
-        })
-        ->where(function($query) use ($today) {
-            // Include employees with no end_date OR end_date >= today
-            $query->whereNull('end_date')
-                  ->orWhere('end_date', '>=', $today);
-        })
-        ->get();
+        // Optimized: only select columns needed for the modal table
+        $availableEmployees = Employee::select('id', 'badge', 'name', 'department', 'line', 'position', 'end_date')
+            ->whereNotIn('id', function($query) {
+                $query->select('employee_id')->from('members')->whereNull('deleted_at');
+            })
+            ->where(function($query) use ($today) {
+                $query->whereNull('end_date')
+                      ->orWhere('end_date', '>=', $today);
+            })
+            ->get();
 
         $memberRoles = MemberRole::where('name', '!=', 'Member')->orderBy('name')->get();
 
-        // Get Ketua and Sekretaris for Card Preview display
-        $ketuaRole = MemberRole::where('name', 'Ketua')->first();
-        $sekretarisRole = MemberRole::where('name', 'Sekretaris')->first();
+        // Optimized: single query for Ketua & Sekretaris instead of 4 separate queries
+        $signRoles = MemberRole::whereIn('name', ['Ketua', 'Sekretaris'])->pluck('id', 'name');
+        $signMembers = Member::with('employee')
+            ->whereIn('member_role_id', $signRoles->values())
+            ->where('status', 'registered')
+            ->whereNull('deleted_at')
+            ->get()
+            ->keyBy('member_role_id');
 
-        $ketua = null;
-        $sekretaris = null;
-
-        if ($ketuaRole) {
-            $ketua = Member::with('employee')
-                ->where('member_role_id', $ketuaRole->id)
-                ->where('status', 'registered')
-                ->whereNull('deleted_at')
-                ->first();
-        }
-
-        if ($sekretarisRole) {
-            $sekretaris = Member::with('employee')
-                ->where('member_role_id', $sekretarisRole->id)
-                ->where('status', 'registered')
-                ->whereNull('deleted_at')
-                ->first();
-        }
+        $ketua = $signMembers->get($signRoles->get('Ketua'));
+        $sekretaris = $signMembers->get($signRoles->get('Sekretaris'));
 
         return view('dashboard.members', compact('members', 'availableEmployees', 'memberRoles', 'ketua', 'sekretaris', 'sort'));
+    }
+
+    /**
+     * AJAX endpoint: fetch member logs on-demand (when drawer is opened)
+     */
+    public function logs(Member $member)
+    {
+        $logs = $member->logs()->with('actor')->orderBy('created_at', 'asc')->get();
+
+        return response()->json($logs->map(function($log) {
+            return [
+                'activity' => $log->activity,
+                'description' => $log->description,
+                'actor_name' => $log->actor ? $log->actor->name : 'System',
+                'actor_badge' => $log->actor ? $log->actor->badge : '',
+                'created_at_date' => $log->created_at->format('l'),
+                'created_at_time' => $log->created_at->format('d F Y, H.i'),
+            ];
+        }));
     }
 
     public function update(Request $request, Member $member)
@@ -143,7 +152,7 @@ class MemberController extends Controller
             'description' => 'Role updated to "' . $newRole->name . '"' . ($request->hasFile('sign_image') ? ' and signature updated.' : '.'),
         ]);
 
-        $message = 'Role member berhasil diperbarui menjadi "' . $newRole->name . '".';
+        $message = 'Member role successfully updated to "' . $newRole->name . '".';
         return back()->with('success', $message);
     }
 
@@ -168,7 +177,7 @@ class MemberController extends Controller
         $inactiveCount = count($request->employee_ids) - count($activeEmployees);
 
         if (empty($activeEmployees)) {
-            return back()->withErrors(['employee_ids' => 'Semua employee yang dipilih sudah tidak aktif (end_date sudah lewat).']);
+            return back()->withErrors(['employee_ids' => 'All selected employees are already inactive (end_date has passed).']);
         }
 
         $defaultRole = MemberRole::firstOrCreate(
@@ -208,16 +217,16 @@ class MemberController extends Controller
                 'actor_id' => auth()->id(),
                 'activity' => 'Status Update',
                 'status' => 'pending',
-                'description' => 'Waiting for confirmation from member',
+                'description' => 'Waiting for member confirmation',
                 'created_at' => now()->addSecond(),
                 'updated_at' => now()->addSecond(),
             ];
         }
         MemberLog::insert($logsToInsert);
 
-        $message = count($activeEmployees) . ' Member berhasil ditambahkan.';
+        $message = count($activeEmployees) . ' Members successfully added.';
         if ($inactiveCount > 0) {
-            $message .= ' ' . $inactiveCount . ' employee dilewati karena sudah tidak aktif.';
+            $message .= ' ' . $inactiveCount . ' employees skipped because they are inactive.';
         }
 
         return back()->with('success', $message);
@@ -238,7 +247,7 @@ class MemberController extends Controller
                 'actor_id' => auth()->id(),
                 'activity' => 'Delete',
                 'status' => $m->status,
-                'description' => 'Menghapus data member: ' . ($m->employee ? $m->employee->name : 'Unknown'),
+                'description' => 'Deleting member data: ' . ($m->employee ? $m->employee->name : 'Unknown'),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -248,6 +257,6 @@ class MemberController extends Controller
         Member::whereIn('id', $request->ids)->delete();
 
         return redirect()->route('dashboard.members')
-            ->with('success', count($request->ids) . ' member berhasil dihapus.');
+            ->with('success', count($request->ids) . ' members successfully deleted.');
     }
 }

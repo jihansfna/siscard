@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="title">Master Employees</x-slot>
 
-    <section class="bg-white border border-blue-100 rounded-2xl p-6 shadow-sm">
+    <section class="text-gray-800 dark:text-gray-200 transition-colors">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <h2 class="text-xl font-bold text-gray-800">Master Data Employees</h2>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Master Data Employees</h2>
 
             <div class="flex flex-wrap items-center gap-3">
                 <form class="flex items-center gap-2" method="GET" action="{{ route('dashboard.employees.index') }}">
@@ -11,7 +11,7 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                             <x-heroicon-o-magnifying-glass class="w-5 h-5" />
                         </div>
-                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari nama / badge..." class="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50">
+                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Search name / badge..." class="pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700/50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 dark:bg-[#242424] dark:text-white dark:placeholder-gray-500 transition-colors">
                     </div>
                 </form>
 
@@ -22,12 +22,12 @@
                         <span>Export</span>
                         <x-heroicon-o-chevron-down class="w-3 h-3" />
                     </button>
-                    <div id="exportDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50 hidden transition-all">
-                        <a href="{{ route('dashboard.export.employees.excel') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                    <div id="exportDropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-[#242424] rounded-xl shadow-xl border border-gray-100 dark:border-gray-700/50 py-1 z-50 hidden transition-all">
+                        <a href="{{ route('dashboard.export.employees.excel') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">
                             <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM9.5 11.5l2 3.5-2 3.5h1.5l1.25-2.5L13.5 18.5H15l-2-3.5 2-3.5h-1.5l-1.25 2.5-1.25-2.5H9.5z"/></svg>
                             <span>Export Excel</span>
                         </a>
-                        <a href="{{ route('dashboard.export.employees.pdf') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                        <a href="{{ route('dashboard.export.employees.pdf') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">
                             <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM10.5 11c-.83 0-1.5.67-1.5 1.5v4c0 .83.67 1.5 1.5 1.5h3c.83 0 1.5-.67 1.5-1.5v-4c0-.83-.67-1.5-1.5-1.5h-3z"/></svg>
                             <span>Export PDF</span>
                         </a>
@@ -48,13 +48,13 @@
         </div>
 
         <!-- Bulk Delete Actions Bar -->
-        <div id="bulkDeleteBar" class="hidden items-center justify-between bg-red-50 border border-red-100 rounded-xl p-4 mb-4 transition-all duration-300">
-            <div class="flex items-center gap-2 text-red-700 text-sm font-semibold">
+        <div id="bulkDeleteBar" class="hidden items-center justify-between bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/50 rounded-xl p-4 mb-4 transition-all duration-300">
+            <div class="flex items-center gap-2 text-red-700 dark:text-red-400 text-sm font-semibold">
                 <x-heroicon-o-trash class="w-5 h-5 text-red-500" />
-                <span id="selectedCount">0</span> data terpilih
+                <span id="selectedCount">0</span> selected data
             </div>
             <button type="submit" form="bulkDeleteForm" class="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition-all shadow-md shadow-red-600/20 active:scale-95">
-                <span>Hapus Terpilih</span>
+                <span>Delete Selected</span>
             </button>
         </div>
 
@@ -62,13 +62,13 @@
             @csrf
         </form>
 
-        <div class="border border-gray-200 rounded-xl overflow-hidden">
+        <div class="bg-white dark:bg-[#242424] border border-gray-200 dark:border-gray-700/50 rounded-xl overflow-hidden shadow-md shadow-gray-200/60 dark:shadow-none transition-all">
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm text-gray-600">
-                    <thead class="bg-gray-50 text-gray-700 text-xs uppercase font-semibold border-b border-gray-200">
+                <table class="w-full text-left text-sm text-gray-600 dark:text-gray-400">
+                    <thead class="bg-gray-50 dark:bg-[#1A1A1A] text-gray-700 dark:text-gray-300 text-xs uppercase font-semibold border-b border-gray-200 dark:border-gray-700/50">
                         <tr>
                             <th class="px-4 py-3 w-10">
-                                <input type="checkbox" id="selectAllEmployees" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500" onclick="toggleSelectAllEmployees(this)">
+                                <input type="checkbox" id="selectAllEmployees" class="rounded border-gray-300 dark:border-gray-600 dark:bg-[#242424] text-primary-600 focus:ring-primary-500" onclick="toggleSelectAllEmployees(this)">
                             </th>
                             <th class="px-4 py-3">Badge</th>
                             <th class="px-4 py-3">Name</th>
@@ -79,13 +79,13 @@
                             <th class="px-4 py-3 text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-100">
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-700/50">
                         @forelse ($employees as $employee)
-                            <tr class="hover:bg-gray-50/50 transition-colors">
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-[#2A2A2A] transition-colors">
                                 <td class="px-4 py-3">
-                                    <input type="checkbox" name="ids[]" value="{{ $employee->id }}" form="bulkDeleteForm" class="employee-checkbox rounded border-gray-300 text-primary-600 focus:ring-primary-500" onclick="updateBulkDeleteBar()">
+                                    <input type="checkbox" name="ids[]" value="{{ $employee->id }}" form="bulkDeleteForm" class="employee-checkbox rounded border-gray-300 dark:border-gray-600 dark:bg-[#242424] text-primary-600 focus:ring-primary-500" onclick="updateBulkDeleteBar()">
                                 </td>
-                                <td class="px-4 py-3 font-medium text-gray-900">{{ $employee->badge }}</td>
+                                <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">{{ $employee->badge }}</td>
                                 <td class="px-4 py-3">{{ $employee->name }}</td>
                                 <td class="px-4 py-3">{{ $employee->department ?? '-' }}</td>
                                 <td class="px-4 py-3">{{ $employee->position ?? '-' }}</td>
@@ -120,20 +120,20 @@
                                                     <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-4 mx-auto">
                                                         <x-heroicon-o-exclamation-triangle class="w-6 h-6 text-red-600" />
                                                     </div>
-                                                    <h3 class="text-lg font-bold text-gray-900 text-center mb-2">Nonaktifkan Employee?</h3>
+                                                    <h3 class="text-lg font-bold text-gray-900 text-center mb-2">Deactivate Employee?</h3>
                                                     <p class="text-sm text-gray-500 text-center">
-                                                        Apakah Anda yakin ingin menonaktifkan <strong>{{ $employee->name }}</strong>? Akses ke sistem akan dicabut dan status member otomatis menjadi Inactive.
+                                                        Are you sure you want to deactivate <strong>{{ $employee->name }}</strong>? System access will be revoked and member status will automatically become Inactive.
                                                     </p>
                                                 </div>
                                                 <div class="px-6 py-4 bg-gray-50 flex justify-center gap-3">
                                                     <button type="button" onclick="document.getElementById('inactiveEmployeeModal-{{ $employee->id }}').classList.add('hidden'); document.getElementById('inactiveEmployeeModal-{{ $employee->id }}').classList.remove('flex')" class="px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-xl transition-all">
-                                                        Batal
+                                                        Cancel
                                                     </button>
                                                     <form action="{{ route('dashboard.employees.set_inactive', $employee->id) }}" method="POST" class="m-0 form-with-loading">
                                                         @csrf
                                                         @method('PATCH')
                                                         <button type="submit" class="px-4 py-2 text-sm font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl shadow-lg shadow-red-600/20 transition-all flex items-center gap-2">
-                                                            <span class="btn-text">Ya, Nonaktifkan</span>
+                                                            <span class="btn-text">Yes, Deactivate</span>
                                                             <svg class="btn-spinner animate-spin h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -147,9 +147,9 @@
 
                                     <!-- Edit Employee Modal -->
                                     <div id="editEmployeeModal-{{ $employee->id }}" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 backdrop-blur-sm text-left">
-                                        <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden max-h-[90vh] flex flex-col">
-                                            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 flex-shrink-0">
-                                                <h3 class="text-lg font-bold text-gray-800">Edit Employee: {{ $employee->name }}</h3>
+                                        <div class="bg-white dark:bg-[#242424] rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden max-h-[90vh] flex flex-col border border-transparent dark:border-gray-700/50">
+                                            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700/50 flex-shrink-0">
+                                                <h3 class="text-lg font-bold text-gray-800 dark:text-white">Edit Employee: {{ $employee->name }}</h3>
                                                 <button type="button" onclick="document.getElementById('editEmployeeModal-{{ $employee->id }}').classList.add('hidden'); document.getElementById('editEmployeeModal-{{ $employee->id }}').classList.remove('flex')" class="text-gray-400 hover:text-gray-600 transition-colors">
                                                     <x-heroicon-o-x-mark class="w-6 h-6" />
                                                 </button>
@@ -160,90 +160,90 @@
                                                     @method('PUT')
                                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                         <div class="space-y-2">
-                                                            <label class="block text-sm font-bold text-gray-700">Badge ID <span class="text-red-500">*</span></label>
+                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Badge ID <span class="text-red-500">*</span></label>
                                                             <input name="badge" type="text" value="{{ old('badge', $employee->badge) }}" required 
-                                                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm">
+                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
                                                         </div>
 
                                                         <div class="space-y-2">
-                                                            <label class="block text-sm font-bold text-gray-700">Nama Lengkap <span class="text-red-500">*</span></label>
+                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Full Name <span class="text-red-500">*</span></label>
                                                             <input name="name" type="text" value="{{ old('name', $employee->name) }}" required 
-                                                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm">
+                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
                                                         </div>
 
                                                         <div class="space-y-2">
-                                                            <label class="block text-sm font-bold text-gray-700">Department</label>
+                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Department</label>
                                                             <input name="department" type="text" value="{{ old('department', $employee->department) }}" 
-                                                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm">
+                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
                                                         </div>
 
                                                         <div class="space-y-2">
-                                                            <label class="block text-sm font-bold text-gray-700">Position</label>
+                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Position</label>
                                                             <input name="position" type="text" value="{{ old('position', $employee->position) }}" 
-                                                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm">
+                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
                                                         </div>
 
                                                         <div class="space-y-2">
-                                                            <label class="block text-sm font-bold text-gray-700">Line</label>
+                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Line</label>
                                                             <input name="line" type="text" value="{{ old('line', $employee->line) }}" 
-                                                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm">
+                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
                                                         </div>
 
                                                         <div class="space-y-2">
-                                                            <label class="block text-sm font-bold text-gray-700">Join Date</label>
+                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Join Date</label>
                                                             <input name="join_date" type="date" value="{{ old('join_date', $employee->join_date?->format('Y-m-d')) }}" 
-                                                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm">
+                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
                                                         </div>
 
                                                         <div class="space-y-2">
-                                                            <label class="block text-sm font-bold text-gray-700">End Date</label>
+                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">End Date</label>
                                                             <input name="end_date" type="date" value="{{ old('end_date', $employee->end_date?->format('Y-m-d')) }}" 
-                                                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm">
-                                                            <p class="text-xs text-gray-500 mt-1">Kosongkan jika employee masih aktif</p>
+                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                                            <p class="text-xs text-gray-500 mt-1">Leave blank if employee is still active</p>
                                                         </div>
 
                                                         <div class="space-y-2">
-                                                            <label class="block text-sm font-bold text-gray-700">Tempat Lahir</label>
+                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Birth Place</label>
                                                             <input name="birth_place" type="text" value="{{ old('birth_place', $employee->birth_place) }}" 
-                                                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm">
+                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
                                                         </div>
 
                                                         <div class="space-y-2">
-                                                            <label class="block text-sm font-bold text-gray-700">Tanggal Lahir</label>
+                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Birth Date</label>
                                                             <input name="birth_date" type="date" value="{{ old('birth_date', $employee->birth_date?->format('Y-m-d')) }}" 
-                                                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm">
+                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
                                                         </div>
 
                                                         @if($employee->image)
                                                             <div class="space-y-2 md:col-span-2">
-                                                                <label class="block text-sm font-bold text-gray-700">Foto Employee</label>
+                                                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Employee Photo</label>
                                                                 <div class="mb-2">
-                                                                    <img src="{{ asset('storage/' . $employee->image) }}" alt="Foto" class="w-20 h-20 object-cover rounded-lg border border-gray-200">
+                                                                    <img src="{{ asset('storage/' . $employee->image) }}" alt="Photo" class="w-20 h-20 object-cover rounded-lg border border-gray-200">
                                                                 </div>
                                                                 <input name="image" type="file" accept=".jpg,.jpeg,.png" onchange="handleFileChange(this)"
-                                                                    class="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm">
+                                                                    class="w-full px-4 py-2 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
                                                                 <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, JPEG. Max: 2MB</p>
                                                             </div>
                                                         @else
                                                             <div class="space-y-2">
-                                                                <label class="block text-sm font-bold text-gray-700">Foto Employee</label>
+                                                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Employee Photo</label>
                                                                 <input name="image" type="file" accept=".jpg,.jpeg,.png" onchange="handleFileChange(this)"
-                                                                    class="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm">
+                                                                    class="w-full px-4 py-2 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
                                                                 <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, JPEG. Max: 2MB</p>
                                                             </div>
                                                         @endif
 
                                                         <div class="space-y-2 md:col-span-2">
-                                                            <label class="block text-sm font-bold text-gray-700">Alamat</label>
-                                                            <textarea name="address" rows="3" placeholder="Alamat lengkap..." 
-                                                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm resize-none">{{ old('address', $employee->address) }}</textarea>
+                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Address</label>
+                                                            <textarea name="address" rows="3" placeholder="Full address..." 
+                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm resize-none dark:text-white dark:placeholder-gray-500">{{ old('address', $employee->address) }}</textarea>
                                                         </div>
                                                     </div>
                                                 </form>
                                             </div>
-                                            <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3 flex-shrink-0">
+                                            <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700/50 bg-gray-50 dark:bg-[#1A1A1A] flex justify-end gap-3 flex-shrink-0">
                                                 <button type="button" onclick="document.getElementById('editEmployeeModal-{{ $employee->id }}').classList.add('hidden'); document.getElementById('editEmployeeModal-{{ $employee->id }}').classList.remove('flex')" class="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-200 rounded-lg transition-colors">
-                                                    Batal
+                                                    Cancel
                                                 </button>
                                                 <button type="submit" form="editEmployeeForm-{{ $employee->id }}" class="px-6 py-2.5 text-sm font-bold bg-primary-600 hover:bg-primary-700 text-white rounded-xl shadow-lg shadow-primary-600/20 transition-all flex items-center gap-2">
                                                     <span class="btn-text">Update</span>
@@ -262,7 +262,7 @@
                                 <td colspan="8" class="px-4 py-8 text-center text-gray-500">
                                     <div class="flex flex-col items-center justify-center">
                                         <x-heroicon-o-users class="w-10 h-10 text-gray-300 mb-3" />
-                                        <p>Belum ada data employee.</p>
+                                        <p>No employee data available.</p>
                                     </div>
                                 </td>
                             </tr>
@@ -272,7 +272,7 @@
             </div>
             
             @if($employees->hasPages())
-            <div class="p-4 border-t border-gray-100">
+            <div class="p-4 border-t border-gray-100 dark:border-gray-700/50">
                 {{ $employees->links() }}
             </div>
             @endif
@@ -281,9 +281,9 @@
 
     <!-- Add Employee Modal -->
     <div id="addEmployeeModal" class="fixed inset-0 z-50 {{ $errors->any() ? 'flex' : 'hidden' }} items-center justify-center bg-gray-900/50 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden max-h-[90vh] flex flex-col">
-            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 flex-shrink-0">
-                <h3 class="text-lg font-bold text-gray-800">Add New Employee</h3>
+        <div class="bg-white dark:bg-[#242424] rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden max-h-[90vh] flex flex-col border border-transparent dark:border-gray-700/50">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700/50 flex-shrink-0">
+                <h3 class="text-lg font-bold text-gray-800 dark:text-white">Add New Employee</h3>
                 <button type="button" onclick="document.getElementById('addEmployeeModal').classList.add('hidden'); document.getElementById('addEmployeeModal').classList.remove('flex')" class="text-gray-400 hover:text-gray-600 transition-colors">
                     <x-heroicon-o-x-mark class="w-6 h-6" />
                 </button>
@@ -304,81 +304,81 @@
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2 group">
-                            <label for="badge" class="block text-sm font-bold text-gray-700">Badge ID <span class="text-red-500">*</span></label>
-                            <input id="badge" name="badge" type="text" value="{{ old('badge') }}" placeholder="Contoh: 12345" required 
-                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
+                            <label for="badge" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Badge ID <span class="text-red-500">*</span></label>
+                            <input id="badge" name="badge" type="text" value="{{ old('badge') }}" placeholder="Example: 12345" required 
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
                         </div>
 
                         <div class="space-y-2 group">
-                            <label for="name" class="block text-sm font-bold text-gray-700">Nama Lengkap <span class="text-red-500">*</span></label>
-                            <input id="name" name="name" type="text" value="{{ old('name') }}" placeholder="Nama Employee" required 
-                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
+                            <label for="name" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Full Name <span class="text-red-500">*</span></label>
+                            <input id="name" name="name" type="text" value="{{ old('name') }}" placeholder="Employee Name" required 
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
                         </div>
 
                         <div class="space-y-2 group">
-                            <label for="department" class="block text-sm font-bold text-gray-700">Department</label>
-                            <input id="department" name="department" type="text" value="{{ old('department') }}" placeholder="Contoh: IT" 
-                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
+                            <label for="department" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Department</label>
+                            <input id="department" name="department" type="text" value="{{ old('department') }}" placeholder="Example: IT" 
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
                         </div>
 
                         <div class="space-y-2 group">
-                            <label for="position" class="block text-sm font-bold text-gray-700">Position</label>
-                            <input id="position" name="position" type="text" value="{{ old('position') }}" placeholder="Contoh: Staff" 
-                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
+                            <label for="position" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Position</label>
+                            <input id="position" name="position" type="text" value="{{ old('position') }}" placeholder="Example: Staff" 
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
                         </div>
 
                         <div class="space-y-2 group">
-                            <label for="line" class="block text-sm font-bold text-gray-700">Line</label>
-                            <input id="line" name="line" type="text" value="{{ old('line') }}" placeholder="Contoh: Line 1" 
-                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
+                            <label for="line" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Line</label>
+                            <input id="line" name="line" type="text" value="{{ old('line') }}" placeholder="Example: Line 1" 
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
                         </div>
 
                         <div class="space-y-2 group">
-                            <label for="join_date" class="block text-sm font-bold text-gray-700">Join Date</label>
+                            <label for="join_date" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Join Date</label>
                             <input id="join_date" name="join_date" type="date" value="{{ old('join_date') }}" 
-                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
                         </div>
 
                         <div class="space-y-2 group">
-                            <label for="end_date" class="block text-sm font-bold text-gray-700">End Date</label>
+                            <label for="end_date" class="block text-sm font-bold text-gray-700 dark:text-gray-300">End Date</label>
                             <input id="end_date" name="end_date" type="date" value="{{ old('end_date') }}" 
-                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
-                            <p class="text-xs text-gray-500 mt-1">Kosongkan jika employee masih aktif</p>
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                            <p class="text-xs text-gray-500 mt-1">Leave blank if employee is still active</p>
                         </div>
 
                         <div class="space-y-2 group">
-                            <label for="birth_place" class="block text-sm font-bold text-gray-700">Tempat Lahir</label>
-                            <input id="birth_place" name="birth_place" type="text" value="{{ old('birth_place') }}" placeholder="Contoh: Batam" 
-                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
+                            <label for="birth_place" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Birth Place</label>
+                            <input id="birth_place" name="birth_place" type="text" value="{{ old('birth_place') }}" placeholder="Example: Batam" 
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
                         </div>
 
                         <div class="space-y-2 group">
-                            <label for="birth_date" class="block text-sm font-bold text-gray-700">Tanggal Lahir</label>
+                            <label for="birth_date" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Birth Date</label>
                             <input id="birth_date" name="birth_date" type="date" value="{{ old('birth_date') }}" 
-                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
                         </div>
 
                         <div class="space-y-2 group">
-                            <label for="image" class="block text-sm font-bold text-gray-700">Foto Employee</label>
+                            <label for="image" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Employee Photo</label>
                             <input id="image" name="image" type="file" accept=".jpg,.jpeg,.png" onchange="handleFileChange(this)"
-                                class="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
+                                class="w-full px-4 py-2 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
                             <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, JPEG. Max: 2MB</p>
                         </div>
 
                         <div class="space-y-2 group md:col-span-2">
-                            <label for="address" class="block text-sm font-bold text-gray-700">Alamat</label>
-                            <textarea id="address" name="address" rows="3" placeholder="Alamat lengkap..." 
-                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm resize-none">{{ old('address') }}</textarea>
+                            <label for="address" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Address</label>
+                            <textarea id="address" name="address" rows="3" placeholder="Full address..." 
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm resize-none dark:text-white dark:placeholder-gray-500">{{ old('address') }}</textarea>
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3 flex-shrink-0">
+            <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700/50 bg-gray-50 dark:bg-[#1A1A1A] flex justify-end gap-3 flex-shrink-0">
                 <button type="button" onclick="document.getElementById('addEmployeeModal').classList.add('hidden'); document.getElementById('addEmployeeModal').classList.remove('flex')" class="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-200 rounded-lg transition-colors">
-                    Batal
+                    Cancel
                 </button>
                 <button type="submit" form="addEmployeeForm" class="px-6 py-2.5 text-sm font-bold bg-primary-600 hover:bg-primary-700 text-white rounded-xl shadow-lg shadow-primary-600/20 transition-all flex items-center gap-2">
-                    <span class="btn-text">Simpan Employee</span>
+                    <span class="btn-text">Save Employee</span>
                     <svg class="btn-spinner animate-spin h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -435,7 +435,7 @@
                     
                     // Trigger beautiful error toast
                     if (window.showToast) {
-                        window.showToast('Format Salah!', 'Hanya format JPG, PNG, dan JPEG yang diperbolehkan.', 'error');
+                        window.showToast('Invalid Format!', 'Only JPG, PNG, and JPEG formats are allowed.', 'error');
                     }
                     return;
                 }
@@ -452,7 +452,7 @@
                     
                     // Trigger beautiful error toast
                     if (window.showToast) {
-                        window.showToast('File Terlalu Besar!', 'Ukuran foto maksimal adalah 2MB.', 'error');
+                        window.showToast('File Too Large!', 'Maximum photo size is 2MB.', 'error');
                     }
                     return;
                 }
@@ -470,9 +470,9 @@
 
     {{-- Import Employee Modal --}}
     <div id="importEmployeeModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col">
-            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 flex-shrink-0">
-                <h3 class="text-lg font-bold text-gray-800">Import Data Employee</h3>
+        <div class="bg-white dark:bg-[#242424] rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col border border-transparent dark:border-gray-700/50">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700/50 flex-shrink-0">
+                <h3 class="text-lg font-bold text-gray-800 dark:text-white">Import Data Employee</h3>
                 <button type="button" onclick="closeImportModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
                     <x-heroicon-o-x-mark class="w-6 h-6" />
                 </button>
@@ -480,7 +480,7 @@
             <div class="p-6">
                 @if(session('import_errors'))
                     <div class="mb-4 p-4 rounded-xl bg-yellow-50 border border-yellow-200 text-yellow-800 text-sm">
-                        <p class="font-bold mb-1">Beberapa baris dilewati:</p>
+                        <p class="font-bold mb-1">Some rows skipped:</p>
                         <ul class="list-disc list-inside space-y-0.5 text-xs">
                             @foreach(session('import_errors') as $err)
                                 <li>{{ $err }}</li>
@@ -493,19 +493,19 @@
                     <div class="flex items-start gap-3">
                         <x-heroicon-o-information-circle class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                         <div class="text-sm text-blue-800">
-                            <p class="font-bold mb-1">Petunjuk Import:</p>
+                            <p class="font-bold mb-1">Import Instructions:</p>
                             <ul class="list-disc list-inside space-y-0.5 text-xs">
-                                <li>Download template terlebih dahulu</li>
-                                <li>Isi data sesuai format template</li>
-                                <li>Kolom <strong>Badge</strong> dan <strong>Nama</strong> wajib diisi</li>
-                                <li>Format tanggal: <strong>dd/mm/yyyy</strong></li>
-                                <li>Badge yang sudah terdaftar akan otomatis dilewati</li>
+                                <li>Download the template first</li>
+                                <li>Fill in data according to template format</li>
+                                <li>Columns <strong>Badge</strong> and <strong>Name</strong> are required</li>
+                                <li>Date format: <strong>dd/mm/yyyy</strong></li>
+                                <li>Already registered badges will automatically be skipped</li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
-                <a href="{{ route('dashboard.import.employees.template') }}" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 mb-5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-sm font-bold transition-all border border-gray-200">
+                <a href="{{ route('dashboard.import.employees.template') }}" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 mb-5 bg-gray-100 dark:bg-[#1A1A1A] hover:bg-gray-200 dark:hover:bg-[#2A2A2A] text-gray-700 dark:text-gray-300 rounded-xl text-sm font-bold transition-all border border-gray-200 dark:border-gray-700/50">
                     <x-heroicon-o-document-arrow-down class="w-4 h-4" />
                     <span>Download Template Excel</span>
                 </a>
@@ -514,20 +514,20 @@
                     @csrf
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-2">File Excel (.xlsx) <span class="text-red-500">*</span></label>
-                            <div id="importDropZone" class="relative border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-primary-400 transition-colors cursor-pointer" onclick="document.getElementById('importFileInput').click()">
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Excel File (.xlsx) <span class="text-red-500">*</span></label>
+                            <div id="importDropZone" class="relative border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center hover:border-primary-400 dark:hover:border-primary-500 transition-colors cursor-pointer bg-gray-50 dark:bg-[#1A1A1A]" onclick="document.getElementById('importFileInput').click()">
                                 <input type="file" name="file" id="importFileInput" accept=".xlsx,.xls" required class="hidden" onchange="handleImportFileChange(this)">
                                 <x-heroicon-o-cloud-arrow-up class="w-10 h-10 text-gray-300 mx-auto mb-2" />
-                                <p class="text-sm text-gray-500 font-medium" id="importFileName">Klik atau drag file ke sini</p>
-                                <p class="text-xs text-gray-400 mt-1">Format: .xlsx atau .xls (max 5MB)</p>
+                                <p class="text-sm text-gray-500 font-medium" id="importFileName">Click or drag file here</p>
+                                <p class="text-xs text-gray-400 mt-1">Format: .xlsx or .xls (max 5MB)</p>
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3 flex-shrink-0">
+            <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700/50 bg-gray-50 dark:bg-[#1A1A1A] flex justify-end gap-3 flex-shrink-0">
                 <button type="button" onclick="closeImportModal()" class="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-200 rounded-lg transition-colors">
-                    Batal
+                    Cancel
                 </button>
                 <button type="submit" form="importEmployeeForm" class="px-6 py-2.5 text-sm font-bold bg-amber-500 hover:bg-amber-600 text-white rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center gap-2">
                     <span class="btn-text">Import Data</span>
@@ -568,7 +568,7 @@
                 
                 if (!['xlsx', 'xls'].includes(ext)) {
                     input.value = '';
-                    fileNameEl.textContent = 'Format file tidak didukung!';
+                    fileNameEl.textContent = 'File format not supported!';
                     fileNameEl.classList.add('text-red-500');
                     dropZone.classList.add('border-red-400');
                     dropZone.classList.remove('border-gray-300', 'border-green-400');
@@ -577,7 +577,7 @@
 
                 if (file.size > 5 * 1024 * 1024) {
                     input.value = '';
-                    fileNameEl.textContent = 'File terlalu besar! Max 5MB';
+                    fileNameEl.textContent = 'File too large! Max 5MB';
                     fileNameEl.classList.add('text-red-500');
                     dropZone.classList.add('border-red-400');
                     dropZone.classList.remove('border-gray-300', 'border-green-400');
@@ -590,7 +590,7 @@
                 dropZone.classList.add('border-green-400', 'bg-green-50/30');
                 dropZone.classList.remove('border-gray-300', 'border-red-400');
             } else {
-                fileNameEl.textContent = 'Klik atau drag file ke sini';
+                fileNameEl.textContent = 'Click or drag file here';
                 fileNameEl.classList.remove('text-green-700', 'font-bold', 'text-red-500');
                 fileNameEl.classList.add('text-gray-500');
                 dropZone.classList.remove('border-green-400', 'bg-green-50/30', 'border-red-400');

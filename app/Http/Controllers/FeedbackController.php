@@ -15,6 +15,8 @@ class FeedbackController extends Controller
     public function indexAdmin(Request $request)
     {
         $q = $request->query('q');
+        $status = $request->query('status');
+        $sort = $request->query('sort', 'desc');
         
         $feedbacks = Feedback::with('member.employee')
             ->when($q, function($query, $q) {
@@ -23,8 +25,12 @@ class FeedbackController extends Controller
                        ->orWhere('badge', 'like', "%{$q}%");
                 });
             })
-            ->orderBy('created_at', 'asc')
-            ->paginate(10);
+            ->when($status && $status !== 'All Status', function($query) use ($status) {
+                $query->where('status', $status);
+            })
+            ->orderBy('updated_at', $sort)
+            ->paginate(10)
+            ->withQueryString();
             
         return view('dashboard.feedbacks', compact('feedbacks'));
     }
@@ -41,7 +47,7 @@ class FeedbackController extends Controller
             'remark' => $request->remark,
         ]);
 
-        return back()->with('success', 'Saran berhasil ditandai sebagai Completed.');
+        return back()->with('success', 'Feedback successfully marked as Completed.');
     }
 
     // USER: Store a new feedback
@@ -49,25 +55,35 @@ class FeedbackController extends Controller
     {
         $request->validate([
             'description' => 'required|string',
-            'document' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg,zip|max:5120',
+            'document' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg,zip|max:10240',
+        ], [
+            'document.max' => 'File size too large. Maximum 10MB.',
+            'document.mimes' => 'Unsupported file format. Use PDF, Word, Excel, Image, or ZIP.',
         ]);
 
         $employee = Employee::where('badge', auth()->user()->badge)->first();
-        if (!$employee) return back()->withErrors(['message' => 'Anda tidak memiliki akses.']);
+        if (!$employee) return back()->withErrors(['message' => 'You do not have access.']);
 
         // Block if employee is inactive
         if ($employee->end_date && Carbon::parse($employee->end_date)->lt(now()->startOfDay())) {
-            return back()->withErrors(['message' => 'Masa kerja Anda telah berakhir. Akun dinonaktifkan.']);
+            return back()->withErrors(['message' => 'Your employment period has ended. Account deactivated.']);
         }
         
         $member = Member::where('employee_id', $employee->id)->first();
         if (!$member || $member->status !== 'registered') {
-            return back()->withErrors(['message' => 'Anda belum terdaftar sebagai member aktif.']);
+            return back()->withErrors(['message' => 'You are not registered as an active member.']);
         }
 
         $filePath = null;
         if ($request->hasFile('document')) {
-            $filePath = $request->file('document')->store('feedbacks', 'public');
+            $file = $request->file('document');
+            
+            // Double-check file validity
+            if (!$file->isValid()) {
+                return back()->withErrors(['document' => 'File upload failed. Ensure the file size does not exceed the maximum limit (10MB).'])->withInput();
+            }
+            
+            $filePath = $file->store('feedbacks', 'public');
         }
 
         Feedback::create([
@@ -77,7 +93,7 @@ class FeedbackController extends Controller
             'status' => 'Waiting',
         ]);
 
-        return back()->with('success', 'Saran berhasil dikirim. Menunggu respon HRD.');
+        return back()->with('success', 'Feedback successfully submitted. Waiting for HRD response.');
     }
 
     public function bulkDestroy(Request $request)
@@ -90,7 +106,7 @@ class FeedbackController extends Controller
         Feedback::whereIn('id', $request->ids)->delete();
 
         return redirect()->route('dashboard.feedbacks')
-            ->with('success', count($request->ids) . ' saran berhasil dihapus.');
+            ->with('success', count($request->ids) . ' feedbacks successfully deleted.');
     }
 
     // USER: Delete a feedback
@@ -113,6 +129,6 @@ class FeedbackController extends Controller
 
         $feedback->delete();
 
-        return back()->with('success', 'Saran Anda berhasil dihapus.');
+        return back()->with('success', 'Your feedback was successfully deleted.');
     }
 }

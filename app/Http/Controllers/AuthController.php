@@ -72,7 +72,7 @@ class AuthController extends Controller
             $token = $user->createToken('user-token')->plainTextToken;
 
             return response()->json([
-                'message' => 'User berhasil didaftarkan',
+                'message' => 'User successfully registered',
                 'user'    => $user,
                 'token'   => $token,
             ], 201);
@@ -82,7 +82,7 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
         return redirect()->route($this->homeRoute($user))
-            ->with('success', 'Registrasi berhasil! Selamat datang.');
+            ->with('success', 'Registration successful! Welcome, ' . $user->name . '.');
     }
 
     /**
@@ -101,7 +101,7 @@ class AuthController extends Controller
         $user = User::whereRaw('BINARY badge = ?', [$credentials['badge']])->first();
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            $error = ['badge' => 'Badge atau password yang Anda masukkan salah.'];
+            $error = ['badge' => 'Invalid badge or password.'];
 
             if ($isApi) {
                 return response()->json(['message' => $error['badge']], 401);
@@ -114,7 +114,7 @@ class AuthController extends Controller
             $token = $user->createToken('user-token')->plainTextToken;
 
             return response()->json([
-                'message' => 'Login berhasil',
+                'message' => 'Login successful',
                 'token'   => $token,
                 'user'    => $user,
             ]);
@@ -124,7 +124,7 @@ class AuthController extends Controller
         if ($user->role !== 'admin') {
             $employee = Employee::where('badge', $user->badge)->first();
             if ($employee && $employee->end_date && Carbon::parse($employee->end_date)->lt(now()->startOfDay())) {
-                $error = ['badge' => 'Status akun Anda saat ini adalah Tidak Aktif (Inactive). Silakan hubungi HRD untuk informasi lebih lanjut.'];
+                $error = ['badge' => 'Your account status is currently Inactive. Please contact HRD for more information.'];
                 if ($isApi) {
                     return response()->json(['message' => $error['badge']], 403);
                 }
@@ -133,11 +133,19 @@ class AuthController extends Controller
         }
 
         // Web login
+        // Track login count to differentiate first-time vs returning users
+        $isFirstLogin = $user->login_count === 0 || $user->login_count === null;
+        $user->increment('login_count');
+
         Auth::login($user, $request->boolean('remember'));
         $request->session()->regenerate();
 
+        $greeting = $isFirstLogin
+            ? 'Welcome, ' . $user->name . '!'
+            : 'Welcome back, ' . $user->name . '!';
+
         return redirect()->intended(route($this->homeRoute($user)))
-            ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
+            ->with('success', $greeting);
     }
 
     public function logout(Request $request)
@@ -146,7 +154,7 @@ class AuthController extends Controller
             // API logout
             $request->user()->currentAccessToken()->delete();
 
-            return response()->json(['message' => 'Logout berhasil']);
+            return response()->json(['message' => 'Logout successful']);
         }
 
         Auth::logout();
@@ -155,7 +163,7 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login')
-            ->with('success', 'Anda telah berhasil logout.');
+            ->with('success', 'You have successfully logged out.');
     }
 
     /**
@@ -170,13 +178,13 @@ class AuthController extends Controller
         $user = User::whereRaw('BINARY badge = ?', [$request->badge])->first();
 
         if (!$user) {
-            return back()->withErrors(['badge' => 'Badge ID tidak ditemukan dalam sistem.']);
+            return back()->withErrors(['badge' => 'Badge ID not found in the system.']);
         }
 
         $user->update([
             'password' => Hash::make('P4ssword')
         ]);
 
-        return redirect()->route('login')->with('success', 'Password berhasil direset ke password default.');
+        return redirect()->route('login')->with('success', 'Password successfully reset to default password.');
     }
 }

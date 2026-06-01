@@ -38,20 +38,20 @@ class EmployeeImport
 
             // Validate required fields
             if (empty($badge)) {
-                $this->errors[] = "Baris {$rowIndex}: Badge tidak boleh kosong.";
+                $this->errors[] = "Row {$rowIndex}: Badge cannot be empty.";
                 $this->skipped++;
                 continue;
             }
 
             if (empty($name)) {
-                $this->errors[] = "Baris {$rowIndex}: Nama tidak boleh kosong.";
+                $this->errors[] = "Row {$rowIndex}: Name cannot be empty.";
                 $this->skipped++;
                 continue;
             }
 
             // Check for duplicate badge
             if (Employee::where('badge', $badge)->exists()) {
-                $this->errors[] = "Baris {$rowIndex}: Badge '{$badge}' sudah terdaftar, data dilewati.";
+                $this->errors[] = "Row {$rowIndex}: Badge '{$badge}' is already registered, data skipped.";
                 $this->skipped++;
                 continue;
             }
@@ -82,7 +82,7 @@ class EmployeeImport
 
                 $this->imported++;
             } catch (\Exception $e) {
-                $this->errors[] = "Baris {$rowIndex}: Gagal menyimpan data - {$e->getMessage()}";
+                $this->errors[] = "Row {$rowIndex}: Failed to save data - {$e->getMessage()}";
                 $this->skipped++;
             }
         }

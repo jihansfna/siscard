@@ -24,6 +24,7 @@ class User extends Authenticatable
         'badge',
         'password',
         'role',
+        'login_count',
     ];
 
     /**
