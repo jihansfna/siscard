@@ -38,30 +38,45 @@
                             
                             <div>
                                 <label class="block text-xs font-semibold text-gray-600 mb-1">Activity</label>
-                                <div class="relative">
-                                    <select name="activity" class="w-full pl-3 pr-8 py-2 border border-gray-200 dark:border-gray-700/50 rounded-lg text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50 dark:bg-[#1A1A1A] dark:text-white transition-colors">
-                                        <option value="All Activity">All Activities</option>
-                                        @foreach($activities as $act)
-                                            <option value="{{ $act }}" {{ request('activity') == $act ? 'selected' : '' }}>{{ ucfirst($act) }}</option>
-                                        @endforeach
-                                    </select>
-                                    <div class="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none text-gray-400">
-                                        <x-heroicon-o-chevron-down class="w-4 h-4" />
+                                <div class="relative custom-dropdown-container">
+                                    <input type="hidden" name="activity" id="activityFilterInput" value="{{ request('activity', 'All Activity') }}">
+                                    <button type="button" onclick="toggleCustomDropdown('activityDropdownMenu')" class="w-full flex items-center justify-between pl-3 pr-2 py-2 border border-gray-200 dark:border-gray-700/50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50 dark:bg-[#1A1A1A] dark:text-white transition-colors cursor-pointer shadow-sm">
+                                        <span id="activityFilterBtnText">{{ request('activity') && request('activity') != 'All Activity' ? ucfirst(request('activity')) : 'All Activities' }}</span>
+                                        <svg class="w-4 h-4 text-gray-400 pointer-events-none flex-shrink-0 ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>
+                                    </button>
+                                    <div id="activityDropdownMenu" class="custom-dropdown-menu absolute z-50 hidden mt-1.5 w-full bg-white dark:bg-[#242424] border border-gray-100 dark:border-gray-700/50 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-300 font-medium">
+                                            <li><button type="button" onclick="selectDropdownOption('activityFilterInput', 'activityFilterBtnText', 'activityDropdownMenu', 'All Activity', 'All Activities')" class="inline-flex items-center w-full px-3 py-2 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">All Activities</button></li>
+                                            @foreach($activities as $act)
+                                                <li><button type="button" onclick="selectDropdownOption('activityFilterInput', 'activityFilterBtnText', 'activityDropdownMenu', '{{ $act }}', '{{ ucfirst($act) }}')" class="inline-flex items-center w-full px-3 py-2 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">{{ ucfirst($act) }}</button></li>
+                                            @endforeach
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
                             
                             <div>
                                 <label class="block text-xs font-semibold text-gray-600 mb-1">Actor</label>
-                                <div class="relative">
-                                    <select name="actor" class="w-full pl-3 pr-8 py-2 border border-gray-200 dark:border-gray-700/50 rounded-lg text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50 dark:bg-[#1A1A1A] dark:text-white transition-colors">
-                                        <option value="All Actor">All Actors</option>
-                                        @foreach($actors as $actr)
-                                            <option value="{{ $actr->id }}" {{ request('actor') == $actr->id ? 'selected' : '' }}>{{ $actr->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <div class="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none text-gray-400">
-                                        <x-heroicon-o-chevron-down class="w-4 h-4" />
+                                <div class="relative custom-dropdown-container">
+                                    <input type="hidden" name="actor" id="actorFilterInput" value="{{ request('actor', 'All Actor') }}">
+                                    @php
+                                        $selectedActorName = 'All Actors';
+                                        if (request('actor') && request('actor') !== 'All Actor') {
+                                            $selectedActor = collect($actors)->firstWhere('id', request('actor'));
+                                            if ($selectedActor) $selectedActorName = $selectedActor->name;
+                                        }
+                                    @endphp
+                                    <button type="button" onclick="toggleCustomDropdown('actorDropdownMenu')" class="w-full flex items-center justify-between pl-3 pr-2 py-2 border border-gray-200 dark:border-gray-700/50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50 dark:bg-[#1A1A1A] dark:text-white transition-colors cursor-pointer shadow-sm">
+                                        <span id="actorFilterBtnText" class="truncate">{{ $selectedActorName }}</span>
+                                        <svg class="w-4 h-4 text-gray-400 pointer-events-none flex-shrink-0 ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>
+                                    </button>
+                                    <div id="actorDropdownMenu" class="custom-dropdown-menu absolute z-50 hidden mt-1.5 w-full bg-white dark:bg-[#242424] border border-gray-100 dark:border-gray-700/50 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-300 font-medium">
+                                            <li><button type="button" onclick="selectDropdownOption('actorFilterInput', 'actorFilterBtnText', 'actorDropdownMenu', 'All Actor', 'All Actors')" class="inline-flex items-center w-full px-3 py-2 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors truncate text-left">All Actors</button></li>
+                                            @foreach($actors as $actr)
+                                                <li><button type="button" onclick="selectDropdownOption('actorFilterInput', 'actorFilterBtnText', 'actorDropdownMenu', '{{ $actr->id }}', '{{ addslashes($actr->name) }}')" class="inline-flex items-center w-full px-3 py-2 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors truncate text-left">{{ $actr->name }}</button></li>
+                                            @endforeach
+                                        </ul>
                                     </div>
                                 </div>
                             </div>

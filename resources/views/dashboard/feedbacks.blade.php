@@ -314,7 +314,7 @@
 
     <!-- Filter Modal -->
     <div id="filterModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 backdrop-blur-sm p-4 transition-opacity">
-        <div class="bg-white dark:bg-[#242424] rounded-2xl shadow-xl w-full max-w-sm overflow-hidden flex flex-col border border-transparent dark:border-gray-700/50">
+        <div class="bg-white dark:bg-[#242424] rounded-2xl shadow-xl w-full max-w-sm flex flex-col border border-transparent dark:border-gray-700/50">
             <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700/50">
                 <h3 class="text-lg font-bold text-gray-800 dark:text-white">Filter Feedbacks</h3>
                 <button type="button" onclick="closeFilterModal()" class="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer">
@@ -331,33 +331,41 @@
                 <div class="p-6 space-y-5">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Status</label>
-                        <div class="relative">
-                            <select name="status" class="w-full pl-4 pr-10 py-2.5 border border-gray-200 dark:border-gray-700/50 rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-[#1A1A1A] text-gray-700 dark:text-white transition-colors cursor-pointer">
-                                <option value="All Status" {{ request('status') == 'All Status' || !request('status') ? 'selected' : '' }}>All Status</option>
-                                <option value="Waiting" {{ request('status') == 'Waiting' ? 'selected' : '' }}>Waiting</option>
-                                <option value="Completed" {{ request('status') == 'Completed' ? 'selected' : '' }}>Completed</option>
-                            </select>
-                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
-                                <x-heroicon-o-chevron-down class="w-4 h-4" />
+                        <div class="relative custom-dropdown-container">
+                            <input type="hidden" name="status" id="fbStatusInput" value="{{ request('status', 'All Status') }}">
+                            <button type="button" onclick="toggleCustomDropdown('fbStatusMenu')" class="w-full flex items-center justify-between pl-4 pr-3 py-2.5 bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors text-gray-700 dark:text-white cursor-pointer shadow-sm">
+                                <span id="fbStatusBtnText">{{ request('status', 'All Status') }}</span>
+                                <svg class="w-4 h-4 text-gray-400 pointer-events-none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>
+                            </button>
+                            <div id="fbStatusMenu" class="custom-dropdown-menu absolute z-50 hidden mt-1.5 w-full bg-white dark:bg-[#242424] border border-gray-100 dark:border-gray-700/50 rounded-xl shadow-lg">
+                                <ul class="py-1 text-sm text-gray-700 dark:text-gray-300 font-medium">
+                                    <li><button type="button" onclick="selectDropdownOption('fbStatusInput', 'fbStatusBtnText', 'fbStatusMenu', 'All Status', 'All Status')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">All Status</button></li>
+                                    <li><button type="button" onclick="selectDropdownOption('fbStatusInput', 'fbStatusBtnText', 'fbStatusMenu', 'Waiting', 'Waiting')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Waiting</button></li>
+                                    <li><button type="button" onclick="selectDropdownOption('fbStatusInput', 'fbStatusBtnText', 'fbStatusMenu', 'Completed', 'Completed')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Completed</button></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
                     
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Sort By</label>
-                        <div class="relative">
-                            <select name="sort" class="w-full pl-4 pr-10 py-2.5 border border-gray-200 dark:border-gray-700/50 rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-[#1A1A1A] text-gray-700 dark:text-white transition-colors cursor-pointer">
-                                <option value="desc" {{ request('sort', 'desc') === 'desc' ? 'selected' : '' }}>Newest Data</option>
-                                <option value="asc" {{ request('sort') === 'asc' ? 'selected' : '' }}>Oldest Data</option>
-                            </select>
-                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
-                                <x-heroicon-o-chevron-down class="w-4 h-4" />
+                        <div class="relative custom-dropdown-container">
+                            <input type="hidden" name="sort" id="fbSortInput" value="{{ request('sort', 'desc') }}">
+                            <button type="button" onclick="toggleCustomDropdown('fbSortMenu')" class="w-full flex items-center justify-between pl-4 pr-3 py-2.5 bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors text-gray-700 dark:text-white cursor-pointer shadow-sm">
+                                <span id="fbSortBtnText">{{ request('sort', 'desc') === 'desc' ? 'Newest Data' : 'Oldest Data' }}</span>
+                                <svg class="w-4 h-4 text-gray-400 pointer-events-none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>
+                            </button>
+                            <div id="fbSortMenu" class="custom-dropdown-menu absolute z-50 hidden mt-1.5 w-full bg-white dark:bg-[#242424] border border-gray-100 dark:border-gray-700/50 rounded-xl shadow-lg">
+                                <ul class="py-1 text-sm text-gray-700 dark:text-gray-300 font-medium">
+                                    <li><button type="button" onclick="selectDropdownOption('fbSortInput', 'fbSortBtnText', 'fbSortMenu', 'desc', 'Newest Data')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Newest Data</button></li>
+                                    <li><button type="button" onclick="selectDropdownOption('fbSortInput', 'fbSortBtnText', 'fbSortMenu', 'asc', 'Oldest Data')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Oldest Data</button></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="px-6 py-4 flex items-center justify-between border-t border-gray-100 dark:border-gray-700/50 bg-gray-50 dark:bg-[#1A1A1A]">
+                <div class="px-6 py-4 flex items-center justify-between border-t border-gray-100 dark:border-gray-700/50 bg-gray-50 dark:bg-[#1A1A1A] rounded-b-2xl">
                     <a href="{{ route('dashboard.feedbacks') }}{{ request('q') ? '?q=' . request('q') : '' }}" class="text-sm font-bold text-red-600 hover:text-red-700 transition-colors">
                         Reset Filter
                     </a>

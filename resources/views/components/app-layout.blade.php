@@ -294,6 +294,51 @@
                     }
                 }, 300);
             };
+
+            // Custom Select Dropdown Logic
+            window.selectDropdownOption = function(inputId, buttonTextId, dropdownId, value, label) {
+                const input = document.getElementById(inputId);
+                if (input) {
+                    input.value = value;
+                    // Trigger change event for any listeners
+                    input.dispatchEvent(new Event('change'));
+                }
+                
+                const btnText = document.getElementById(buttonTextId);
+                if (btnText) {
+                    btnText.innerText = label;
+                }
+                
+                const dropdown = document.getElementById(dropdownId);
+                if (dropdown) {
+                    dropdown.classList.add('hidden');
+                }
+            };
+
+            window.toggleCustomDropdown = function(dropdownId) {
+                const dropdown = document.getElementById(dropdownId);
+                if (!dropdown) return;
+                
+                const isHidden = dropdown.classList.contains('hidden');
+                
+                // Close all other dropdowns first
+                document.querySelectorAll('.custom-dropdown-menu').forEach(menu => {
+                    menu.classList.add('hidden');
+                });
+                
+                if (isHidden) {
+                    dropdown.classList.remove('hidden');
+                }
+            };
+
+            document.addEventListener('click', function(e) {
+                // If click is not inside a relative container of a dropdown, close them all
+                if (!e.target.closest('.custom-dropdown-container')) {
+                    document.querySelectorAll('.custom-dropdown-menu').forEach(menu => {
+                        menu.classList.add('hidden');
+                    });
+                }
+            });
         </script>
     </body>
 </html>
