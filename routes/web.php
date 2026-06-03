@@ -22,10 +22,13 @@ Route::get('/verify/{token}/pdf', [\App\Http\Controllers\CardController::class, 
 Route::get('/qr-image', [\App\Http\Controllers\CardController::class, 'qrImage'])->name('qr.image');
 
 // --- Auth route (hanya bisa diakses jika sudah login) ---
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/password/change', [AuthController::class, 'changePassword'])->name('password.change');
+});
 
 // --- Admin routes (role: admin / HRD) ---
-Route::middleware(['auth', 'role:admin'])->prefix('dashboard')->group(function () {
+Route::middleware(['auth', 'role:admin', 'check.default.password'])->prefix('dashboard')->group(function () {
     Route::get('/', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
     // Bulk Delete Routes
@@ -68,7 +71,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('dashboard')->group(function (
 });
 
 // --- User routes (role: user / Employee) ---
-Route::middleware(['auth', 'role:user'])->prefix('home')->group(function () {
+Route::middleware(['auth', 'role:user', 'check.default.password'])->prefix('home')->group(function () {
     Route::get('/', [\App\Http\Controllers\UserController::class, 'index'])->name('user.home');
     Route::post('/confirm-membership/{id}', [\App\Http\Controllers\UserController::class, 'confirmMembership'])->name('user.confirm_membership');
     Route::post('/feedbacks', [\App\Http\Controllers\FeedbackController::class, 'store'])->name('user.feedbacks.store');

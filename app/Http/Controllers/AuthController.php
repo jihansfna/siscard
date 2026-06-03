@@ -181,10 +181,50 @@ class AuthController extends Controller
             return back()->withErrors(['badge' => 'Badge ID not found in the system.']);
         }
 
+        if (Hash::check('P4ssword', $user->password)) {
+            return back()->withInput()->withErrors([
+                'badge' => 'Account password is already in default state.',
+            ]);
+        }
+
         $user->update([
             'password' => Hash::make('P4ssword')
         ]);
 
         return redirect()->route('login')->with('success', 'Password successfully reset to default password.');
     }
+
+    /**
+     * Handle password change request.
+     */
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required'],
+            'new_password' => ['required', 'confirmed', Password::min(8)->letters()->mixedCase()->numbers()],
+        ]);
+
+        $user = Auth::user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors([
+                'current_password' => 'The provided password does not match your current password.',
+            ]);
+        }
+
+        if (Hash::check($request->new_password, $user->password)) {
+            return back()->withErrors([
+                'new_password' => 'New password cannot be the same as your current password.',
+            ]);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+        
+        $homeRoute = $this->homeRoute($user);
+
+        return redirect()->route($homeRoute)->with('success', 'Password successfully updated.');
+    }
+
 }

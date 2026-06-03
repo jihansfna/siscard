@@ -76,6 +76,7 @@
                             <th class="px-4 py-3">Position</th>
                             <th class="px-4 py-3">Join Date</th>
                             <th class="px-4 py-3">End Date</th>
+                            <th class="px-4 py-3">Status</th>
                             <th class="px-4 py-3 text-right">Action</th>
                         </tr>
                     </thead>
@@ -92,8 +93,8 @@
                                 <td class="px-4 py-3">{{ $employee->join_date?->format('d M Y') ?? '-' }}</td>
                                 <td class="px-4 py-3">
                                     @if($employee->end_date)
-                                        @if($employee->end_date->lt(now()->startOfDay()))
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">{{ $employee->end_date->format('d M Y') }}</span>
+                                        @if(!$employee->is_active)
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">{{ $employee->end_date->format('d M Y') }}</span>
                                         @else
                                             <span>{{ $employee->end_date->format('d M Y') }}</span>
                                         @endif
@@ -101,14 +102,21 @@
                                         -
                                     @endif
                                 </td>
+                                <td class="px-4 py-3">
+                                    @if(!$employee->is_active)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-400">{{ $employee->status }}</span>
+                                    @else
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">{{ $employee->status }}</span>
+                                    @endif
+                                </td>
                                 <td class="px-4 py-3 text-right space-x-1">
-                                    <!-- Edit Employee Button -->
-                                    <button type="button" onclick="document.getElementById('editEmployeeModal-{{ $employee->id }}').classList.remove('hidden'); document.getElementById('editEmployeeModal-{{ $employee->id }}').classList.add('flex')" class="inline-flex p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit Employee">
-                                        <x-heroicon-o-pencil-square class="w-5 h-5" />
-                                    </button>
+                                    @if($employee->is_active)
+                                        <!-- Edit Employee Button -->
+                                        <button type="button" onclick="document.getElementById('editEmployeeModal-{{ $employee->id }}').classList.remove('hidden'); document.getElementById('editEmployeeModal-{{ $employee->id }}').classList.add('flex')" class="inline-flex p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit Employee">
+                                            <x-heroicon-o-pencil-square class="w-5 h-5" />
+                                        </button>
 
-                                    <!-- Set Inactive Button (only if active) -->
-                                    @if(!$employee->end_date || $employee->end_date->gt(now()->startOfDay()))
+                                        <!-- Set Inactive Button (only if active) -->
                                         <button type="button" onclick="document.getElementById('inactiveEmployeeModal-{{ $employee->id }}').classList.remove('hidden'); document.getElementById('inactiveEmployeeModal-{{ $employee->id }}').classList.add('flex')" class="inline-flex p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Set Inactive">
                                             <x-heroicon-o-no-symbol class="w-5 h-5" />
                                         </button>

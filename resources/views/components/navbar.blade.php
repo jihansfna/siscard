@@ -50,7 +50,12 @@
                 <p class="text-sm font-bold text-gray-800 dark:text-white truncate">{{ $adminName }}</p>
             </div>
             
-
+            <!-- Change Password Button -->
+            <button type="button" onclick="openChangePasswordModal()" class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#242424] transition-all text-left">
+                <x-heroicon-o-key class="w-4.5 h-4.5" />
+                <span>Change Password</span>
+            </button>
+            <hr class="border-gray-100 dark:border-gray-700/50 my-1">
 
             <form method="POST" action="{{ route('logout') }}" class="form-with-loading m-0">
                 @csrf

@@ -28,4 +28,21 @@ class Employee extends Model
         'end_date' => 'date',
         'birth_date' => 'date',
     ];
+
+    /**
+     * Check if the employee is currently active.
+     */
+    public function getIsActiveAttribute(): bool
+    {
+        // An employee is active if they have no end_date or their end_date is in the future
+        return !$this->end_date || $this->end_date->gt(now()->startOfDay());
+    }
+
+    /**
+     * Get the readable status of the employee.
+     */
+    public function getStatusAttribute(): string
+    {
+        return $this->is_active ? 'Active' : 'Inactive';
+    }
 }

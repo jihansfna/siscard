@@ -27,6 +27,20 @@
                 
                 <!-- Main Content -->
                 <main class="flex-1 min-w-0 overflow-y-auto p-4 md:p-6 lg:p-8">
+                    @if(isset($isDefaultPassword) && $isDefaultPassword)
+                    <div class="mb-6 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm animate-fade-in-up">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-800/50 flex flex-shrink-0 items-center justify-center">
+                                <x-heroicon-o-shield-exclamation class="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                            </div>
+                            <div>
+                                <strong class="block font-bold text-amber-900 dark:text-amber-300">Security Warning</strong>
+                                <p class="text-amber-800 dark:text-amber-400 text-sm">For security reasons, you are still using the default password. Please change your password immediately by clicking on your profile menu in the top right corner and selecting <strong>"Change Password"</strong>.</p>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
                     {{ $slot }}
                 </main>
             </div>
@@ -377,6 +391,119 @@
                         });
                     });
                 });
+            });
+        </script>
+        <!-- Change Password Modal -->
+        <div id="changePasswordModal" class="fixed inset-0 z-[150] hidden items-center justify-center bg-gray-900/60 backdrop-blur-sm text-left">
+            <div class="bg-white dark:bg-[#242424] rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col transform scale-100 border border-transparent dark:border-gray-700/50">
+                <div class="p-6 border-b border-gray-100 dark:border-gray-700/50 flex justify-between items-center bg-gray-50 dark:bg-[#1A1A1A]">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <x-heroicon-o-key class="w-5 h-5 text-primary-600 dark:text-primary-400" />
+                        Change Password
+                    </h3>
+                    <button type="button" onclick="closeChangePasswordModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                        <x-heroicon-o-x-mark class="w-6 h-6" />
+                    </button>
+                </div>
+                <div class="p-6">
+                    <form action="{{ route('password.change') }}" method="POST" class="m-0 form-with-loading space-y-4" id="changePasswordForm">
+                        @csrf
+                        @if(isset($isDefaultPassword) && $isDefaultPassword)
+                            <input type="hidden" name="current_password" value="P4ssword">
+                        @else
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Current Password</label>
+                                <input type="password" name="current_password" required class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700/50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50 dark:bg-[#1A1A1A] dark:text-white">
+                            </div>
+                        @endif
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">New Password</label>
+                            <input type="password" name="new_password" required minlength="8" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700/50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50 dark:bg-[#1A1A1A] dark:text-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Confirm New Password</label>
+                            <input type="password" name="new_password_confirmation" required minlength="8" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700/50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50 dark:bg-[#1A1A1A] dark:text-white">
+                            <p class="text-xs text-gray-500 mt-2">Password must be at least 8 characters and contain uppercase, lowercase, and numbers</p>
+                        </div>
+                        
+                        <div id="passwordClientError" class="hidden pt-2 text-sm text-red-600 dark:text-red-400 font-medium"></div>
+                        <div class="pt-4 flex justify-end gap-3">
+                            <button type="button" onclick="closeChangePasswordModal()" class="px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-xl transition-all">Cancel</button>
+                            <button type="submit" id="changePasswordSubmitBtn" class="px-4 py-2 text-sm font-bold text-white bg-primary-600 hover:bg-primary-700 rounded-xl shadow-lg shadow-primary-600/20 transition-all flex items-center gap-2">
+                                <span class="btn-text">Update Password</span>
+                                <svg class="btn-spinner animate-spin h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function openChangePasswordModal() {
+                const modal = document.getElementById('changePasswordModal');
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                if (typeof closeProfileDropdown === 'function') {
+                    closeProfileDropdown();
+                }
+            }
+            function closeChangePasswordModal() {
+                const modal = document.getElementById('changePasswordModal');
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.getElementById('changePasswordForm').reset();
+                document.getElementById('passwordClientError').classList.add('hidden');
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.getElementById('changePasswordForm');
+                const newPass = document.querySelector('input[name="new_password"]');
+                const confirmPass = document.querySelector('input[name="new_password_confirmation"]');
+                const errorDiv = document.getElementById('passwordClientError');
+                const submitBtn = document.getElementById('changePasswordSubmitBtn');
+
+                function validatePassword() {
+                    const pass = newPass.value;
+                    const confirm = confirmPass.value;
+                    let error = '';
+
+                    if (pass.length > 0) {
+                        if (pass.length < 8) error = 'Password must be at least 8 characters.';
+                        else if (!/[A-Z]/.test(pass)) error = 'Password must contain at least one uppercase letter.';
+                        else if (!/[a-z]/.test(pass)) error = 'Password must contain at least one lowercase letter.';
+                        else if (!/[0-9]/.test(pass)) error = 'Password must contain at least one number.';
+                        else if (confirm.length > 0 && pass !== confirm) error = 'Passwords do not match.';
+                    }
+
+                    if (error) {
+                        errorDiv.textContent = error;
+                        errorDiv.classList.remove('hidden');
+                        submitBtn.disabled = true;
+                        submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    } else {
+                        errorDiv.classList.add('hidden');
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    }
+                }
+
+                if (newPass && confirmPass) {
+                    newPass.addEventListener('input', validatePassword);
+                    confirmPass.addEventListener('input', validatePassword);
+                }
+
+                if (form) {
+                    form.addEventListener('submit', function(e) {
+                        validatePassword();
+                        if (submitBtn.disabled) {
+                            e.preventDefault();
+                        }
+                    });
+                }
             });
         </script>
     </body>
