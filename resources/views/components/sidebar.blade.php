@@ -22,7 +22,7 @@ $currentUrl = request()->url();
     <div>
         <div class="border-b border-gray-100 dark:border-gray-800 p-6 flex items-center justify-between">
             <div>
-                <h2 class="text-2xl font-bold text-primary-800 dark:text-primary-400 tracking-tight">SPSI</h2>
+                <h2 class="text-2xl font-bold text-primary-800 dark:text-primary-400 tracking-tight">SISCARD</h2>
                 <span class="block mt-1 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ $sidebarLabel }}</span>
             </div>
             <!-- Mobile Close Button -->

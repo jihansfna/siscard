@@ -1058,9 +1058,9 @@
             
             let hintText = '';
             if (isSign && isSingle) {
-                hintText = '⚠️ This role can only be held by 1 person. Signature will appear on digital card.';
+                hintText = 'This role can only be held by 1 person. Signature will appear on digital card.';
             } else if (isSingle) {
-                hintText = '⚠️ This role can only be held by 1 person.';
+                hintText = 'This role can only be held by 1 person.';
             } else if (isSign) {
                 hintText = 'This role\'s signature will appear on the digital card.';
             } else {
