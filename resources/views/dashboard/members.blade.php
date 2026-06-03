@@ -11,44 +11,21 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                             <x-heroicon-o-magnifying-glass class="w-5 h-5" />
                         </div>
-                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Search member..." class="pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700/50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 dark:bg-[#242424] dark:text-white dark:placeholder-gray-500 transition-colors">
-                    </div>
-
-                    <div class="relative hidden sm:block">
-                        <select name="status" onchange="this.form.submit()" class="pl-3 pr-8 py-2 border border-gray-200 dark:border-gray-700/50 rounded-lg text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 dark:bg-[#242424] dark:text-white transition-colors">
-                            <option value="All Status" {{ request('status') == 'All Status' ? 'selected' : '' }}>All Status</option>
-                            <option value="Registered Member" {{ request('status') == 'Registered Member' ? 'selected' : '' }}>Registered Member</option>
-                            <option value="Pending Verification" {{ request('status') == 'Pending Verification' ? 'selected' : '' }}>Pending Verification</option>
-                            <option value="Inactive" {{ request('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
-                        </select>
-                        <div class="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none text-gray-400">
-                            <x-heroicon-o-chevron-down class="w-4 h-4" />
-                        </div>
+                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Search name or badge..." class="pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700/50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 dark:bg-[#242424] dark:text-white dark:placeholder-gray-500 transition-colors">
+                        @if(request('status'))
+                            <input type="hidden" name="status" value="{{ request('status') }}">
+                        @endif
+                        @if(request('sort'))
+                            <input type="hidden" name="sort" value="{{ request('sort') }}">
+                        @endif
                     </div>
                 </form>
 
-                {{-- Sort Dropdown --}}
-                <div class="relative" id="sortDropdownContainer">
-                    <button type="button" onclick="toggleDropdown('sortDropdown')" class="flex items-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-700/50 bg-gray-50 dark:bg-[#242424] hover:bg-gray-100 dark:hover:bg-[#2A2A2A] text-gray-700 dark:text-gray-300 rounded-lg text-sm font-semibold transition-all">
-                        <x-heroicon-o-arrows-up-down class="w-4 h-4" />
-                        <span>Sort</span>
-                        <x-heroicon-o-chevron-down class="w-3 h-3 text-gray-400" />
-                    </button>
-                    <div id="sortDropdown" class="absolute right-0 mt-2 w-40 bg-white dark:bg-[#242424] rounded-xl shadow-xl border border-gray-100 dark:border-gray-700/50 py-1 z-50 hidden transition-all">
-                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'desc']) }}" class="flex items-center justify-between px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">
-                            <span>Newest Data</span>
-                            @if(request('sort', 'desc') === 'desc')
-                                <x-heroicon-m-check class="w-4 h-4 text-primary-600" />
-                            @endif
-                        </a>
-                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'asc']) }}" class="flex items-center justify-between px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">
-                            <span>Oldest Data</span>
-                            @if(request('sort') === 'asc')
-                                <x-heroicon-m-check class="w-4 h-4 text-primary-600" />
-                            @endif
-                        </a>
-                    </div>
-                </div>
+                {{-- Filter Button --}}
+                <button type="button" onclick="openFilterModal()" class="flex items-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-700/50 bg-gray-50 dark:bg-[#242424] hover:bg-gray-100 dark:hover:bg-[#2A2A2A] text-gray-700 dark:text-gray-300 rounded-lg text-sm font-semibold transition-all shadow-sm active:scale-95">
+                    <x-heroicon-o-funnel class="w-4 h-4" />
+                    <span>Filter</span>
+                </button>
 
                 {{-- Export Dropdown --}}
                 <div class="relative" id="exportDropdownContainer">
@@ -280,6 +257,64 @@
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Filter Members Modal -->
+    <div id="filterMembersModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 backdrop-blur-sm p-4 transition-opacity">
+        <div class="bg-white dark:bg-[#242424] rounded-2xl shadow-xl w-full max-w-sm overflow-hidden flex flex-col border border-transparent dark:border-gray-700/50">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700/50">
+                <h3 class="text-lg font-bold text-gray-800 dark:text-white">Filter Members</h3>
+                <button type="button" onclick="closeFilterModal()" class="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer">
+                    <x-heroicon-o-x-mark class="w-6 h-6" />
+                </button>
+            </div>
+            
+            <form action="{{ route('dashboard.members') }}" method="GET" class="m-0">
+                <!-- Keep search query if it exists -->
+                @if(request('q'))
+                    <input type="hidden" name="q" value="{{ request('q') }}">
+                @endif
+                
+                <div class="p-6 space-y-5">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Status</label>
+                        <div class="relative">
+                            <select name="status" class="w-full pl-4 pr-10 py-2.5 border border-gray-200 dark:border-gray-700/50 rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-[#1A1A1A] text-gray-700 dark:text-white transition-colors cursor-pointer">
+                                <option value="All Status" {{ request('status') == 'All Status' || !request('status') ? 'selected' : '' }}>All Status</option>
+                                <option value="Registered Member" {{ request('status') == 'Registered Member' ? 'selected' : '' }}>Registered Member</option>
+                                <option value="Pending Verification" {{ request('status') == 'Pending Verification' ? 'selected' : '' }}>Pending Verification</option>
+                                <option value="Inactive" {{ request('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
+                                <x-heroicon-o-chevron-down class="w-4 h-4" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Sort By</label>
+                        <div class="relative">
+                            <select name="sort" class="w-full pl-4 pr-10 py-2.5 border border-gray-200 dark:border-gray-700/50 rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-[#1A1A1A] text-gray-700 dark:text-white transition-colors cursor-pointer">
+                                <option value="desc" {{ request('sort', 'desc') === 'desc' ? 'selected' : '' }}>Newest Data</option>
+                                <option value="asc" {{ request('sort') === 'asc' ? 'selected' : '' }}>Oldest Data</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
+                                <x-heroicon-o-chevron-down class="w-4 h-4" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="px-6 py-4 flex items-center justify-between border-t border-gray-100 dark:border-gray-700/50 bg-gray-50 dark:bg-[#1A1A1A]">
+                    <a href="{{ route('dashboard.members') }}{{ request('q') ? '?q=' . request('q') : '' }}" class="text-sm font-bold text-red-600 hover:text-red-700 transition-colors">
+                        Reset Filter
+                    </a>
+                    <button type="submit" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-red-600/20 active:scale-95 cursor-pointer">
+                        Submit
                     </button>
                 </div>
             </form>
@@ -673,6 +708,16 @@
             }, 300);
         }
 
+        function openFilterModal() {
+            document.getElementById('filterMembersModal').classList.remove('hidden');
+            document.getElementById('filterMembersModal').classList.add('flex');
+        }
+
+        function closeFilterModal() {
+            document.getElementById('filterMembersModal').classList.add('hidden');
+            document.getElementById('filterMembersModal').classList.remove('flex');
+        }
+
         function toggleDropdown(id) {
             const dropdown = document.getElementById(id);
             dropdown.classList.toggle('hidden');
@@ -683,11 +728,6 @@
             const exportContainer = document.getElementById('exportDropdownContainer');
             if (exportContainer && !exportContainer.contains(e.target)) {
                 document.getElementById('exportDropdown').classList.add('hidden');
-            }
-
-            const sortContainer = document.getElementById('sortDropdownContainer');
-            if (sortContainer && !sortContainer.contains(e.target)) {
-                document.getElementById('sortDropdown').classList.add('hidden');
             }
         });
     </script>
@@ -1077,13 +1117,14 @@
             }
         });
 
-        // Close edit modal on Escape
+        // Close modals on Escape
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 const editModal = document.getElementById('editMemberModal');
                 if (editModal && !editModal.classList.contains('hidden')) {
                     closeEditMemberModal();
                 }
+                closeFilterModal();
             }
         });
     </script>
