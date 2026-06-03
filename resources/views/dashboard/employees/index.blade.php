@@ -271,9 +271,9 @@
                 </table>
             </div>
             
-            @if($employees->hasPages())
+            @if($employees->hasPages() || $employees->total() > 0)
             <div class="p-4 border-t border-gray-100 dark:border-gray-700/50">
-                {{ $employees->links() }}
+                <x-custom-pagination :paginator="$employees" />
             </div>
             @endif
         </div>

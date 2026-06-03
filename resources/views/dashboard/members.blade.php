@@ -18,6 +18,9 @@
                         @if(request('sort'))
                             <input type="hidden" name="sort" value="{{ request('sort') }}">
                         @endif
+                        @if(request('perPage'))
+                            <input type="hidden" name="perPage" value="{{ request('perPage') }}">
+                        @endif
                     </div>
                 </form>
 
@@ -166,9 +169,9 @@
                 </table>
             </div>
             
-            @if($members->hasPages())
+            @if($members->hasPages() || $members->total() > 0)
             <div class="p-4 border-t border-gray-100 dark:border-gray-700/50">
-                {{ $members->links() }}
+                <x-custom-pagination :paginator="$members" />
             </div>
             @endif
         </div>
@@ -277,6 +280,9 @@
                 <!-- Keep search query if it exists -->
                 @if(request('q'))
                     <input type="hidden" name="q" value="{{ request('q') }}">
+                @endif
+                @if(request('perPage'))
+                    <input type="hidden" name="perPage" value="{{ request('perPage') }}">
                 @endif
                 
                 <div class="p-6 space-y-5">

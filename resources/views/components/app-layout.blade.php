@@ -339,6 +339,45 @@
                     });
                 }
             });
+
+            // Simple Client-Side Table Filtering
+            document.addEventListener('DOMContentLoaded', function() {
+                const searchInputs = document.querySelectorAll('input[name="q"]');
+                
+                searchInputs.forEach(function(input) {
+                    // Prevent form submission so the page never refreshes
+                    const form = input.closest('form');
+                    if (form) {
+                        form.addEventListener('submit', function(e) {
+                            e.preventDefault();
+                        });
+                    }
+
+                    input.addEventListener('input', function() {
+                        const searchTerm = input.value.toLowerCase().trim();
+                        
+                        // Find the main table on the page
+                        const table = document.querySelector('table');
+                        if (!table) return;
+
+                        const rows = table.querySelectorAll('tbody tr');
+
+                        rows.forEach(row => {
+                            // Don't filter out the "No data found" placeholder rows
+                            if (row.children.length === 1 && row.textContent.toLowerCase().includes('no')) {
+                                return;
+                            }
+                            
+                            const text = row.textContent.toLowerCase();
+                            if (text.includes(searchTerm)) {
+                                row.style.display = '';
+                            } else {
+                                row.style.display = 'none';
+                            }
+                        });
+                    });
+                });
+            });
         </script>
     </body>
 </html>

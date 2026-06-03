@@ -35,6 +35,9 @@
                         <form method="GET" action="{{ route('dashboard.history') }}" class="space-y-4">
                             <!-- Preserve search query -->
                             <input type="hidden" name="q" value="{{ request('q') }}">
+                            @if(request('perPage'))
+                                <input type="hidden" name="perPage" value="{{ request('perPage') }}">
+                            @endif
                             
                             <div>
                                 <label class="block text-xs font-semibold text-gray-600 mb-1">Activity</label>
@@ -162,9 +165,9 @@
                 </table>
             </div>
             
-            @if($logs->hasPages())
-                <div class="px-4 py-3 border-t border-gray-100 dark:border-gray-700/50 bg-gray-50 dark:bg-[#1A1A1A]">
-                    {{ $logs->links() }}
+            @if($logs->hasPages() || $logs->total() > 0)
+                <div class="p-4 border-t border-gray-100 dark:border-gray-700/50">
+                    <x-custom-pagination :paginator="$logs" />
                 </div>
             @endif
         </div>

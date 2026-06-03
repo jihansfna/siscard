@@ -41,7 +41,7 @@ class HistoryController extends Controller
             $query->whereDate('created_at', $request->date);
         }
 
-        $logs = $query->paginate(10)->withQueryString();
+        $logs = $query->paginate($request->query('perPage', 10))->withQueryString();
         
         $activities = MemberLog::select('activity')->distinct()->pluck('activity');
         $actors = User::whereHas('memberLogs')->get(); // Get users who have done something

@@ -17,7 +17,7 @@ class MasterEmployeeController extends Controller
         $employees = Employee::when($search, function ($query, $search) {
             return $query->where('name', 'like', "%{$search}%")
                          ->orWhere('badge', 'like', "%{$search}%");
-        })->orderBy('created_at', 'asc')->paginate(10);
+        })->orderBy('created_at', 'asc')->paginate($request->query('perPage', 10))->withQueryString();
 
         return view('dashboard.employees.index', compact('employees'));
     }

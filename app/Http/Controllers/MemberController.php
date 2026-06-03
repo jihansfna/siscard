@@ -38,7 +38,8 @@ class MemberController extends Controller
                 }
             })
             ->orderBy('updated_at', $sortDirection)
-            ->paginate(10);
+            ->paginate($request->query('perPage', 10))
+            ->withQueryString();
 
         $today = now()->toDateString();
 

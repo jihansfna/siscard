@@ -18,6 +18,9 @@
                         @if(request('sort'))
                             <input type="hidden" name="sort" value="{{ request('sort') }}">
                         @endif
+                        @if(request('perPage'))
+                            <input type="hidden" name="perPage" value="{{ request('perPage') }}">
+                        @endif
                     </div>
                 </form>
 
@@ -159,9 +162,9 @@
                     </tbody>
                 </table>
             </div>
-            @if($feedbacks->hasPages())
-                <div class="p-4 border-t border-gray-100 dark:border-gray-700/50 bg-gray-50 dark:bg-[#1A1A1A]">
-                    {{ $feedbacks->links() }}
+            @if($feedbacks->hasPages() || $feedbacks->total() > 0)
+                <div class="p-4 border-t border-gray-100 dark:border-gray-700/50">
+                    <x-custom-pagination :paginator="$feedbacks" />
                 </div>
             @endif
         </div>
@@ -326,6 +329,9 @@
                 <!-- Keep search query if it exists -->
                 @if(request('q'))
                     <input type="hidden" name="q" value="{{ request('q') }}">
+                @endif
+                @if(request('perPage'))
+                    <input type="hidden" name="perPage" value="{{ request('perPage') }}">
                 @endif
                 
                 <div class="p-6 space-y-5">

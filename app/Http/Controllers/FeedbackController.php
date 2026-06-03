@@ -29,7 +29,7 @@ class FeedbackController extends Controller
                 $query->where('status', $status);
             })
             ->orderBy('updated_at', $sort)
-            ->paginate(10)
+            ->paginate($request->query('perPage', 10))
             ->withQueryString();
             
         return view('dashboard.feedbacks', compact('feedbacks'));
