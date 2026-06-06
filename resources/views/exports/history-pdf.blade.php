@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>History Export PDF</title>
+    <title>Riwayat Ekspor PDF</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -54,9 +54,9 @@
             <tr>
                 <th style="width: 5%">No</th>
                 <th style="width: 15%">Tanggal</th>
-                <th style="width: 15%">Aktor</th>
+                <th style="width: 15%">Pelaku</th>
                 <th style="width: 15%">Aktivitas</th>
-                <th style="width: 20%">Target Member</th>
+                <th style="width: 20%">Target Anggota</th>
                 <th style="width: 30%">Deskripsi</th>
             </tr>
         </thead>
@@ -65,10 +65,10 @@
                 <tr>
                     <td style="text-align: center">{{ $index + 1 }}</td>
                     <td>{{ $log->created_at->format('d/m/Y H:i:s') }}</td>
-                    <td>{{ $log->actor ? $log->actor->name : 'Sistem' }}</td>
-                    <td>{{ ucfirst($log->activity) }}</td>
-                    <td>{{ $log->member && $log->member->employee ? $log->member->employee->name : '-' }}</td>
-                    <td>{{ $log->description ?? '-' }}</td>
+                    <td>{{ $log->pelaku ? $log->pelaku->nama : 'Sistem' }}</td>
+                    <td>{{ ucfirst($log->aktivitas) }}</td>
+                    <td>{{ $log->anggota && $log->anggota->karyawan ? $log->anggota->karyawan->nama : '-' }}</td>
+                    <td>{{ $log->deskripsi ?? '-' }}</td>
                 </tr>
             @endforeach
         </tbody>

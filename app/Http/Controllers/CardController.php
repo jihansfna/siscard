@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Member;
-use App\Models\Employee;
-use App\Models\MemberRole;
-use App\Models\MemberLog;
+use App\Models\Anggota;
+use App\Models\Karyawan;
+use App\Models\JabatanAnggota;
+use App\Models\LogAnggota;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -47,12 +47,12 @@ class CardController extends Controller
      */
     public function preview($id)
     {
-        $member = Member::with(['employee', 'role'])->findOrFail($id);
+        $member = Anggota::with(['karyawan', 'jabatan'])->findOrFail($id);
 
         if ($member->status !== 'registered') {
             return response()->json([
                 'success' => false,
-                'message' => 'Digital card cannot be generated yet. Membership status is not "Registered".'
+                'message' => 'Kartu digital belum dapat di-generate. Status keanggotaan bukan "Registered".'
             ], 422);
         }
 
@@ -69,10 +69,10 @@ class CardController extends Controller
      */
     public function download($id)
     {
-        $member = Member::with(['employee', 'role'])->findOrFail($id);
+        $member = Anggota::with(['karyawan', 'jabatan'])->findOrFail($id);
 
         if ($member->status !== 'registered') {
-            return back()->with('error', 'Digital card cannot be downloaded yet. Membership status is not "Registered".');
+            return back()->with('error', 'Kartu digital belum dapat diunduh. Status keanggotaan bukan "Registered".');
         }
 
         $cardData = $this->buildCardData($member);
@@ -80,13 +80,13 @@ class CardController extends Controller
         $pdf = Pdf::loadView('card.digital-card', $cardData);
         $pdf->setPaper([0, 0, 242.65, 153]);
 
-        $filename = 'Kartu_Digital_SPSI_' . str_replace(' ', '_', $member->employee->name) . '.pdf';
+        $filename = 'Kartu_Digital_SPSI_' . str_replace(' ', '_', $member->karyawan->nama) . '.pdf';
 
-        MemberLog::create([
-            'member_id' => $member->id,
-            'actor_id' => auth()->id(),
-            'activity' => 'Download Card',
-            'description' => 'Card downloaded by admin.',
+        LogAnggota::create([
+            'anggota_id' => $member->id,
+            'pelaku_id' => auth()->id(),
+            'aktivitas' => 'Download Card',
+            'deskripsi' => 'Kartu diunduh oleh admin.',
         ]);
 
         return $pdf->download($filename);
@@ -98,22 +98,22 @@ class CardController extends Controller
     public function downloadOwn()
     {
         $user = auth()->user();
-        $employee = Employee::where('badge', $user->badge)->first();
+        $karyawan = Karyawan::where('badge', $user->badge)->first();
 
-        if (!$employee) {
-            return back()->with('error', 'Employee data not found.');
+        if (!$karyawan) {
+            return back()->with('error', 'Data karyawan tidak ditemukan.');
         }
 
-        $member = Member::with(['employee', 'role'])
-            ->where('employee_id', $employee->id)
+        $member = Anggota::with(['karyawan', 'jabatan'])
+            ->where('karyawan_id', $karyawan->id)
             ->first();
 
         if (!$member) {
-            return back()->with('error', 'You are not registered as an SPSI member.');
+            return back()->with('error', 'Anda tidak terdaftar sebagai anggota SPSI.');
         }
 
         if ($member->status !== 'registered') {
-            return back()->with('error', 'Digital card cannot be downloaded yet. Membership status is not "Registered".');
+            return back()->with('error', 'Kartu digital belum dapat diunduh. Status keanggotaan bukan "Registered".');
         }
 
         $cardData = $this->buildCardData($member);
@@ -121,13 +121,13 @@ class CardController extends Controller
         $pdf = Pdf::loadView('card.digital-card', $cardData);
         $pdf->setPaper([0, 0, 242.65, 153]);
 
-        $filename = 'Kartu_Digital_SPSI_' . str_replace(' ', '_', $member->employee->name) . '.pdf';
+        $filename = 'Kartu_Digital_SPSI_' . str_replace(' ', '_', $member->karyawan->nama) . '.pdf';
 
-        MemberLog::create([
-            'member_id' => $member->id,
-            'actor_id' => auth()->id(),
-            'activity' => 'Download Card',
-            'description' => 'Card downloaded by member.',
+        LogAnggota::create([
+            'anggota_id' => $member->id,
+            'pelaku_id' => auth()->id(),
+            'aktivitas' => 'Download Card',
+            'deskripsi' => 'Kartu diunduh oleh anggota.',
         ]);
 
         return $pdf->download($filename);
@@ -146,29 +146,29 @@ class CardController extends Controller
         if (!$uuid) {
             return view('card.verify', [
                 'verified' => false,
-                'message' => 'Member data not found. Verification token is invalid or expired.',
+                'message' => 'Data anggota tidak ditemukan. Token verifikasi tidak valid atau kedaluwarsa.',
             ]);
         }
 
-        $member = Member::with(['employee', 'role'])
+        $member = Anggota::with(['karyawan', 'jabatan'])
             ->where('uuid', $uuid)
             ->first();
 
         if (!$member) {
             return view('card.verify', [
                 'verified' => false,
-                'message' => 'Member data not found.',
+                'message' => 'Data anggota tidak ditemukan.',
             ]);
         }
 
         // Build verification data including signatures for display
         $verifyData = $this->buildVerifyData($member);
 
-        MemberLog::create([
-            'member_id' => $member->id,
-            'actor_id' => null, // Public scan
-            'activity' => 'Verify Card',
-            'description' => 'QR Code scanned for verification.',
+        LogAnggota::create([
+            'anggota_id' => $member->id,
+            'pelaku_id' => null, // Public scan
+            'aktivitas' => 'Verify Card',
+            'deskripsi' => 'QR Code dipindai untuk verifikasi.',
         ]);
 
         return view('card.verify', array_merge([
@@ -215,7 +215,7 @@ class CardController extends Controller
             abort(404, 'Member data not found. Verification token is invalid.');
         }
 
-        $member = Member::with(['employee', 'role'])
+        $member = Anggota::with(['karyawan', 'jabatan'])
             ->where('uuid', $uuid)
             ->first();
 
@@ -228,7 +228,7 @@ class CardController extends Controller
         $pdf = Pdf::loadView('card.verify-pdf', $cardData);
         $pdf->setPaper('A4', 'portrait');
 
-        $filename = 'Verifikasi_SPSI_' . str_replace(' ', '_', $member->employee->name) . '.pdf';
+        $filename = 'Verifikasi_SPSI_' . str_replace(' ', '_', $member->karyawan->nama) . '.pdf';
 
         return $pdf->download($filename);
     }
@@ -236,28 +236,28 @@ class CardController extends Controller
     /**
      * Build card data array for rendering.
      */
-    private function buildCardData(Member $member): array
+    private function buildCardData(Anggota $member): array
     {
-        $employee = $member->employee;
+        $karyawan = $member->karyawan;
 
-        // Get Ketua and Sekretaris from member_roles
-        $ketuaRole = MemberRole::where('name', 'Ketua')->first();
-        $sekretarisRole = MemberRole::where('name', 'Sekretaris')->first();
+        // Get Ketua and Sekretaris from jabatan_anggota
+        $ketuaRole = JabatanAnggota::where('nama', 'Ketua')->first();
+        $sekretarisRole = JabatanAnggota::where('nama', 'Sekretaris')->first();
 
         $ketua = null;
         $sekretaris = null;
 
         if ($ketuaRole) {
-            $ketua = Member::with('employee')
-                ->where('member_role_id', $ketuaRole->id)
+            $ketua = Anggota::with('karyawan')
+                ->where('jabatan_anggota_id', $ketuaRole->id)
                 ->where('status', 'registered')
                 ->whereNull('deleted_at')
                 ->first();
         }
 
         if ($sekretarisRole) {
-            $sekretaris = Member::with('employee')
-                ->where('member_role_id', $sekretarisRole->id)
+            $sekretaris = Anggota::with('karyawan')
+                ->where('jabatan_anggota_id', $sekretarisRole->id)
                 ->where('status', 'registered')
                 ->whereNull('deleted_at')
                 ->first();
@@ -290,8 +290,8 @@ class CardController extends Controller
 
         // Employee photo
         $photoBase64 = '';
-        if ($employee->image) {
-            $photoPath = storage_path('app/public/' . $employee->image);
+        if ($karyawan->foto) {
+            $photoPath = storage_path('app/public/' . $karyawan->foto);
             if (file_exists($photoPath)) {
                 $ext = pathinfo($photoPath, PATHINFO_EXTENSION);
                 $mimeTypes = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
@@ -302,8 +302,8 @@ class CardController extends Controller
 
         // Ketua signature
         $ketuaSignBase64 = '';
-        if ($ketua && $ketua->sign_image) {
-            $signPath = storage_path('app/public/' . $ketua->sign_image);
+        if ($ketua && $ketua->tanda_tangan) {
+            $signPath = storage_path('app/public/' . $ketua->tanda_tangan);
             if (file_exists($signPath)) {
                 $ext = pathinfo($signPath, PATHINFO_EXTENSION);
                 $mimeTypes = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
@@ -314,8 +314,8 @@ class CardController extends Controller
 
         // Sekretaris signature
         $sekretarisSignBase64 = '';
-        if ($sekretaris && $sekretaris->sign_image) {
-            $signPath = storage_path('app/public/' . $sekretaris->sign_image);
+        if ($sekretaris && $sekretaris->tanda_tangan) {
+            $signPath = storage_path('app/public/' . $sekretaris->tanda_tangan);
             if (file_exists($signPath)) {
                 $ext = pathinfo($signPath, PATHINFO_EXTENSION);
                 $mimeTypes = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
@@ -326,15 +326,15 @@ class CardController extends Controller
 
         return [
             'member' => $member,
-            'employee' => $employee,
+            'employee' => $karyawan,
             'qrBase64' => $qrBase64,
             'encryptedToken' => $encryptedToken,
             'logoKspsi' => $logoKspsiBase64,
             'logoLemSpsi' => $logoLemSpsiBase64,
             'photo' => $photoBase64,
-            'ketuaName' => $ketua ? $ketua->employee->name : '',
+            'ketuaName' => $ketua ? $ketua->karyawan->nama : '',
             'ketuaSign' => $ketuaSignBase64,
-            'sekretarisName' => $sekretaris ? $sekretaris->employee->name : '',
+            'sekretarisName' => $sekretaris ? $sekretaris->karyawan->nama : '',
             'sekretarisSign' => $sekretarisSignBase64,
             'verifyUrl' => $verifyUrl,
             'scanTime' => now()->format('Y-m-d H:i'),
@@ -346,25 +346,25 @@ class CardController extends Controller
      * Build verification data for the verify page display (non-PDF).
      * Uses base64 for signatures to display inline.
      */
-    private function buildVerifyData(Member $member): array
+    private function buildVerifyData(Anggota $member): array
     {
-        $ketuaRole = MemberRole::where('name', 'Ketua')->first();
-        $sekretarisRole = MemberRole::where('name', 'Sekretaris')->first();
+        $ketuaRole = JabatanAnggota::where('nama', 'Ketua')->first();
+        $sekretarisRole = JabatanAnggota::where('nama', 'Sekretaris')->first();
 
         $ketua = null;
         $sekretaris = null;
 
         if ($ketuaRole) {
-            $ketua = Member::with('employee')
-                ->where('member_role_id', $ketuaRole->id)
+            $ketua = Anggota::with('karyawan')
+                ->where('jabatan_anggota_id', $ketuaRole->id)
                 ->where('status', 'registered')
                 ->whereNull('deleted_at')
                 ->first();
         }
 
         if ($sekretarisRole) {
-            $sekretaris = Member::with('employee')
-                ->where('member_role_id', $sekretarisRole->id)
+            $sekretaris = Anggota::with('karyawan')
+                ->where('jabatan_anggota_id', $sekretarisRole->id)
                 ->where('status', 'registered')
                 ->whereNull('deleted_at')
                 ->first();
@@ -372,8 +372,8 @@ class CardController extends Controller
 
         // Ketua signature as base64
         $ketuaSignBase64 = '';
-        if ($ketua && $ketua->sign_image) {
-            $signPath = storage_path('app/public/' . $ketua->sign_image);
+        if ($ketua && $ketua->tanda_tangan) {
+            $signPath = storage_path('app/public/' . $ketua->tanda_tangan);
             if (file_exists($signPath)) {
                 $ext = pathinfo($signPath, PATHINFO_EXTENSION);
                 $mimeTypes = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
@@ -384,8 +384,8 @@ class CardController extends Controller
 
         // Sekretaris signature as base64
         $sekretarisSignBase64 = '';
-        if ($sekretaris && $sekretaris->sign_image) {
-            $signPath = storage_path('app/public/' . $sekretaris->sign_image);
+        if ($sekretaris && $sekretaris->tanda_tangan) {
+            $signPath = storage_path('app/public/' . $sekretaris->tanda_tangan);
             if (file_exists($signPath)) {
                 $ext = pathinfo($signPath, PATHINFO_EXTENSION);
                 $mimeTypes = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
@@ -395,9 +395,9 @@ class CardController extends Controller
         }
 
         return [
-            'ketuaName' => $ketua ? $ketua->employee->name : '',
+            'ketuaName' => $ketua ? $ketua->karyawan->nama : '',
             'ketuaSign' => $ketuaSignBase64,
-            'sekretarisName' => $sekretaris ? $sekretaris->employee->name : '',
+            'sekretarisName' => $sekretaris ? $sekretaris->karyawan->nama : '',
             'sekretarisSign' => $sekretarisSignBase64,
         ];
     }

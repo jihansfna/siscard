@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Employee;
+use App\Models\Karyawan;
 use App\Models\User;
-use App\Models\Member;
+use App\Models\Anggota;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,12 +14,12 @@ class MasterEmployeeController extends Controller
     public function index(Request $request)
     {
         $search = $request->query('q');
-        $employees = Employee::when($search, function ($query, $search) {
-            return $query->where('name', 'like', "%{$search}%")
+        $karyawan = Karyawan::when($search, function ($query, $search) {
+            return $query->where('nama', 'like', "%{$search}%")
                          ->orWhere('badge', 'like', "%{$search}%");
         })->orderBy('created_at', 'asc')->paginate($request->query('perPage', 10))->withQueryString();
 
-        return view('dashboard.employees.index', compact('employees'));
+        return view('dashboard.employees.index', ['employees' => $karyawan]);
     }
 
     public function create()
@@ -30,65 +30,83 @@ class MasterEmployeeController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'badge' => 'required|string|unique:employees,badge',
-            'name' => 'required|string|max:255',
-            'department' => 'nullable|string|max:255',
+            'badge' => 'required|string|unique:karyawan,badge',
+            'nama' => 'required|string|max:255',
+            'departemen' => 'nullable|string|max:255',
             'line' => 'nullable|string|max:255',
-            'position' => 'nullable|string|max:255',
-            'join_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:join_date',
-            'birth_place' => 'nullable|string|max:255',
-            'birth_date' => 'nullable|date|before:join_date',
-            'address' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'jabatan' => 'nullable|string|max:255',
+            'tanggal_masuk' => 'nullable|date',
+            'tanggal_keluar' => 'nullable|date|after_or_equal:tanggal_masuk',
+            'tempat_lahir' => 'nullable|string|max:255',
+            'tanggal_lahir' => 'nullable|date|before:tanggal_masuk',
+            'alamat' => 'nullable|string',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ], [
+            'badge.required' => 'Badge ID wajib diisi.',
+            'badge.unique' => 'Badge ID sudah terdaftar.',
+            'nama.required' => 'Nama lengkap wajib diisi.',
+            'tanggal_keluar.after_or_equal' => 'Tanggal keluar harus sama atau setelah tanggal masuk.',
+            'tanggal_lahir.before' => 'Tanggal lahir harus sebelum tanggal masuk.',
+            'foto.image' => 'File foto harus berupa gambar.',
+            'foto.mimes' => 'Format foto harus jpeg, png, atau jpg.',
+            'foto.max' => 'Ukuran foto maksimal 2MB.',
         ]);
 
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('employees', 'public');
+        if ($request->hasFile('foto')) {
+            $validated['foto'] = $request->file('foto')->store('employees', 'public');
         }
 
-        Employee::create($validated);
+        Karyawan::create($validated);
 
         // Create associated user account with default password
         User::firstOrCreate(
             ['badge' => $validated['badge']],
             [
-                'name' => $validated['name'],
+                'nama' => $validated['nama'],
                 'password' => Hash::make('P4ssword'),
-                'role' => 'user'
+                'peran' => 'user'
             ]
         );
 
         return redirect()->route('dashboard.employees.index')
-            ->with('success', 'Employee successfully added.');
+            ->with('success', 'Data karyawan berhasil ditambahkan.');
     }
 
-    public function edit(Employee $employee)
+    public function edit(Karyawan $employee)
     {
-        return view('dashboard.employees.edit', compact('employee'));
+        return view('dashboard.employees.edit', ['employee' => $employee]);
     }
 
-    public function update(Request $request, Employee $employee)
+    public function update(Request $request, Karyawan $employee)
     {
         $validated = $request->validate([
-            'badge' => 'required|string|unique:employees,badge,' . $employee->id,
-            'name' => 'required|string|max:255',
-            'department' => 'nullable|string|max:255',
+            'badge' => 'required|string|unique:karyawan,badge,' . $employee->id,
+            'nama' => 'required|string|max:255',
+            'departemen' => 'nullable|string|max:255',
             'line' => 'nullable|string|max:255',
-            'position' => 'nullable|string|max:255',
-            'join_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:join_date',
-            'birth_place' => 'nullable|string|max:255',
-            'birth_date' => 'nullable|date|before:join_date',
-            'address' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'jabatan' => 'nullable|string|max:255',
+            'tanggal_masuk' => 'nullable|date',
+            'tanggal_keluar' => 'nullable|date|after_or_equal:tanggal_masuk',
+            'tempat_lahir' => 'nullable|string|max:255',
+            'tanggal_lahir' => 'nullable|date|before:tanggal_masuk',
+            'alamat' => 'nullable|string',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ], [
+            'badge.required' => 'Badge ID wajib diisi.',
+            'badge.unique' => 'Badge ID sudah terdaftar.',
+            'nama.required' => 'Nama lengkap wajib diisi.',
+            'tanggal_keluar.after_or_equal' => 'Tanggal keluar harus sama atau setelah tanggal masuk.',
+            'tanggal_lahir.before' => 'Tanggal lahir harus sebelum tanggal masuk.',
+            'foto.image' => 'File foto harus berupa gambar.',
+            'foto.mimes' => 'Format foto harus jpeg, png, atau jpg.',
+            'foto.max' => 'Ukuran foto maksimal 2MB.',
         ]);
 
-        if ($request->hasFile('image')) {
-            if ($employee->image) {
-                Storage::disk('public')->delete($employee->image);
+        if ($request->hasFile('foto')) {
+            if ($employee->foto) {
+                Storage::disk('public')->delete($employee->foto);
             }
-            $validated['image'] = $request->file('image')->store('employees', 'public');
+            $validated['foto'] = $request->file('foto')->store('employees', 'public');
         }
 
         $oldBadge = $employee->badge;
@@ -99,15 +117,15 @@ class MasterEmployeeController extends Controller
         if ($user) {
             $user->update([
                 'badge' => $validated['badge'],
-                'name' => $validated['name'],
+                'nama' => $validated['nama'],
             ]);
         }
 
         return redirect()->route('dashboard.employees.index')
-            ->with('success', 'Employee data successfully updated.');
+            ->with('success', 'Data karyawan berhasil diperbarui.');
     }
 
-    public function destroy(Employee $employee)
+    public function destroy(Karyawan $employee)
     {
         $badge = $employee->badge;
         $employee->delete();
@@ -116,41 +134,41 @@ class MasterEmployeeController extends Controller
         User::where('badge', $badge)->delete();
 
         return redirect()->route('dashboard.employees.index')
-            ->with('success', 'Employee data successfully deleted.');
+            ->with('success', 'Data karyawan berhasil dihapus.');
     }
 
     public function bulkDestroy(Request $request)
     {
         $request->validate([
             'ids' => 'required|array',
-            'ids.*' => 'exists:employees,id',
+            'ids.*' => 'exists:karyawan,id',
         ]);
 
-        $employees = Employee::whereIn('id', $request->ids)->get();
-        $badges = $employees->pluck('badge')->toArray();
+        $karyawanList = Karyawan::whereIn('id', $request->ids)->get();
+        $badges = $karyawanList->pluck('badge')->toArray();
 
         // Delete associated user accounts
         User::whereIn('badge', $badges)->delete();
 
         // Delete the employees
-        Employee::whereIn('id', $request->ids)->delete();
+        Karyawan::whereIn('id', $request->ids)->delete();
 
         return redirect()->route('dashboard.employees.index')
-            ->with('success', count($request->ids) . ' employee data successfully deleted.');
+            ->with('success', count($request->ids) . ' data karyawan berhasil dihapus.');
     }
 
-    public function setInactive(Employee $employee)
+    public function setInactive(Karyawan $employee)
     {
-        // 1. Set employee end_date to yesterday so they become inactive immediately
-        $employee->update(['end_date' => now()->subDay()->startOfDay()]);
+        // 1. Set employee tanggal_keluar to yesterday so they become inactive immediately
+        $employee->update(['tanggal_keluar' => now()->subDay()->startOfDay()]);
 
-        // 2. Set Member status to inactive
-        $member = Member::where('employee_id', $employee->id)->first();
-        if ($member) {
-            $member->update(['status' => 'inactive']);
+        // 2. Set Anggota status to inactive
+        $anggota = Anggota::where('karyawan_id', $employee->id)->first();
+        if ($anggota) {
+            $anggota->update(['status' => 'inactive']);
         }
 
         return redirect()->route('dashboard.employees.index')
-            ->with('success', 'Employee ' . $employee->name . ' has been deactivated and login access revoked.');
+            ->with('success', 'Karyawan ' . $employee->nama . ' telah dinonaktifkan dan akses login dicabut.');
     }
 }

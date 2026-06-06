@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Member;
-use App\Models\Employee;
-use App\Models\MemberRole;
-use App\Models\MemberLog;
+use App\Models\Anggota;
+use App\Models\Karyawan;
+use App\Models\JabatanAnggota;
+use App\Models\LogAnggota;
 use Illuminate\Support\Str;
 
 class MemberController extends Controller
@@ -19,11 +19,11 @@ class MemberController extends Controller
 
         $sortDirection = $sort === 'asc' ? 'asc' : 'desc';
 
-        // Optimized: removed 'logs.actor' — now loaded on-demand via AJAX
-        $members = Member::with(['employee', 'role'])
+        // Optimized: removed 'logAnggota.pelaku' — now loaded on-demand via AJAX
+        $members = Anggota::with(['karyawan', 'jabatan'])
             ->when($q, function($query, $q) {
-                $query->whereHas('employee', function($q2) use ($q) {
-                    $q2->where('name', 'like', "%{$q}%")
+                $query->whereHas('karyawan', function($q2) use ($q) {
+                    $q2->where('nama', 'like', "%{$q}%")
                        ->orWhere('badge', 'like', "%{$q}%");
                 });
             })
@@ -44,26 +44,26 @@ class MemberController extends Controller
         $today = now()->toDateString();
 
         // Optimized: only select columns needed for the modal table
-        $availableEmployees = Employee::select('id', 'badge', 'name', 'department', 'line', 'position', 'end_date')
+        $availableEmployees = Karyawan::select('id', 'badge', 'nama', 'departemen', 'line', 'jabatan', 'tanggal_keluar')
             ->whereNotIn('id', function($query) {
-                $query->select('employee_id')->from('members')->whereNull('deleted_at');
+                $query->select('karyawan_id')->from('anggota')->whereNull('deleted_at');
             })
             ->where(function($query) use ($today) {
-                $query->whereNull('end_date')
-                      ->orWhere('end_date', '>=', $today);
+                $query->whereNull('tanggal_keluar')
+                      ->orWhere('tanggal_keluar', '>=', $today);
             })
             ->get();
 
-        $memberRoles = MemberRole::where('name', '!=', 'Member')->orderBy('name')->get();
+        $memberRoles = JabatanAnggota::where('nama', '!=', 'Member')->orderBy('nama')->get();
 
         // Optimized: single query for Ketua & Sekretaris instead of 4 separate queries
-        $signRoles = MemberRole::whereIn('name', ['Ketua', 'Sekretaris'])->pluck('id', 'name');
-        $signMembers = Member::with('employee')
-            ->whereIn('member_role_id', $signRoles->values())
+        $signRoles = JabatanAnggota::whereIn('nama', ['Ketua', 'Sekretaris'])->pluck('id', 'nama');
+        $signMembers = Anggota::with('karyawan')
+            ->whereIn('jabatan_anggota_id', $signRoles->values())
             ->where('status', 'registered')
             ->whereNull('deleted_at')
             ->get()
-            ->keyBy('member_role_id');
+            ->keyBy('jabatan_anggota_id');
 
         $ketua = $signMembers->get($signRoles->get('Ketua'));
         $sekretaris = $signMembers->get($signRoles->get('Sekretaris'));
@@ -74,45 +74,51 @@ class MemberController extends Controller
     /**
      * AJAX endpoint: fetch member logs on-demand (when drawer is opened)
      */
-    public function logs(Member $member)
+    public function logs(Anggota $member)
     {
-        $logs = $member->logs()->with('actor')->orderBy('created_at', 'asc')->get();
+        $logs = $member->logAnggota()->with('pelaku')->orderBy('created_at', 'asc')->get();
 
         return response()->json($logs->map(function($log) {
             return [
-                'activity' => $log->activity,
-                'description' => $log->description,
-                'actor_name' => $log->actor ? $log->actor->name : 'System',
-                'actor_badge' => $log->actor ? $log->actor->badge : '',
+                'activity' => $log->aktivitas,
+                'description' => $log->deskripsi,
+                'actor_name' => $log->pelaku ? $log->pelaku->nama : 'System',
+                'actor_badge' => $log->pelaku ? $log->pelaku->badge : '',
                 'created_at_date' => $log->created_at->format('l'),
                 'created_at_time' => $log->created_at->format('d F Y, H.i'),
             ];
         }));
     }
 
-    public function update(Request $request, Member $member)
+    public function update(Request $request, Anggota $member)
     {
         $request->validate([
-            'member_role_id' => 'required|exists:member_roles,id',
-            'sign_image' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+            'jabatan_anggota_id' => 'required|exists:jabatan_anggota,id',
+            'tanda_tangan' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+        ], [
+            'jabatan_anggota_id.required' => 'Jabatan anggota wajib dipilih.',
+            'jabatan_anggota_id.exists' => 'Jabatan anggota tidak valid.',
+            'tanda_tangan.image' => 'Tanda tangan harus berupa gambar.',
+            'tanda_tangan.mimes' => 'Format tanda tangan harus png, jpg, atau jpeg.',
+            'tanda_tangan.max' => 'Ukuran tanda tangan maksimal 2MB.',
         ]);
 
-        $newRole = MemberRole::findOrFail($request->member_role_id);
+        $newRole = JabatanAnggota::findOrFail($request->jabatan_anggota_id);
 
-        // Enforce is_single: if the new role is single-holder, demote the current holder
-        if ($newRole->is_single) {
-            $defaultRole = MemberRole::where('name', 'Member')->first();
+        // Enforce tunggal: if the new role is single-holder, demote the current holder
+        if ($newRole->tunggal) {
+            $defaultRole = JabatanAnggota::where('nama', 'Member')->first();
             if ($defaultRole) {
                 // Find old holders of this specific role
-                $oldHolders = Member::where('member_role_id', $newRole->id)
+                $oldHolders = Anggota::where('jabatan_anggota_id', $newRole->id)
                     ->where('id', '!=', $member->id)
                     ->whereNull('deleted_at')
                     ->get();
                 
                 foreach ($oldHolders as $oldHolder) {
                     // Delete signature file from storage
-                    if ($oldHolder->sign_image) {
-                        $oldPath = storage_path('app/public/' . $oldHolder->sign_image);
+                    if ($oldHolder->tanda_tangan) {
+                        $oldPath = storage_path('app/public/' . $oldHolder->tanda_tangan);
                         if (file_exists($oldPath)) {
                             unlink($oldPath);
                         }
@@ -120,40 +126,40 @@ class MemberController extends Controller
                     
                     // Demote to Member and clear signature
                     $oldHolder->update([
-                        'member_role_id' => $defaultRole->id,
-                        'sign_image' => null
+                        'jabatan_anggota_id' => $defaultRole->id,
+                        'tanda_tangan' => null
                     ]);
                 }
             }
         }
 
         $data = [
-            'member_role_id' => $request->member_role_id,
+            'jabatan_anggota_id' => $request->jabatan_anggota_id,
         ];
 
         // Handle signature upload
-        if ($request->hasFile('sign_image')) {
+        if ($request->hasFile('tanda_tangan')) {
             // Delete old signature if exists
-            if ($member->sign_image) {
-                $oldPath = storage_path('app/public/' . $member->sign_image);
+            if ($member->tanda_tangan) {
+                $oldPath = storage_path('app/public/' . $member->tanda_tangan);
                 if (file_exists($oldPath)) {
                     unlink($oldPath);
                 }
             }
-            $data['sign_image'] = $request->file('sign_image')->store('signatures', 'public');
+            $data['tanda_tangan'] = $request->file('tanda_tangan')->store('signatures', 'public');
         }
 
         $member->update($data);
 
-        MemberLog::create([
-            'member_id' => $member->id,
-            'actor_id' => auth()->id(),
-            'activity' => 'Update',
+        LogAnggota::create([
+            'anggota_id' => $member->id,
+            'pelaku_id' => auth()->id(),
+            'aktivitas' => 'Update',
             'status' => $member->status,
-            'description' => 'Role updated to "' . $newRole->name . '"' . ($request->hasFile('sign_image') ? ' and signature updated.' : '.'),
+            'deskripsi' => 'Jabatan diperbarui menjadi "' . $newRole->nama . '"' . ($request->hasFile('tanda_tangan') ? ' dan tanda tangan diperbarui.' : '.'),
         ]);
 
-        $message = 'Member role successfully updated to "' . $newRole->name . '".';
+        $message = 'Jabatan anggota berhasil diperbarui menjadi "' . $newRole->nama . '".';
         return back()->with('success', $message);
     }
 
@@ -161,16 +167,16 @@ class MemberController extends Controller
     {
         $request->validate([
             'employee_ids' => 'required|array',
-            'employee_ids.*' => 'exists:employees,id',
+            'employee_ids.*' => 'exists:karyawan,id',
         ]);
 
         $today = now()->toDateString();
 
-        // Filter out any inactive employees (end_date < today)
-        $activeEmployees = Employee::whereIn('id', $request->employee_ids)
+        // Filter out any inactive employees (tanggal_keluar < today)
+        $activeEmployees = Karyawan::whereIn('id', $request->employee_ids)
             ->where(function($query) use ($today) {
-                $query->whereNull('end_date')
-                      ->orWhere('end_date', '>=', $today);
+                $query->whereNull('tanggal_keluar')
+                      ->orWhere('tanggal_keluar', '>=', $today);
             })
             ->pluck('id')
             ->toArray();
@@ -178,56 +184,56 @@ class MemberController extends Controller
         $inactiveCount = count($request->employee_ids) - count($activeEmployees);
 
         if (empty($activeEmployees)) {
-            return back()->withErrors(['employee_ids' => 'All selected employees are already inactive (end_date has passed).']);
+            return back()->withErrors(['employee_ids' => 'Semua karyawan yang dipilih sudah tidak aktif (tanggal_keluar sudah lewat).']);
         }
 
-        $defaultRole = MemberRole::firstOrCreate(
-            ['name' => 'Member'],
-            ['is_single' => false, 'is_sign' => false]
+        $defaultRole = JabatanAnggota::firstOrCreate(
+            ['nama' => 'Member'],
+            ['tunggal' => false, 'penandatangan' => false]
         );
 
-        $membersToInsert = [];
+        $anggotaToInsert = [];
         foreach ($activeEmployees as $empId) {
-            $membersToInsert[] = [
+            $anggotaToInsert[] = [
                 'uuid' => Str::uuid(),
-                'employee_id' => $empId,
-                'member_role_id' => $defaultRole->id,
+                'karyawan_id' => $empId,
+                'jabatan_anggota_id' => $defaultRole->id,
                 'status' => 'pending',
-                'is_active' => true,
+                'aktif' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
         }
 
-        Member::insert($membersToInsert);
+        Anggota::insert($anggotaToInsert);
 
-        $insertedMembers = Member::whereIn('employee_id', $activeEmployees)->get();
+        $insertedAnggota = Anggota::whereIn('karyawan_id', $activeEmployees)->get();
         $logsToInsert = [];
-        foreach ($insertedMembers as $m) {
+        foreach ($insertedAnggota as $m) {
             $logsToInsert[] = [
-                'member_id' => $m->id,
-                'actor_id' => auth()->id(),
-                'activity' => 'Create',
+                'anggota_id' => $m->id,
+                'pelaku_id' => auth()->id(),
+                'aktivitas' => 'Create',
                 'status' => 'pending',
-                'description' => 'Member added',
+                'deskripsi' => 'Anggota ditambahkan',
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
             $logsToInsert[] = [
-                'member_id' => $m->id,
-                'actor_id' => auth()->id(),
-                'activity' => 'Status Update',
+                'anggota_id' => $m->id,
+                'pelaku_id' => auth()->id(),
+                'aktivitas' => 'Status Update',
                 'status' => 'pending',
-                'description' => 'Waiting for member confirmation',
+                'deskripsi' => 'Menunggu konfirmasi anggota',
                 'created_at' => now()->addSecond(),
                 'updated_at' => now()->addSecond(),
             ];
         }
-        MemberLog::insert($logsToInsert);
+        LogAnggota::insert($logsToInsert);
 
-        $message = count($activeEmployees) . ' Members successfully added.';
+        $message = count($activeEmployees) . ' Anggota berhasil ditambahkan.';
         if ($inactiveCount > 0) {
-            $message .= ' ' . $inactiveCount . ' employees skipped because they are inactive.';
+            $message .= ' ' . $inactiveCount . ' karyawan dilewati karena sudah tidak aktif.';
         }
 
         return back()->with('success', $message);
@@ -237,27 +243,27 @@ class MemberController extends Controller
     {
         $request->validate([
             'ids' => 'required|array',
-            'ids.*' => 'exists:members,id',
+            'ids.*' => 'exists:anggota,id',
         ]);
 
-        $members = Member::with('employee')->whereIn('id', $request->ids)->get();
+        $anggotaList = Anggota::with('karyawan')->whereIn('id', $request->ids)->get();
         $logsToInsert = [];
-        foreach ($members as $m) {
+        foreach ($anggotaList as $m) {
             $logsToInsert[] = [
-                'member_id' => $m->id,
-                'actor_id' => auth()->id(),
-                'activity' => 'Delete',
+                'anggota_id' => $m->id,
+                'pelaku_id' => auth()->id(),
+                'aktivitas' => 'Delete',
                 'status' => $m->status,
-                'description' => 'Deleting member data: ' . ($m->employee ? $m->employee->name : 'Unknown'),
+                'deskripsi' => 'Menghapus data anggota: ' . ($m->karyawan ? $m->karyawan->nama : 'Tidak diketahui'),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
         }
-        MemberLog::insert($logsToInsert);
+        LogAnggota::insert($logsToInsert);
 
-        Member::whereIn('id', $request->ids)->delete();
+        Anggota::whereIn('id', $request->ids)->delete();
 
         return redirect()->route('dashboard.members')
-            ->with('success', count($request->ids) . ' members successfully deleted.');
+            ->with('success', count($request->ids) . ' anggota berhasil dihapus.');
     }
 }

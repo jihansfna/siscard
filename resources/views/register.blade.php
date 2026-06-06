@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Register | SISCARD</title>
+    <title>Daftar | SISCARD</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -15,16 +15,16 @@
         <aside class="relative flex-1 bg-gradient-to-br from-primary-800 to-primary-900 overflow-hidden md:rounded-r-[40px] flex flex-col justify-center shadow-2xl z-10 p-10 lg:p-16">
             <div class="w-full max-w-lg mx-auto text-white">
                 <div class="mb-8 animate-fade-in-up">
-                    <h1 class="text-3xl md:text-4xl font-extrabold leading-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white to-blue-100">Join SISCARD</h1>
+                    <h1 class="text-3xl md:text-4xl font-extrabold leading-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white to-blue-100">Bergabung dengan SISCARD</h1>
                     <p class="text-blue-100 text-lg leading-relaxed">
-                        <strong class="text-white font-bold">Register</strong> to become part of the community.
+                        <strong class="text-white font-bold">Daftar</strong> untuk menjadi bagian dari komunitas.
                         <br>
-                        Built to support every member of SPSI.
+                        Dibangun untuk mendukung setiap anggota SPSI.
                     </p>
                 </div>
 
                 <div class="flex justify-center mt-8 animate-fade-in-up" style="animation-delay: 200ms;">
-                    <img src="{{ asset('login_vector.png') }}" alt="Siscard illustration" class="w-64 md:w-80 lg:w-96 object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500" fetchpriority="high">
+                    <img src="{{ asset('login_vector.png') }}" alt="Ilustrasi Siscard" class="w-64 md:w-80 lg:w-96 object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500" fetchpriority="high">
                 </div>
             </div>
             
@@ -40,7 +40,7 @@
             
             <section class="w-full max-w-md bg-white rounded-3xl p-8 shadow-xl shadow-primary-900/5 md:shadow-none md:p-0 my-auto">
                 <div class="mb-10 text-center md:text-left">
-                    <h2 class="text-3xl font-extrabold text-primary-800 tracking-tight">Register</h2>
+                    <h2 class="text-3xl font-extrabold text-primary-800 tracking-tight">Daftar</h2>
                 </div>
 
                 @if (session('success'))
@@ -65,59 +65,59 @@
                     @csrf
 
                     <div class="space-y-2 group">
-                        <label for="name" class="block text-sm font-bold text-gray-700 group-focus-within:text-primary-700 transition-colors">Full Name</label>
+                        <label for="nama" class="block text-sm font-bold text-gray-700 group-focus-within:text-primary-700 transition-colors">Nama Lengkap</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
                                 <x-heroicon-o-user class="w-5 h-5" />
                             </div>
-                            <input id="name" name="name" type="text" value="{{ old('name') }}" placeholder="Enter full name" autocomplete="name" required 
+                            <input id="nama" name="nama" type="text" value="{{ old('nama') }}" placeholder="Masukkan nama lengkap" autocomplete="name" required 
                                 class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
                         </div>
                     </div>
 
                     <div class="space-y-2 group">
-                        <label for="badge" class="block text-sm font-bold text-gray-700 group-focus-within:text-primary-700 transition-colors">Badge ID</label>
+                        <label for="badge" class="block text-sm font-bold text-gray-700 group-focus-within:text-primary-700 transition-colors">ID Badge</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
                                 <x-heroicon-o-identification class="w-5 h-5" />
                             </div>
-                            <input id="badge" name="badge" type="text" value="{{ old('badge') }}" placeholder="Enter badge ID" autocomplete="username" required 
+                            <input id="badge" name="badge" type="text" value="{{ old('badge') }}" placeholder="Masukkan ID badge" autocomplete="username" required 
                                 class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
                         </div>
                     </div>
 
                     <div class="space-y-2 group">
-                        <label for="password" class="block text-sm font-bold text-gray-700 group-focus-within:text-primary-700 transition-colors">Password</label>
+                        <label for="password" class="block text-sm font-bold text-gray-700 group-focus-within:text-primary-700 transition-colors">Kata Sandi</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
                                 <x-heroicon-o-lock-closed class="w-5 h-5" />
                             </div>
-                            <input id="password" name="password" type="password" placeholder="Min. 8 characters" autocomplete="new-password" required 
+                            <input id="password" name="password" type="password" placeholder="Min. 8 karakter" autocomplete="new-password" required 
                                 class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
                         </div>
                     </div>
 
                     <div class="space-y-2 group">
-                        <label for="password_confirmation" class="block text-sm font-bold text-gray-700 group-focus-within:text-primary-700 transition-colors">Confirm Password</label>
+                        <label for="password_confirmation" class="block text-sm font-bold text-gray-700 group-focus-within:text-primary-700 transition-colors">Konfirmasi Kata Sandi</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
                                 <x-heroicon-o-check-badge class="w-5 h-5" />
                             </div>
-                            <input id="password_confirmation" name="password_confirmation" type="password" placeholder="Repeat password" autocomplete="new-password" required 
+                            <input id="password_confirmation" name="password_confirmation" type="password" placeholder="Ulangi kata sandi" autocomplete="new-password" required 
                                 class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
                         </div>
                     </div>
 
                     <div class="pt-4">
                         <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-primary-600/30 hover:shadow-xl hover:shadow-primary-600/40 hover:-translate-y-0.5 transition-all duration-200 flex justify-center items-center gap-2">
-                            <span>Register Now</span>
+                            <span>Daftar Sekarang</span>
                             <x-heroicon-m-arrow-right class="w-5 h-5" />
                         </button>
                     </div>
 
                     <div class="text-center pt-6 border-t border-gray-100 mt-6">
                         <p class="text-sm font-medium text-gray-500">
-                            Already have an account? <a href="{{ route('login') }}" class="font-bold text-primary-600 hover:text-primary-800 hover:underline transition-colors">Login here</a>
+                            Sudah punya akun? <a href="{{ route('login') }}" class="font-bold text-primary-600 hover:text-primary-800 hover:underline transition-colors">Masuk di sini</a>
                         </p>
                     </div>
                 </form>

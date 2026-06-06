@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\MemberLog;
+use App\Models\LogAnggota;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -13,13 +13,13 @@ class HistoryExport
 {
     public function export()
     {
-        $logs = MemberLog::with(['member.employee', 'actor'])->orderBy('created_at', 'desc')->get();
+        $logs = LogAnggota::with(['anggota.karyawan', 'pelaku'])->orderBy('created_at', 'desc')->get();
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('History Logs');
+        $sheet->setTitle('Riwayat Log');
 
         // Headers
-        $headers = ['No', 'Tanggal', 'Aktor', 'Aktivitas', 'Target Member', 'Deskripsi'];
+        $headers = ['No', 'Tanggal', 'Pelaku', 'Aktivitas', 'Target Anggota', 'Deskripsi'];
         $columns = ['A', 'B', 'C', 'D', 'E', 'F'];
 
         // Header styling
@@ -41,10 +41,10 @@ class HistoryExport
         foreach ($logs as $index => $log) {
             $sheet->setCellValue("A{$row}", $index + 1);
             $sheet->setCellValue("B{$row}", $log->created_at?->format('d/m/Y H:i:s'));
-            $sheet->setCellValue("C{$row}", $log->actor ? $log->actor->name : 'Sistem');
-            $sheet->setCellValue("D{$row}", ucfirst($log->activity));
-            $sheet->setCellValue("E{$row}", $log->member && $log->member->employee ? $log->member->employee->name : '-');
-            $sheet->setCellValue("F{$row}", $log->description ?? '-');
+            $sheet->setCellValue("C{$row}", $log->pelaku ? $log->pelaku->nama : 'Sistem');
+            $sheet->setCellValue("D{$row}", ucfirst($log->aktivitas));
+            $sheet->setCellValue("E{$row}", $log->anggota && $log->anggota->karyawan ? $log->anggota->karyawan->nama : '-');
+            $sheet->setCellValue("F{$row}", $log->deskripsi ?? '-');
 
             if ($index % 2 === 0) {
                 $sheet->getStyle("A{$row}:F{$row}")->getFill()
@@ -66,7 +66,7 @@ class HistoryExport
         }
 
         $writer = new Xlsx($spreadsheet);
-        $filename = 'history_logs_' . date('Y-m-d_His') . '.xlsx';
+        $filename = 'riwayat_log_' . date('Y-m-d_His') . '.xlsx';
         $tempFile = storage_path('app/' . $filename);
         $writer->save($tempFile);
 

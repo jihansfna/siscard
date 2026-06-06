@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-slot name="title">Dashboard Overview</x-slot>
+    <x-slot name="title">Ringkasan Beranda</x-slot>
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -7,74 +7,74 @@
     <!-- Dashboard Container with dynamic theme -->
     <div class="text-gray-800 dark:text-gray-200 transition-colors">
         <!-- Summary -->
-        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Summary</h2>
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Ringkasan</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <!-- Card 1 -->
-            <div class="bg-white dark:bg-[#242424] border border-gray-100 dark:border-gray-700/50 rounded-2xl p-5 flex items-center gap-5 hover:shadow-lg dark:hover:bg-[#2A2A2A] transition-all shadow-md shadow-gray-200/60 dark:shadow-none">
+            <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-5 flex items-center gap-5 hover:shadow-lg dark:hover:bg-[#2A2A2A] transition-all shadow-md shadow-gray-200/60 dark:shadow-none">
                 <div class="w-14 h-14 rounded-2xl bg-[#F4F0FF] flex items-center justify-center flex-shrink-0">
                     <x-heroicon-o-users class="w-7 h-7 text-[#7C3AED]" />
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Total members</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Total anggota</p>
                     <p class="text-3xl font-bold text-gray-900 dark:text-white leading-tight">{{ $totalMembers }}</p>
-                    <p class="text-xs text-gray-500 mt-0.5">+{{ $totalMembersThisMonth }} this month</p>
+                    <p class="text-xs text-gray-500 mt-0.5">+{{ $totalMembersThisMonth }} bulan ini</p>
                 </div>
             </div>
 
             <!-- Card 2 -->
-            <div class="bg-white dark:bg-[#242424] border border-gray-100 dark:border-gray-700/50 rounded-2xl p-5 flex items-center gap-5 hover:shadow-lg dark:hover:bg-[#2A2A2A] transition-all shadow-md shadow-gray-200/60 dark:shadow-none">
+            <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-5 flex items-center gap-5 hover:shadow-lg dark:hover:bg-[#2A2A2A] transition-all shadow-md shadow-gray-200/60 dark:shadow-none">
                 <div class="w-14 h-14 rounded-2xl bg-[#F0FDF4] flex items-center justify-center flex-shrink-0">
                     <x-heroicon-o-arrow-down-tray class="w-7 h-7 text-[#16A34A]" />
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 font-medium leading-tight mb-1">Cards downloaded today</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 font-medium leading-tight mb-1">Kartu diunduh hari ini</p>
                     <p class="text-3xl font-bold text-gray-900 dark:text-white leading-tight">{{ $downloadsToday }}</p>
                     <p class="text-xs text-gray-500 mt-0.5">{{ $downloadsDiffText }}</p>
                 </div>
             </div>
 
             <!-- Card 3 -->
-            <div class="bg-white dark:bg-[#242424] border border-gray-100 dark:border-gray-700/50 rounded-2xl p-5 flex items-center gap-5 hover:shadow-lg dark:hover:bg-[#2A2A2A] transition-all shadow-md shadow-gray-200/60 dark:shadow-none">
+            <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-5 flex items-center gap-5 hover:shadow-lg dark:hover:bg-[#2A2A2A] transition-all shadow-md shadow-gray-200/60 dark:shadow-none">
                 <div class="w-14 h-14 rounded-2xl bg-[#FFFBEB] flex items-center justify-center flex-shrink-0">
                     <x-heroicon-o-clock class="w-7 h-7 text-[#D97706]" />
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mb-1">Pending verification</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mb-1">Menunggu verifikasi</p>
                     <p class="text-3xl font-bold text-gray-900 dark:text-white leading-tight">{{ $pendingMembers }}</p>
-                    <p class="text-xs text-gray-500 mt-0.5">Waiting for approval</p>
+                    <p class="text-xs text-gray-500 mt-0.5">Menunggu persetujuan</p>
                 </div>
             </div>
 
             <!-- Card 4 -->
-            <div class="bg-white dark:bg-[#242424] border border-gray-100 dark:border-gray-700/50 rounded-2xl p-5 flex items-center gap-5 hover:shadow-lg dark:hover:bg-[#2A2A2A] transition-all shadow-md shadow-gray-200/60 dark:shadow-none">
+            <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-5 flex items-center gap-5 hover:shadow-lg dark:hover:bg-[#2A2A2A] transition-all shadow-md shadow-gray-200/60 dark:shadow-none">
                 <div class="w-14 h-14 rounded-2xl bg-[#FEF2F2] flex items-center justify-center flex-shrink-0">
                     <x-heroicon-o-chat-bubble-left-ellipsis class="w-7 h-7 text-[#DC2626]" />
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mb-1">Feedbacks received</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mb-1">Saran diterima</p>
                     <p class="text-3xl font-bold text-gray-900 dark:text-white leading-tight">{{ $totalFeedbacks }}</p>
-                    <p class="text-xs text-gray-500 mt-0.5">{{ $pendingFeedbacks }} unresolved</p>
+                    <p class="text-xs text-gray-500 mt-0.5">{{ $pendingFeedbacks }} belum selesai</p>
                 </div>
             </div>
         </div>
 
         <!-- Charts & Statistics -->
-        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Charts & Statistics</h2>
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Grafik & Statistik</h2>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
             
             <!-- Bar Chart -->
-            <div class="bg-white dark:bg-[#242424] border border-gray-100 dark:border-gray-700/50 rounded-2xl p-6 lg:col-span-2 flex flex-col shadow-md shadow-gray-200/60 dark:shadow-none">
+            <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-6 lg:col-span-2 flex flex-col shadow-md shadow-gray-200/60 dark:shadow-none">
                 <div class="flex justify-between items-start mb-6">
                     <div>
-                        <h3 class="text-gray-900 dark:text-white font-bold text-lg mb-1">Daily barcode scans</h3>
+                        <h3 class="text-gray-900 dark:text-white font-bold text-lg mb-1">Pemindaian barcode harian</h3>
                         <div class="flex items-center gap-4 text-xs font-medium">
                             <div class="flex items-center gap-1.5">
                                 <div class="w-3 h-3 bg-[#3B82F6] rounded-[3px]"></div>
-                                <span class="text-gray-500 dark:text-gray-400">Total scans</span>
+                                <span class="text-gray-500 dark:text-gray-400">Total pindaian</span>
                             </div>
                             <div class="flex items-center gap-1.5">
                                 <div class="w-3 h-0.5 bg-[#10B981]"></div>
-                                <span class="text-gray-500 dark:text-gray-400">Average</span>
+                                <span class="text-gray-500 dark:text-gray-400">Rata-rata</span>
                             </div>
                         </div>
                     </div>
@@ -86,20 +86,20 @@
             </div>
 
             <!-- Donut Chart -->
-            <div class="bg-white dark:bg-[#242424] border border-gray-100 dark:border-gray-700/50 rounded-2xl p-6 flex flex-col shadow-md shadow-gray-200/60 dark:shadow-none">
-                <h3 class="text-gray-900 dark:text-white font-bold text-lg mb-4">Member Status</h3>
+            <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-6 flex flex-col shadow-md shadow-gray-200/60 dark:shadow-none">
+                <h3 class="text-gray-900 dark:text-white font-bold text-lg mb-4">Status Anggota</h3>
                 <div class="flex items-center gap-4 text-xs font-medium mb-6 flex-wrap justify-center">
                     <div class="flex items-center gap-1.5">
                         <div class="w-3 h-3 bg-[#65A30D] rounded-[3px]"></div>
-                        <span class="text-gray-500 dark:text-gray-400">Active {{ $donutData['active'] }}%</span>
+                        <span class="text-gray-500 dark:text-gray-400">Aktif {{ $donutData['active'] }}%</span>
                     </div>
                     <div class="flex items-center gap-1.5">
                         <div class="w-3 h-3 bg-[#D97706] rounded-[3px]"></div>
-                        <span class="text-gray-500 dark:text-gray-400">Inactive {{ $donutData['inactive'] }}%</span>
+                        <span class="text-gray-500 dark:text-gray-400">Tidak Aktif {{ $donutData['inactive'] }}%</span>
                     </div>
                     <div class="flex items-center gap-1.5">
                         <div class="w-3 h-3 bg-[#D1D5DB] rounded-[3px]"></div>
-                        <span class="text-gray-500 dark:text-gray-400">Exited {{ $donutData['exited'] }}%</span>
+                        <span class="text-gray-500 dark:text-gray-400">Keluar {{ $donutData['exited'] }}%</span>
                     </div>
                 </div>
                 <div class="flex-1 w-full relative flex items-center justify-center min-h-[200px]">
@@ -126,7 +126,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Total Scans',
+                        label: 'Total Pindaian',
                         data: data,
                         backgroundColor: '#3B82F6',
                         borderRadius: 4,
@@ -212,7 +212,7 @@
             new Chart(ctxStatus, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Active', 'Inactive', 'Exited'],
+                    labels: ['Aktif', 'Tidak Aktif', 'Keluar'],
                     datasets: [{
                         data: donutData,
                         backgroundColor: [

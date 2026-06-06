@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('feedbacks', function (Blueprint $table) {
-            $table->text('remark')->nullable()->after('description');
+        Schema::table('saran', function (Blueprint $table) {
+            $table->text('catatan')->nullable()->after('deskripsi');
             // Since altering an enum can be tricky, we change it to string
             $table->string('status')->default('Waiting')->change();
         });
@@ -23,8 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('feedbacks', function (Blueprint $table) {
-            $table->dropColumn('remark');
+        Schema::table('saran', function (Blueprint $table) {
+            $table->dropColumn('catatan');
         });
     }
 };

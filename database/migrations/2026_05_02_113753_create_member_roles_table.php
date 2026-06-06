@@ -11,17 +11,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('member_roles', function (Blueprint $table) {
+        Schema::create('jabatan_anggota', function (Blueprint $table) {
             $table->id();
 
             $table->uuid('uuid')
                 ->unique()
                 ->default(DB::raw('(UUID())'));
 
-            $table->string('name')->unique();
+            $table->string('nama')->unique();
 
-            $table->boolean('is_single')->default(false);
-            $table->boolean('is_sign')->default(false);
+            $table->boolean('tunggal')->default(false);
+            $table->boolean('penandatangan')->default(false);
 
             $table->timestamps();
         });
@@ -29,6 +29,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('member_roles');
+        Schema::dropIfExists('jabatan_anggota');
     }
 };

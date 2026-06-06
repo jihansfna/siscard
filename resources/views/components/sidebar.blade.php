@@ -1,24 +1,24 @@
 @php
-$role = Auth::user()->role ?? 'user';
+$role = Auth::user()->peran ?? 'user';
 
 $adminMenu = [
-    ['name' => 'Dashboard', 'href' => route('dashboard'), 'icon' => 'home'],
-    ['name' => 'Master Employees', 'href' => route('dashboard.employees.index'), 'icon' => 'user-group'],
-    ['name' => 'Members', 'href' => route('dashboard.members'), 'icon' => 'users'],
-    ['name' => 'Feedbacks', 'href' => route('dashboard.feedbacks'), 'icon' => 'chat-bubble-left-ellipsis'],
-    // ['name' => 'History', 'href' => route('dashboard.history'), 'icon' => 'clock'],
+    ['name' => 'Beranda', 'href' => route('dashboard'), 'icon' => 'home'],
+    ['name' => 'Master Karyawan', 'href' => route('dashboard.employees.index'), 'icon' => 'user-group'],
+    ['name' => 'Anggota', 'href' => route('dashboard.members'), 'icon' => 'users'],
+    ['name' => 'Saran', 'href' => route('dashboard.feedbacks'), 'icon' => 'chat-bubble-left-ellipsis'],
+    // ['name' => 'Riwayat', 'href' => route('dashboard.history'), 'icon' => 'clock'],
 ];
 
 $userMenu = [
-    ['name' => 'Home', 'href' => route('user.home'), 'icon' => 'home'],
+    ['name' => 'Beranda', 'href' => route('user.home'), 'icon' => 'home'],
 ];
 
 $menu = $role === 'admin' ? $adminMenu : $userMenu;
-$sidebarLabel = $role === 'admin' ? 'Management System' : 'Member Area';
+$sidebarLabel = $role === 'admin' ? 'Sistem Manajemen' : 'Area Anggota';
 $currentUrl = request()->url();
 @endphp
 
-<aside id="sidebarMenu" class="w-64 flex-shrink-0 flex flex-col border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1A1A1A] shadow-xl shadow-gray-200/50 dark:shadow-none min-h-screen fixed inset-y-0 left-0 z-50 h-full transition-all duration-300 transform -translate-x-full md:translate-x-0">
+<aside id="sidebarMenu" class="w-64 flex-shrink-0 flex flex-col border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-xl shadow-gray-200/50 dark:shadow-none min-h-screen fixed inset-y-0 left-0 z-50 h-full transition-all duration-300 transform -translate-x-full md:translate-x-0">
     <div>
         <div class="border-b border-gray-100 dark:border-gray-800 p-6 flex items-center justify-between">
             <div>
@@ -34,7 +34,7 @@ $currentUrl = request()->url();
         <nav class="p-4 space-y-1">
             @foreach ($menu as $item)
                 @php
-                    $isActive = $item['name'] === 'Dashboard' || $item['name'] === 'Home'
+                    $isActive = $item['name'] === 'Beranda' || $item['name'] === 'Beranda'
                         ? request()->url() === $item['href']
                         : str_starts_with($currentUrl, $item['href']);
                 @endphp

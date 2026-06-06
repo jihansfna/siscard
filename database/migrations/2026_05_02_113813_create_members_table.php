@@ -11,19 +11,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('members', function (Blueprint $table) {
+        Schema::create('anggota', function (Blueprint $table) {
             $table->id();
 
             $table->uuid('uuid')
                 ->unique()
                 ->default(DB::raw('(UUID())'));
 
-            $table->foreignId('employee_id')
-                ->constrained()
+            $table->foreignId('karyawan_id')
+                ->constrained('karyawan')
                 ->cascadeOnDelete();
 
-            $table->foreignId('member_role_id')
-                ->constrained('member_roles')
+            $table->foreignId('jabatan_anggota_id')
+                ->constrained('jabatan_anggota')
                 ->cascadeOnUpdate();
             
             $table->enum('status', [
@@ -33,16 +33,16 @@ return new class extends Migration
                 'rejected'
             ])->default('pending');
 
-            $table->boolean('is_active')
+            $table->boolean('aktif')
                 ->default(true);
 
-            $table->boolean('is_show')
+            $table->boolean('tampil')
                 ->default(true);
 
-            $table->timestamp('approved_at')
+            $table->timestamp('disetujui_pada')
                 ->nullable();
 
-            $table->string('sign_image')
+            $table->string('tanda_tangan')
                 ->nullable();
 
             $table->timestamps();
@@ -52,6 +52,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('members');
+        Schema::dropIfExists('anggota');
     }
 };

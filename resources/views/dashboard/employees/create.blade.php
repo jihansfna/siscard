@@ -57,8 +57,7 @@
 
                     <div class="space-y-2 group">
                         <label for="join_date" class="block text-sm font-bold text-gray-700">Join Date</label>
-                        <input id="join_date" name="join_date" type="date" value="{{ old('join_date') }}" 
-                            class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
+                        <x-datepicker id="join_date" name="join_date" value="{{ old('join_date') }}" />
                     </div>
 
                     <div class="space-y-2 group">
@@ -69,8 +68,7 @@
 
                     <div class="space-y-2 group">
                         <label for="birth_date" class="block text-sm font-bold text-gray-700">Birth Date</label>
-                        <input id="birth_date" name="birth_date" type="date" value="{{ old('birth_date') }}" 
-                            class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
+                        <x-datepicker id="birth_date" name="birth_date" value="{{ old('birth_date') }}" />
                     </div>
                 </div>
 

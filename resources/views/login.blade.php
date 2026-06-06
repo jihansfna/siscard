@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Login | SISCARD</title>
+    <title>Masuk | SISCARD</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -15,16 +15,16 @@
         <aside class="relative flex-1 bg-gradient-to-br from-primary-800 to-primary-900 overflow-hidden md:rounded-r-[40px] flex flex-col justify-center shadow-2xl z-10 p-10 lg:p-16">
             <div class="w-full max-w-lg mx-auto text-white">
                 <div class="mb-8 animate-fade-in-up">
-                    <h1 class="text-3xl md:text-4xl font-extrabold leading-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white to-blue-100">Welcome to SISCARD</h1>
+                    <h1 class="text-3xl md:text-4xl font-extrabold leading-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white to-blue-100">Selamat datang di SISCARD</h1>
                     <p class="text-blue-100 text-lg leading-relaxed">
-                        <strong class="text-white font-bold">Log in</strong> to stay united and empowered.
+                        <strong class="text-white font-bold">Masuk</strong> untuk tetap bersatu dan berdaya.
                         <br>
-                        Built to support every member of SPSI.
+                        Dibangun untuk mendukung setiap anggota SPSI.
                     </p>
                 </div>
 
                 <div class="flex justify-center mt-8 animate-fade-in-up" style="animation-delay: 200ms;">
-                    <img src="{{ asset('login_vector.png') }}" alt="Siscard illustration" class="w-64 md:w-80 lg:w-96 object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500" fetchpriority="high">
+                    <img src="{{ asset('login_vector.png') }}" alt="Ilustrasi Siscard" class="w-64 md:w-80 lg:w-96 object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500" fetchpriority="high">
                 </div>
             </div>
             
@@ -40,7 +40,7 @@
             
             <section class="w-full max-w-md">
                 <div class="mb-10 text-center md:text-left">
-                    <h2 class="text-3xl font-extrabold text-primary-800 tracking-tight">Login!</h2>
+                    <h2 class="text-3xl font-extrabold text-primary-800 tracking-tight">Masuk!</h2>
                 </div>
 
                 @if (session('success'))
@@ -65,23 +65,23 @@
                     @csrf
 
                     <div class="space-y-2 group">
-                        <label for="badge" class="block text-sm font-bold text-gray-700 group-focus-within:text-primary-700 transition-colors">Badge ID</label>
+                        <label for="badge" class="block text-sm font-bold text-gray-700 group-focus-within:text-primary-700 transition-colors">ID Badge</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
                                 <x-heroicon-o-identification class="w-5 h-5" />
                             </div>
-                            <input id="badge" name="badge" type="text" value="{{ old('badge') }}" placeholder="Enter your badge ID" autocomplete="username" required 
+                            <input id="badge" name="badge" type="text" value="{{ old('badge') }}" placeholder="Masukkan ID badge Anda" autocomplete="username" required 
                                 class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
                         </div>
                     </div>
 
                     <div class="space-y-2 group">
-                        <label for="password" class="block text-sm font-bold text-gray-700 group-focus-within:text-primary-700 transition-colors">Password</label>
+                        <label for="password" class="block text-sm font-bold text-gray-700 group-focus-within:text-primary-700 transition-colors">Kata Sandi</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
                                 <x-heroicon-o-lock-closed class="w-5 h-5" />
                             </div>
-                            <input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required 
+                            <input id="password" name="password" type="password" placeholder="Masukkan kata sandi Anda" autocomplete="current-password" required 
                                 class="w-full pl-10 pr-14 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
                             <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 px-4 flex items-center justify-center text-gray-400 hover:text-primary-600 focus:outline-none transition-colors rounded-r-xl">
                                 <x-heroicon-o-eye id="eye-icon" class="w-5 h-5" />
@@ -93,15 +93,15 @@
                     <div class="flex items-center justify-between pt-2">
                         <label class="flex items-center gap-2 cursor-pointer group">
                             <input type="checkbox" name="remember" id="remember" class="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 cursor-pointer">
-                            <span class="text-sm font-medium text-gray-600 group-hover:text-gray-900 transition-colors">Remember me</span>
+                            <span class="text-sm font-medium text-gray-600 group-hover:text-gray-900 transition-colors">Ingat saya</span>
                         </label>
                         
-                        <button type="button" id="show-reset-btn" class="text-sm font-bold text-primary-600 hover:text-primary-800 transition-colors">Reset Password</button>
+                        <button type="button" id="show-reset-btn" class="text-sm font-bold text-primary-600 hover:text-primary-800 transition-colors">Atur Ulang Kata Sandi</button>
                     </div>
 
                     <div class="pt-4 flex justify-center">
                         <button type="submit" id="login-btn" class="w-full max-w-[200px] bg-primary-600 hover:bg-primary-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-primary-600/30 hover:shadow-xl hover:shadow-primary-600/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-300 ease-out flex justify-center items-center gap-2">
-                            <span id="btn-text">Login</span>
+                            <span id="btn-text">Masuk</span>
                             <x-heroicon-m-arrow-right id="btn-icon" class="w-5 h-5" />
                             <svg id="btn-spinner" class="animate-spin h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -116,27 +116,27 @@
                     @csrf
 
                     <div class="space-y-2 group">
-                        <label for="reset_badge" class="block text-sm font-bold text-gray-700 group-focus-within:text-primary-700 transition-colors">Badge ID</label>
+                        <label for="reset_badge" class="block text-sm font-bold text-gray-700 group-focus-within:text-primary-700 transition-colors">ID Badge</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
                                 <x-heroicon-o-identification class="w-5 h-5" />
                             </div>
-                            <input id="reset_badge" name="badge" type="text" placeholder="Enter your badge ID to reset" required 
+                            <input id="reset_badge" name="badge" type="text" placeholder="Masukkan ID badge Anda untuk mengatur ulang" required 
                                 class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
                         </div>
-                        <p class="text-xs text-gray-500 mt-1">Password will be reset to default password.</p>
+                        <p class="text-xs text-gray-500 mt-1">Kata sandi akan diatur ulang ke kata sandi bawaan.</p>
                     </div>
 
                     <div class="flex items-center justify-between pt-2">
                         <button type="button" id="show-login-btn" class="text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors flex items-center gap-1">
                             <x-heroicon-m-arrow-left class="w-4 h-4" />
-                            Back to Login
+                            Kembali ke Masuk
                         </button>
                     </div>
 
                     <div class="pt-4 flex justify-center">
                         <button type="submit" id="reset-btn" class="w-full max-w-[200px] bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-red-600/30 hover:shadow-xl hover:shadow-red-600/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-300 ease-out flex justify-center items-center gap-2">
-                            <span id="reset-btn-text">Reset</span>
+                            <span id="reset-btn-text">Atur Ulang</span>
                             <x-heroicon-m-arrow-path id="reset-btn-icon" class="w-5 h-5" />
                             <svg id="reset-btn-spinner" class="animate-spin h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -158,13 +158,13 @@
         document.getElementById('show-reset-btn').addEventListener('click', function() {
             loginForm.classList.add('hidden');
             resetForm.classList.remove('hidden');
-            formTitle.innerText = 'Reset Password';
+            formTitle.innerText = 'Atur Ulang Kata Sandi';
         });
 
         document.getElementById('show-login-btn').addEventListener('click', function() {
             resetForm.classList.add('hidden');
             loginForm.classList.remove('hidden');
-            formTitle.innerText = 'Login!';
+            formTitle.innerText = 'Masuk!';
         });
 
         // Toggle Password Visibility
@@ -193,7 +193,7 @@
             
             btn.disabled = true;
             btn.classList.add('opacity-75', 'cursor-not-allowed');
-            text.innerText = 'Loading...';
+            text.innerText = 'Memuat...';
             icon.classList.add('hidden');
             spinner.classList.remove('hidden');
         });
@@ -207,7 +207,7 @@
             
             btn.disabled = true;
             btn.classList.add('opacity-75', 'cursor-not-allowed');
-            text.innerText = 'Loading...';
+            text.innerText = 'Memuat...';
             icon.classList.add('hidden');
             spinner.classList.remove('hidden');
         });

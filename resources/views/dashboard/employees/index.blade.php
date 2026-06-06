@@ -1,9 +1,9 @@
 <x-app-layout>
-    <x-slot name="title">Master Employees</x-slot>
+    <x-slot name="title">Master Karyawan</x-slot>
 
     <section class="text-gray-800 dark:text-gray-200 transition-colors">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Master Data Employees</h2>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Data Master Karyawan</h2>
 
             <div class="flex flex-wrap items-center gap-3">
                 <form class="flex items-center gap-2" method="GET" action="{{ route('dashboard.employees.index') }}">
@@ -11,7 +11,7 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                             <x-heroicon-o-magnifying-glass class="w-5 h-5" />
                         </div>
-                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Search name / badge..." class="pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700/50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 dark:bg-[#242424] dark:text-white dark:placeholder-gray-500 transition-colors">
+                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari nama / badge..." class="pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500 transition-colors">
                     </div>
                 </form>
 
@@ -19,29 +19,24 @@
                 <div class="relative" id="exportDropdownContainer">
                     <button type="button" onclick="toggleDropdown('exportDropdown')" class="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-emerald-600/20 active:scale-95">
                         <x-heroicon-o-arrow-down-tray class="w-4 h-4" />
-                        <span>Export</span>
+                        <span>Ekspor</span>
                         <x-heroicon-o-chevron-down class="w-3 h-3" />
                     </button>
-                    <div id="exportDropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-[#242424] rounded-xl shadow-xl border border-gray-100 dark:border-gray-700/50 py-1 z-50 hidden transition-all">
+                    <div id="exportDropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 py-1 z-50 hidden transition-all">
                         <a href="{{ route('dashboard.export.employees.excel') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">
                             <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM9.5 11.5l2 3.5-2 3.5h1.5l1.25-2.5L13.5 18.5H15l-2-3.5 2-3.5h-1.5l-1.25 2.5-1.25-2.5H9.5z"/></svg>
-                            <span>Export Excel</span>
+                            <span>Ekspor Excel</span>
                         </a>
                         <a href="{{ route('dashboard.export.employees.pdf') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">
                             <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM10.5 11c-.83 0-1.5.67-1.5 1.5v4c0 .83.67 1.5 1.5 1.5h3c.83 0 1.5-.67 1.5-1.5v-4c0-.83-.67-1.5-1.5-1.5h-3z"/></svg>
-                            <span>Export PDF</span>
+                            <span>Ekspor PDF</span>
                         </a>
                     </div>
                 </div>
 
-                {{-- Import Button --}}
-                <button type="button" onclick="document.getElementById('importEmployeeModal').classList.remove('hidden'); document.getElementById('importEmployeeModal').classList.add('flex')" class="flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-amber-500/20 active:scale-95">
-                    <x-heroicon-o-arrow-up-tray class="w-4 h-4" />
-                    <span>Import</span>
-                </button>
 
                 <button type="button" onclick="document.getElementById('addEmployeeModal').classList.remove('hidden'); document.getElementById('addEmployeeModal').classList.add('flex')" class="flex items-center gap-3 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-primary-600/20 active:scale-95">
-                    <span>Add Employee</span>
+                    <span>Tambah Karyawan</span>
                     <x-heroicon-o-user-plus class="w-4 h-4" />
                 </button>
             </div>
@@ -51,10 +46,10 @@
         <div id="bulkDeleteBar" class="hidden items-center justify-between bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/50 rounded-xl p-4 mb-4 transition-all duration-300">
             <div class="flex items-center gap-2 text-red-700 dark:text-red-400 text-sm font-semibold">
                 <x-heroicon-o-trash class="w-5 h-5 text-red-500" />
-                <span id="selectedCount">0</span> selected data
+                <span id="selectedCount">0</span> data terpilih
             </div>
             <button type="submit" form="bulkDeleteForm" class="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition-all shadow-md shadow-red-600/20 active:scale-95">
-                <span>Delete Selected</span>
+                <span>Hapus Terpilih</span>
             </button>
         </div>
 
@@ -62,62 +57,62 @@
             @csrf
         </form>
 
-        <div class="bg-white dark:bg-[#242424] border border-gray-200 dark:border-gray-700/50 rounded-xl overflow-hidden shadow-md shadow-gray-200/60 dark:shadow-none transition-all">
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-md shadow-gray-200/60 dark:shadow-none transition-all">
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-gray-600 dark:text-gray-400">
-                    <thead class="bg-gray-50 dark:bg-[#1A1A1A] text-gray-700 dark:text-gray-300 text-xs uppercase font-semibold border-b border-gray-200 dark:border-gray-700/50">
+                    <thead class="bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 text-xs uppercase font-semibold border-b border-gray-200 dark:border-gray-700">
                         <tr>
                             <th class="px-4 py-3 w-10">
-                                <input type="checkbox" id="selectAllEmployees" class="rounded border-gray-300 dark:border-gray-600 dark:bg-[#242424] text-primary-600 focus:ring-primary-500" onclick="toggleSelectAllEmployees(this)">
+                                <input type="checkbox" id="selectAllEmployees" class="rounded border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-primary-600 focus:ring-primary-500" onclick="toggleSelectAllEmployees(this)">
                             </th>
                             <th class="px-4 py-3">Badge</th>
-                            <th class="px-4 py-3">Name</th>
-                            <th class="px-4 py-3">Department</th>
-                            <th class="px-4 py-3">Position</th>
-                            <th class="px-4 py-3">Join Date</th>
-                            <th class="px-4 py-3">End Date</th>
+                            <th class="px-4 py-3">Nama</th>
+                            <th class="px-4 py-3">Departemen</th>
+                            <th class="px-4 py-3">Jabatan</th>
+                            <th class="px-4 py-3">Tanggal Masuk</th>
+                            <th class="px-4 py-3">Tanggal Keluar</th>
                             <th class="px-4 py-3">Status</th>
-                            <th class="px-4 py-3 text-right">Action</th>
+                            <th class="px-4 py-3 text-right">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 dark:divide-gray-700/50">
                         @forelse ($employees as $employee)
                             <tr class="hover:bg-gray-50/50 dark:hover:bg-[#2A2A2A] transition-colors">
                                 <td class="px-4 py-3">
-                                    <input type="checkbox" name="ids[]" value="{{ $employee->id }}" form="bulkDeleteForm" class="employee-checkbox rounded border-gray-300 dark:border-gray-600 dark:bg-[#242424] text-primary-600 focus:ring-primary-500" onclick="updateBulkDeleteBar()">
+                                    <input type="checkbox" name="ids[]" value="{{ $employee->id }}" form="bulkDeleteForm" class="employee-checkbox rounded border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-primary-600 focus:ring-primary-500" onclick="updateBulkDeleteBar()">
                                 </td>
                                 <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">{{ $employee->badge }}</td>
-                                <td class="px-4 py-3">{{ $employee->name }}</td>
-                                <td class="px-4 py-3">{{ $employee->department ?? '-' }}</td>
-                                <td class="px-4 py-3">{{ $employee->position ?? '-' }}</td>
-                                <td class="px-4 py-3">{{ $employee->join_date?->format('d M Y') ?? '-' }}</td>
+                                <td class="px-4 py-3">{{ $employee->nama }}</td>
+                                <td class="px-4 py-3">{{ $employee->departemen ?? '-' }}</td>
+                                <td class="px-4 py-3">{{ $employee->jabatan ?? '-' }}</td>
+                                <td class="px-4 py-3">{{ $employee->tanggal_masuk?->format('d M Y') ?? '-' }}</td>
                                 <td class="px-4 py-3">
-                                    @if($employee->end_date)
-                                        @if(!$employee->is_active)
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">{{ $employee->end_date->format('d M Y') }}</span>
+                                    @if($employee->tanggal_keluar)
+                                        @if(!$employee->aktif)
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">{{ $employee->tanggal_keluar->format('d M Y') }}</span>
                                         @else
-                                            <span>{{ $employee->end_date->format('d M Y') }}</span>
+                                            <span>{{ $employee->tanggal_keluar->format('d M Y') }}</span>
                                         @endif
                                     @else
                                         -
                                     @endif
                                 </td>
                                 <td class="px-4 py-3">
-                                    @if(!$employee->is_active)
+                                    @if(!$employee->aktif)
                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-400">{{ $employee->status }}</span>
                                     @else
                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">{{ $employee->status }}</span>
                                     @endif
                                 </td>
                                 <td class="px-4 py-3 text-right space-x-1">
-                                    @if($employee->is_active)
+                                    @if($employee->aktif)
                                         <!-- Edit Employee Button -->
-                                        <button type="button" onclick="document.getElementById('editEmployeeModal-{{ $employee->id }}').classList.remove('hidden'); document.getElementById('editEmployeeModal-{{ $employee->id }}').classList.add('flex')" class="inline-flex p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit Employee">
+                                        <button type="button" onclick="document.getElementById('editEmployeeModal-{{ $employee->id }}').classList.remove('hidden'); document.getElementById('editEmployeeModal-{{ $employee->id }}').classList.add('flex')" class="inline-flex p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Ubah Karyawan">
                                             <x-heroicon-o-pencil-square class="w-5 h-5" />
                                         </button>
 
                                         <!-- Set Inactive Button (only if active) -->
-                                        <button type="button" onclick="document.getElementById('inactiveEmployeeModal-{{ $employee->id }}').classList.remove('hidden'); document.getElementById('inactiveEmployeeModal-{{ $employee->id }}').classList.add('flex')" class="inline-flex p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Set Inactive">
+                                        <button type="button" onclick="document.getElementById('inactiveEmployeeModal-{{ $employee->id }}').classList.remove('hidden'); document.getElementById('inactiveEmployeeModal-{{ $employee->id }}').classList.add('flex')" class="inline-flex p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Set Tidak Aktif">
                                             <x-heroicon-o-no-symbol class="w-5 h-5" />
                                         </button>
 
@@ -128,20 +123,20 @@
                                                     <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-4 mx-auto">
                                                         <x-heroicon-o-exclamation-triangle class="w-6 h-6 text-red-600" />
                                                     </div>
-                                                    <h3 class="text-lg font-bold text-gray-900 text-center mb-2">Deactivate Employee?</h3>
+                                                    <h3 class="text-lg font-bold text-gray-900 text-center mb-2">Nonaktifkan Karyawan?</h3>
                                                     <p class="text-sm text-gray-500 text-center">
-                                                        Are you sure you want to deactivate <strong>{{ $employee->name }}</strong>? System access will be revoked and member status will automatically become Inactive.
+                                                        Apakah Anda yakin ingin menonaktifkan <strong>{{ $employee->nama }}</strong>? Akses sistem akan dicabut dan status anggota akan otomatis menjadi Tidak Aktif.
                                                     </p>
                                                 </div>
                                                 <div class="px-6 py-4 bg-gray-50 flex justify-center gap-3">
                                                     <button type="button" onclick="document.getElementById('inactiveEmployeeModal-{{ $employee->id }}').classList.add('hidden'); document.getElementById('inactiveEmployeeModal-{{ $employee->id }}').classList.remove('flex')" class="px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-xl transition-all">
-                                                        Cancel
+                                                        Batal
                                                     </button>
                                                     <form action="{{ route('dashboard.employees.set_inactive', $employee->id) }}" method="POST" class="m-0 form-with-loading">
                                                         @csrf
                                                         @method('PATCH')
                                                         <button type="submit" class="px-4 py-2 text-sm font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl shadow-lg shadow-red-600/20 transition-all flex items-center gap-2">
-                                                            <span class="btn-text">Yes, Deactivate</span>
+                                                            <span class="btn-text">Ya, Nonaktifkan</span>
                                                             <svg class="btn-spinner animate-spin h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -155,9 +150,9 @@
 
                                     <!-- Edit Employee Modal -->
                                     <div id="editEmployeeModal-{{ $employee->id }}" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 backdrop-blur-sm text-left">
-                                        <div class="bg-white dark:bg-[#242424] rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden max-h-[90vh] flex flex-col border border-transparent dark:border-gray-700/50">
-                                            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700/50 flex-shrink-0">
-                                                <h3 class="text-lg font-bold text-gray-800 dark:text-white">Edit Employee: {{ $employee->name }}</h3>
+                                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden max-h-[90vh] flex flex-col border border-transparent dark:border-gray-700">
+                                            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex-shrink-0">
+                                                <h3 class="text-lg font-bold text-gray-800 dark:text-white">Ubah Karyawan: {{ $employee->nama }}</h3>
                                                 <button type="button" onclick="document.getElementById('editEmployeeModal-{{ $employee->id }}').classList.add('hidden'); document.getElementById('editEmployeeModal-{{ $employee->id }}').classList.remove('flex')" class="text-gray-400 hover:text-gray-600 transition-colors">
                                                     <x-heroicon-o-x-mark class="w-6 h-6" />
                                                 </button>
@@ -170,91 +165,88 @@
                                                         <div class="space-y-2">
                                                             <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Badge ID <span class="text-red-500">*</span></label>
                                                             <input name="badge" type="text" value="{{ old('badge', $employee->badge) }}" required 
-                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
                                                         </div>
 
                                                         <div class="space-y-2">
-                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Full Name <span class="text-red-500">*</span></label>
-                                                            <input name="name" type="text" value="{{ old('name', $employee->name) }}" required 
-                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Nama Lengkap <span class="text-red-500">*</span></label>
+                                                            <input name="nama" type="text" value="{{ old('nama', $employee->nama) }}" required 
+                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
                                                         </div>
 
                                                         <div class="space-y-2">
-                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Department</label>
-                                                            <input name="department" type="text" value="{{ old('department', $employee->department) }}" 
-                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Departemen</label>
+                                                            <input name="departemen" type="text" value="{{ old('departemen', $employee->departemen) }}" 
+                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
                                                         </div>
 
                                                         <div class="space-y-2">
-                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Position</label>
-                                                            <input name="position" type="text" value="{{ old('position', $employee->position) }}" 
-                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Jabatan</label>
+                                                            <input name="jabatan" type="text" value="{{ old('jabatan', $employee->jabatan) }}" 
+                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
                                                         </div>
 
                                                         <div class="space-y-2">
                                                             <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Line</label>
                                                             <input name="line" type="text" value="{{ old('line', $employee->line) }}" 
-                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
                                                         </div>
 
                                                         <div class="space-y-2">
-                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Join Date</label>
-                                                            <input name="join_date" type="date" value="{{ old('join_date', $employee->join_date?->format('Y-m-d')) }}" 
-                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Tanggal Masuk</label>
+                                                            <x-datepicker id="tanggal_masuk_edit_{{ $employee->id }}" name="tanggal_masuk" value="{{ old('tanggal_masuk', $employee->tanggal_masuk?->format('Y-m-d')) }}" />
                                                         </div>
 
                                                         <div class="space-y-2">
-                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">End Date</label>
-                                                            <input name="end_date" type="date" value="{{ old('end_date', $employee->end_date?->format('Y-m-d')) }}" 
-                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
-                                                            <p class="text-xs text-gray-500 mt-1">Leave blank if employee is still active</p>
+                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Tanggal Keluar</label>
+                                                            <x-datepicker id="tanggal_keluar_edit_{{ $employee->id }}" name="tanggal_keluar" value="{{ old('tanggal_keluar', $employee->tanggal_keluar?->format('Y-m-d')) }}" />
+                                                            <p class="text-xs text-gray-500 mt-1">Kosongkan jika karyawan masih aktif</p>
                                                         </div>
 
                                                         <div class="space-y-2">
-                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Birth Place</label>
-                                                            <input name="birth_place" type="text" value="{{ old('birth_place', $employee->birth_place) }}" 
-                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Tempat Lahir</label>
+                                                            <input name="tempat_lahir" type="text" value="{{ old('tempat_lahir', $employee->tempat_lahir) }}" 
+                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
                                                         </div>
 
                                                         <div class="space-y-2">
-                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Birth Date</label>
-                                                            <input name="birth_date" type="date" value="{{ old('birth_date', $employee->birth_date?->format('Y-m-d')) }}" 
-                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Tanggal Lahir</label>
+                                                            <x-datepicker id="tanggal_lahir_edit_{{ $employee->id }}" name="tanggal_lahir" value="{{ old('tanggal_lahir', $employee->tanggal_lahir?->format('Y-m-d')) }}" />
                                                         </div>
 
-                                                        @if($employee->image)
+                                                        @if($employee->foto)
                                                             <div class="space-y-2 md:col-span-2">
-                                                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Employee Photo</label>
+                                                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Foto Karyawan</label>
                                                                 <div class="mb-2">
-                                                                    <img src="{{ asset('storage/' . $employee->image) }}" alt="Photo" class="w-20 h-20 object-cover rounded-lg border border-gray-200">
+                                                                    <img src="{{ asset('storage/' . $employee->foto) }}" alt="Photo" class="w-20 h-20 object-cover rounded-lg border border-gray-200">
                                                                 </div>
-                                                                <input name="image" type="file" accept=".jpg,.jpeg,.png" onchange="handleFileChange(this)"
-                                                                    class="w-full px-4 py-2 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
-                                                                <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, JPEG. Max: 2MB</p>
+                                                                <input name="foto" type="file" accept=".jpg,.jpeg,.png" onchange="handleFileChange(this)"
+                                                                    class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                                                <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, JPEG. Maks: 2MB</p>
                                                             </div>
                                                         @else
                                                             <div class="space-y-2">
-                                                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Employee Photo</label>
-                                                                <input name="image" type="file" accept=".jpg,.jpeg,.png" onchange="handleFileChange(this)"
-                                                                    class="w-full px-4 py-2 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
-                                                                <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, JPEG. Max: 2MB</p>
+                                                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Foto Karyawan</label>
+                                                                <input name="foto" type="file" accept=".jpg,.jpeg,.png" onchange="handleFileChange(this)"
+                                                                    class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                                                <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, JPEG. Maks: 2MB</p>
                                                             </div>
                                                         @endif
 
                                                         <div class="space-y-2 md:col-span-2">
-                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Address</label>
-                                                            <textarea name="address" rows="3" placeholder="Full address..." 
-                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm resize-none dark:text-white dark:placeholder-gray-500">{{ old('address', $employee->address) }}</textarea>
+                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Alamat</label>
+                                                            <textarea name="alamat" rows="3" placeholder="Alamat lengkap..." 
+                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm resize-none dark:text-white dark:placeholder-gray-500">{{ old('alamat', $employee->alamat) }}</textarea>
                                                         </div>
                                                     </div>
                                                 </form>
                                             </div>
-                                            <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700/50 bg-gray-50 dark:bg-[#1A1A1A] flex justify-end gap-3 flex-shrink-0">
+                                            <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex justify-end gap-3 flex-shrink-0">
                                                 <button type="button" onclick="document.getElementById('editEmployeeModal-{{ $employee->id }}').classList.add('hidden'); document.getElementById('editEmployeeModal-{{ $employee->id }}').classList.remove('flex')" class="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-200 rounded-lg transition-colors">
-                                                    Cancel
+                                                    Batal
                                                 </button>
                                                 <button type="submit" form="editEmployeeForm-{{ $employee->id }}" class="px-6 py-2.5 text-sm font-bold bg-primary-600 hover:bg-primary-700 text-white rounded-xl shadow-lg shadow-primary-600/20 transition-all flex items-center gap-2">
-                                                    <span class="btn-text">Update</span>
+                                                    <span class="btn-text">Perbarui</span>
                                                     <svg class="btn-spinner animate-spin h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -270,7 +262,7 @@
                                 <td colspan="8" class="px-4 py-8 text-center text-gray-500">
                                     <div class="flex flex-col items-center justify-center">
                                         <x-heroicon-o-users class="w-10 h-10 text-gray-300 mb-3" />
-                                        <p>No employee data available.</p>
+                                        <p>Tidak ada data karyawan tersedia.</p>
                                     </div>
                                 </td>
                             </tr>
@@ -280,7 +272,7 @@
             </div>
             
             @if($employees->hasPages() || $employees->total() > 0)
-            <div class="p-4 border-t border-gray-100 dark:border-gray-700/50">
+            <div class="p-4 border-t border-gray-100 dark:border-gray-700">
                 <x-custom-pagination :paginator="$employees" />
             </div>
             @endif
@@ -289,9 +281,9 @@
 
     <!-- Add Employee Modal -->
     <div id="addEmployeeModal" class="fixed inset-0 z-50 {{ $errors->any() ? 'flex' : 'hidden' }} items-center justify-center bg-gray-900/50 backdrop-blur-sm">
-        <div class="bg-white dark:bg-[#242424] rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden max-h-[90vh] flex flex-col border border-transparent dark:border-gray-700/50">
-            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700/50 flex-shrink-0">
-                <h3 class="text-lg font-bold text-gray-800 dark:text-white">Add New Employee</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden max-h-[90vh] flex flex-col border border-transparent dark:border-gray-700">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex-shrink-0">
+                <h3 class="text-lg font-bold text-gray-800 dark:text-white">Tambah Karyawan Baru</h3>
                 <button type="button" onclick="document.getElementById('addEmployeeModal').classList.add('hidden'); document.getElementById('addEmployeeModal').classList.remove('flex')" class="text-gray-400 hover:text-gray-600 transition-colors">
                     <x-heroicon-o-x-mark class="w-6 h-6" />
                 </button>
@@ -313,80 +305,77 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2 group">
                             <label for="badge" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Badge ID <span class="text-red-500">*</span></label>
-                            <input id="badge" name="badge" type="text" value="{{ old('badge') }}" placeholder="Example: 12345" required 
-                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                            <input id="badge" name="badge" type="text" value="{{ old('badge') }}" placeholder="Contoh: 12345" required 
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
                         </div>
 
                         <div class="space-y-2 group">
-                            <label for="name" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Full Name <span class="text-red-500">*</span></label>
-                            <input id="name" name="name" type="text" value="{{ old('name') }}" placeholder="Employee Name" required 
-                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                            <label for="nama" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Nama Lengkap <span class="text-red-500">*</span></label>
+                            <input id="nama" name="nama" type="text" value="{{ old('nama') }}" placeholder="Nama Karyawan" required 
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
                         </div>
 
                         <div class="space-y-2 group">
-                            <label for="department" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Department</label>
-                            <input id="department" name="department" type="text" value="{{ old('department') }}" placeholder="Example: IT" 
-                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                            <label for="departemen" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Departemen</label>
+                            <input id="departemen" name="departemen" type="text" value="{{ old('departemen') }}" placeholder="Contoh: IT" 
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
                         </div>
 
                         <div class="space-y-2 group">
-                            <label for="position" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Position</label>
-                            <input id="position" name="position" type="text" value="{{ old('position') }}" placeholder="Example: Staff" 
-                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                            <label for="jabatan" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Jabatan</label>
+                            <input id="jabatan" name="jabatan" type="text" value="{{ old('jabatan') }}" placeholder="Contoh: Staff" 
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
                         </div>
 
                         <div class="space-y-2 group">
                             <label for="line" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Line</label>
-                            <input id="line" name="line" type="text" value="{{ old('line') }}" placeholder="Example: Line 1" 
-                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                            <input id="line" name="line" type="text" value="{{ old('line') }}" placeholder="Contoh: Line 1" 
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
                         </div>
 
                         <div class="space-y-2 group">
-                            <label for="join_date" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Join Date</label>
-                            <input id="join_date" name="join_date" type="date" value="{{ old('join_date') }}" 
-                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                            <label for="tanggal_masuk" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Tanggal Masuk</label>
+                            <x-datepicker id="tanggal_masuk" name="tanggal_masuk" value="{{ old('tanggal_masuk') }}" />
                         </div>
 
                         <div class="space-y-2 group">
-                            <label for="end_date" class="block text-sm font-bold text-gray-700 dark:text-gray-300">End Date</label>
-                            <input id="end_date" name="end_date" type="date" value="{{ old('end_date') }}" 
-                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
-                            <p class="text-xs text-gray-500 mt-1">Leave blank if employee is still active</p>
+                            <label for="tanggal_keluar" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Tanggal Keluar</label>
+                            <x-datepicker id="tanggal_keluar" name="tanggal_keluar" value="{{ old('tanggal_keluar') }}" />
+                            <p class="text-xs text-gray-500 mt-1">Kosongkan jika karyawan masih aktif</p>
                         </div>
 
                         <div class="space-y-2 group">
-                            <label for="birth_place" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Birth Place</label>
-                            <input id="birth_place" name="birth_place" type="text" value="{{ old('birth_place') }}" placeholder="Example: Batam" 
-                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                            <label for="tempat_lahir" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Tempat Lahir</label>
+                            <input id="tempat_lahir" name="tempat_lahir" type="text" value="{{ old('tempat_lahir') }}" placeholder="Contoh: Batam" 
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
                         </div>
 
                         <div class="space-y-2 group">
-                            <label for="birth_date" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Birth Date</label>
-                            <input id="birth_date" name="birth_date" type="date" value="{{ old('birth_date') }}" 
-                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                            <label for="tanggal_lahir" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Tanggal Lahir</label>
+                            <x-datepicker id="tanggal_lahir" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" />
                         </div>
 
                         <div class="space-y-2 group">
-                            <label for="image" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Employee Photo</label>
-                            <input id="image" name="image" type="file" accept=".jpg,.jpeg,.png" onchange="handleFileChange(this)"
-                                class="w-full px-4 py-2 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
-                            <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, JPEG. Max: 2MB</p>
+                            <label for="foto" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Foto Karyawan</label>
+                            <input id="foto" name="foto" type="file" accept=".jpg,.jpeg,.png" onchange="handleFileChange(this)"
+                                class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                            <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, JPEG. Maks: 2MB</p>
                         </div>
 
                         <div class="space-y-2 group md:col-span-2">
-                            <label for="address" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Address</label>
-                            <textarea id="address" name="address" rows="3" placeholder="Full address..." 
-                                class="w-full px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm resize-none dark:text-white dark:placeholder-gray-500">{{ old('address') }}</textarea>
+                            <label for="alamat" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Alamat</label>
+                            <textarea id="alamat" name="alamat" rows="3" placeholder="Alamat lengkap..." 
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm resize-none dark:text-white dark:placeholder-gray-500">{{ old('alamat') }}</textarea>
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700/50 bg-gray-50 dark:bg-[#1A1A1A] flex justify-end gap-3 flex-shrink-0">
+            <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex justify-end gap-3 flex-shrink-0">
                 <button type="button" onclick="document.getElementById('addEmployeeModal').classList.add('hidden'); document.getElementById('addEmployeeModal').classList.remove('flex')" class="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-200 rounded-lg transition-colors">
-                    Cancel
+                    Batal
                 </button>
                 <button type="submit" form="addEmployeeForm" class="px-6 py-2.5 text-sm font-bold bg-primary-600 hover:bg-primary-700 text-white rounded-xl shadow-lg shadow-primary-600/20 transition-all flex items-center gap-2">
-                    <span class="btn-text">Save Employee</span>
+                    <span class="btn-text">Simpan Karyawan</span>
                     <svg class="btn-spinner animate-spin h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -478,9 +467,9 @@
 
     {{-- Import Employee Modal --}}
     <div id="importEmployeeModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 backdrop-blur-sm">
-        <div class="bg-white dark:bg-[#242424] rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col border border-transparent dark:border-gray-700/50">
-            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700/50 flex-shrink-0">
-                <h3 class="text-lg font-bold text-gray-800 dark:text-white">Import Data Employee</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col border border-transparent dark:border-gray-700">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex-shrink-0">
+                <h3 class="text-lg font-bold text-gray-800 dark:text-white">Impor Data Karyawan</h3>
                 <button type="button" onclick="closeImportModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
                     <x-heroicon-o-x-mark class="w-6 h-6" />
                 </button>
@@ -488,7 +477,7 @@
             <div class="p-6">
                 @if(session('import_errors'))
                     <div class="mb-4 p-4 rounded-xl bg-yellow-50 border border-yellow-200 text-yellow-800 text-sm">
-                        <p class="font-bold mb-1">Some rows skipped:</p>
+                        <p class="font-bold mb-1">Beberapa baris dilewati:</p>
                         <ul class="list-disc list-inside space-y-0.5 text-xs">
                             @foreach(session('import_errors') as $err)
                                 <li>{{ $err }}</li>
@@ -501,44 +490,44 @@
                     <div class="flex items-start gap-3">
                         <x-heroicon-o-information-circle class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                         <div class="text-sm text-blue-800">
-                            <p class="font-bold mb-1">Import Instructions:</p>
+                            <p class="font-bold mb-1">Instruksi Impor:</p>
                             <ul class="list-disc list-inside space-y-0.5 text-xs">
-                                <li>Download the template first</li>
-                                <li>Fill in data according to template format</li>
-                                <li>Columns <strong>Badge</strong> and <strong>Name</strong> are required</li>
-                                <li>Date format: <strong>dd/mm/yyyy</strong></li>
-                                <li>Already registered badges will automatically be skipped</li>
+                                <li>Unduh template terlebih dahulu</li>
+                                <li>Isi data sesuai dengan format template</li>
+                                <li>Kolom <strong>Badge</strong> dan <strong>Nama</strong> wajib diisi</li>
+                                <li>Format tanggal: <strong>dd/mm/yyyy</strong></li>
+                                <li>Badge yang sudah terdaftar otomatis akan dilewati</li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
-                <a href="{{ route('dashboard.import.employees.template') }}" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 mb-5 bg-gray-100 dark:bg-[#1A1A1A] hover:bg-gray-200 dark:hover:bg-[#2A2A2A] text-gray-700 dark:text-gray-300 rounded-xl text-sm font-bold transition-all border border-gray-200 dark:border-gray-700/50">
+                <a href="{{ route('dashboard.import.employees.template') }}" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 mb-5 bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-[#2A2A2A] text-gray-700 dark:text-gray-300 rounded-xl text-sm font-bold transition-all border border-gray-200 dark:border-gray-700">
                     <x-heroicon-o-document-arrow-down class="w-4 h-4" />
-                    <span>Download Template Excel</span>
+                    <span>Unduh Template Excel</span>
                 </a>
 
                 <form action="{{ route('dashboard.import.employees') }}" method="POST" enctype="multipart/form-data" class="form-with-loading" id="importEmployeeForm">
                     @csrf
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Excel File (.xlsx) <span class="text-red-500">*</span></label>
-                            <div id="importDropZone" class="relative border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center hover:border-primary-400 dark:hover:border-primary-500 transition-colors cursor-pointer bg-gray-50 dark:bg-[#1A1A1A]" onclick="document.getElementById('importFileInput').click()">
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Berkas Excel (.xlsx) <span class="text-red-500">*</span></label>
+                            <div id="importDropZone" class="relative border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center hover:border-primary-400 dark:hover:border-primary-500 transition-colors cursor-pointer bg-gray-50 dark:bg-gray-900" onclick="document.getElementById('importFileInput').click()">
                                 <input type="file" name="file" id="importFileInput" accept=".xlsx,.xls" required class="hidden" onchange="handleImportFileChange(this)">
                                 <x-heroicon-o-cloud-arrow-up class="w-10 h-10 text-gray-300 mx-auto mb-2" />
-                                <p class="text-sm text-gray-500 font-medium" id="importFileName">Click or drag file here</p>
-                                <p class="text-xs text-gray-400 mt-1">Format: .xlsx or .xls (max 5MB)</p>
+                                <p class="text-sm text-gray-500 font-medium" id="importFileName">Klik atau seret berkas ke sini</p>
+                                <p class="text-xs text-gray-400 mt-1">Format: .xlsx atau .xls (maks 5MB)</p>
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700/50 bg-gray-50 dark:bg-[#1A1A1A] flex justify-end gap-3 flex-shrink-0">
+            <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex justify-end gap-3 flex-shrink-0">
                 <button type="button" onclick="closeImportModal()" class="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-200 rounded-lg transition-colors">
-                    Cancel
+                    Batal
                 </button>
                 <button type="submit" form="importEmployeeForm" class="px-6 py-2.5 text-sm font-bold bg-amber-500 hover:bg-amber-600 text-white rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center gap-2">
-                    <span class="btn-text">Import Data</span>
+                    <span class="btn-text">Impor Data</span>
                     <svg class="btn-spinner animate-spin h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>

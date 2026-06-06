@@ -34,19 +34,19 @@
 
                     <div class="space-y-2 group">
                         <label for="name" class="block text-sm font-bold text-gray-700">Nama Lengkap <span class="text-red-500">*</span></label>
-                        <input id="name" name="name" type="text" value="{{ old('name', $employee->name) }}" placeholder="Nama Employee" required 
+                        <input id="name" name="name" type="text" value="{{ old('name', $employee->nama) }}" placeholder="Nama Employee" required 
                             class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
                     </div>
 
                     <div class="space-y-2 group">
                         <label for="department" class="block text-sm font-bold text-gray-700">Department</label>
-                        <input id="department" name="department" type="text" value="{{ old('department', $employee->department) }}" placeholder="Contoh: IT" 
+                        <input id="department" name="department" type="text" value="{{ old('department', $employee->departemen) }}" placeholder="Contoh: IT" 
                             class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
                     </div>
 
                     <div class="space-y-2 group">
                         <label for="position" class="block text-sm font-bold text-gray-700">Position</label>
-                        <input id="position" name="position" type="text" value="{{ old('position', $employee->position) }}" placeholder="Contoh: Staff" 
+                        <input id="position" name="position" type="text" value="{{ old('position', $employee->jabatan) }}" placeholder="Contoh: Staff" 
                             class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
                     </div>
 
@@ -58,27 +58,25 @@
 
                     <div class="space-y-2 group">
                         <label for="join_date" class="block text-sm font-bold text-gray-700">Join Date</label>
-                        <input id="join_date" name="join_date" type="date" value="{{ old('join_date', $employee->join_date?->format('Y-m-d')) }}" 
-                            class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
+                        <x-datepicker id="join_date" name="join_date" value="{{ old('join_date', $employee->tanggal_masuk?->format('Y-m-d')) }}" />
                     </div>
 
                     <div class="space-y-2 group">
                         <label for="birth_place" class="block text-sm font-bold text-gray-700">Birth Place</label>
-                        <input id="birth_place" name="birth_place" type="text" value="{{ old('birth_place', $employee->birth_place) }}" placeholder="Tempat Lahir" 
+                        <input id="birth_place" name="birth_place" type="text" value="{{ old('birth_place', $employee->tempat_lahir) }}" placeholder="Tempat Lahir" 
                             class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
                     </div>
 
                     <div class="space-y-2 group">
                         <label for="birth_date" class="block text-sm font-bold text-gray-700">Birth Date</label>
-                        <input id="birth_date" name="birth_date" type="date" value="{{ old('birth_date', $employee->birth_date?->format('Y-m-d')) }}" 
-                            class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
+                        <x-datepicker id="birth_date" name="birth_date" value="{{ old('birth_date', $employee->tanggal_lahir?->format('Y-m-d')) }}" />
                     </div>
                 </div>
 
                 <div class="space-y-2 group">
                     <label for="address" class="block text-sm font-bold text-gray-700">Address</label>
                     <textarea id="address" name="address" rows="3" placeholder="Alamat Lengkap" 
-                        class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">{{ old('address', $employee->address) }}</textarea>
+                        class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">{{ old('address', $employee->alamat) }}</textarea>
                 </div>
 
                 <div class="pt-4 flex justify-end">

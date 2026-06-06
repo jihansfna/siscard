@@ -20,10 +20,10 @@ class RoleMiddleware
     {
         $user = Auth::user();
 
-        if (!$user || !in_array($user->role, $roles)) {
+        if (!$user || !in_array($user->peran, $roles)) {
             // Redirect based on their actual role
             if ($user) {
-                return match ($user->role) {
+                return match ($user->peran) {
                     'admin' => redirect()->route('dashboard'),
                     'user'  => redirect()->route('user.home'),
                     default => redirect()->route('login'),

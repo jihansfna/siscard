@@ -11,7 +11,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('employees', function (Blueprint $table) {
+        Schema::create('karyawan', function (Blueprint $table) {
             $table->id();
 
             $table->uuid('uuid')
@@ -19,22 +19,22 @@ return new class extends Migration
                 ->default(DB::raw('(UUID())'));
 
             $table->string('badge')->unique();
-            $table->string('name');
-            $table->string('department')->nullable();
+            $table->string('nama');
+            $table->string('departemen')->nullable();
             $table->string('line')->nullable();
-            $table->string('position')->nullable();
-            $table->date('join_date')->nullable();
-            $table->date('end_date')->nullable();
-            $table->string('image')->nullable();
-            $table->string('birth_place')->nullable();
-            $table->date('birth_date')->nullable();
-            $table->text('address')->nullable();
+            $table->string('jabatan')->nullable();
+            $table->date('tanggal_masuk')->nullable();
+            $table->date('tanggal_keluar')->nullable();
+            $table->string('foto')->nullable();
+            $table->string('tempat_lahir')->nullable();
+            $table->date('tanggal_lahir')->nullable();
+            $table->text('alamat')->nullable();
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('karyawan');
     }
 };

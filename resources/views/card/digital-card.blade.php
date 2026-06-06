@@ -68,11 +68,15 @@
             height: 70pt;
             background-color: #dc2626;
             text-align: center;
-            display: inline-block;
-            background-size: cover;
-            background-position: center top;
-            background-repeat: no-repeat;
             border-radius: 2pt;
+            overflow: hidden;
+            display: inline-block;
+        }
+        .front-photo-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
         }
         .photo-fallback {
             line-height: 70pt;
@@ -99,9 +103,10 @@
             vertical-align: bottom;
         }
         .front-logo-wrapper img {
-            width: 55pt;
-            height: 55pt;
-            object-fit: contain;
+            max-width: 55pt;
+            max-height: 55pt;
+            width: auto;
+            height: auto;
         }
         .front-logo-text {
             font-size: 6pt;
@@ -205,7 +210,9 @@
                 <!-- Left: Photo -->
                 <td style="width: 30%; vertical-align: top; text-align: left;">
                     @if($photo)
-                        <div class="front-photo-wrapper" style="background-image: url('{{ $photo }}');"></div>
+                        <div class="front-photo-wrapper">
+                            <img src="{{ $photo }}" alt="Foto">
+                        </div>
                     @else
                         <div class="front-photo-wrapper">
                             <div class="photo-fallback">{{ strtoupper(substr($employee->name, 0, 1)) }}</div>

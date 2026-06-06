@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-slot name="title">User Profile</x-slot>
+    <x-slot name="title">Profil Pengguna</x-slot>
 
     @if($accessStatus !== 'registered')
         <!-- Overlay / Modal for no access or pending confirmation -->
@@ -9,13 +9,13 @@
                     <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-6">
                         <x-heroicon-o-x-circle class="h-8 w-8 text-red-600" />
                     </div>
-                    <h2 class="text-2xl font-extrabold text-gray-800 mb-2">Employment Period Ended</h2>
-                    <p class="text-gray-600 mb-8">Sorry, your active membership has been deactivated because your employment period at the company has ended (End Date: {{ $employee?->end_date?->format('d M Y') ?? '-' }}). Please contact HR.</p>
+                    <h2 class="text-2xl font-extrabold text-gray-800 mb-2">Masa Kerja Berakhir</h2>
+                    <p class="text-gray-600 mb-8">Maaf, keanggotaan aktif Anda telah dinonaktifkan karena masa kerja Anda di perusahaan telah berakhir (Tanggal Keluar: {{ $employee?->tanggal_keluar?->format('d M Y') ?? '-' }}). Silakan hubungi HR.</p>
                     
                     <form method="POST" action="{{ route('logout') }}" class="form-with-loading">
                         @csrf
                         <button type="submit" class="w-full inline-flex justify-center items-center gap-2 rounded-xl border border-transparent bg-red-600 px-6 py-3 text-base font-bold text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all">
-                            <span class="btn-text">Logout</span>
+                            <span class="btn-text">Keluar</span>
                             <svg class="btn-spinner animate-spin h-5 w-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -26,13 +26,13 @@
                     <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-6">
                         <x-heroicon-o-lock-closed class="h-8 w-8 text-red-600" />
                     </div>
-                    <h2 class="text-2xl font-extrabold text-gray-800 mb-2">Access Denied</h2>
-                    <p class="text-gray-600 mb-8">Sorry, you are not registered as a Member or do not have access to this page.</p>
+                    <h2 class="text-2xl font-extrabold text-gray-800 mb-2">Akses Ditolak</h2>
+                    <p class="text-gray-600 mb-8">Maaf, Anda belum terdaftar sebagai Anggota atau tidak memiliki akses ke halaman ini.</p>
                     
                     <form method="POST" action="{{ route('logout') }}" class="form-with-loading">
                         @csrf
                         <button type="submit" class="w-full inline-flex justify-center items-center gap-2 rounded-xl border border-transparent bg-red-600 px-6 py-3 text-base font-bold text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all">
-                            <span class="btn-text">Logout</span>
+                            <span class="btn-text">Keluar</span>
                             <svg class="btn-spinner animate-spin h-5 w-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -43,13 +43,13 @@
                     <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-yellow-100 mb-6">
                         <x-heroicon-o-exclamation-triangle class="h-8 w-8 text-yellow-600" />
                     </div>
-                    <h2 class="text-2xl font-extrabold text-gray-800 mb-2">Confirm Membership</h2>
-                    <p class="text-gray-600 mb-8">You have been added as a member by the admin. Please confirm to fully access this page.</p>
+                    <h2 class="text-2xl font-extrabold text-gray-800 mb-2">Konfirmasi Keanggotaan</h2>
+                    <p class="text-gray-600 mb-8">Anda telah ditambahkan sebagai anggota oleh admin. Harap konfirmasi untuk mendapatkan akses penuh ke halaman ini.</p>
                     
                     <form method="POST" action="{{ route('user.confirm_membership', $memberId) }}" class="form-with-loading">
                         @csrf
                         <button type="submit" class="w-full inline-flex justify-center items-center gap-2 rounded-xl border border-transparent bg-primary-600 px-6 py-3 text-base font-bold text-white shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all">
-                            <span class="btn-text">Yes, I Confirm</span>
+                            <span class="btn-text">Ya, Saya Konfirmasi</span>
                             <svg class="btn-spinner animate-spin h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -65,54 +65,54 @@
     <div class="grid gap-6 md:grid-cols-3 mb-6 {{ $accessStatus !== 'registered' ? 'blur-md pointer-events-none select-none opacity-50' : '' }}">
         <!-- Profile Sidebar -->
         <div class="md:col-span-1 min-w-0">
-            <div class="bg-white dark:bg-[#1A1A1A] border border-blue-100 dark:border-gray-700/50 rounded-2xl p-6 shadow-sm flex flex-col items-center text-center h-full justify-center transition-colors">
-                <div class="w-24 h-24 rounded-full overflow-hidden shadow-lg mb-4 border-2 border-white dark:border-[#242424] bg-gradient-to-br from-primary-800 to-primary-500 flex items-center justify-center flex-shrink-0">
-                    @if($employee && $employee->image)
-                        <img src="{{ asset('storage/' . $employee->image) }}" alt="Profile" class="w-full h-full object-cover">
+            <div class="bg-white dark:bg-gray-900 border border-blue-100 dark:border-gray-700 rounded-2xl p-6 shadow-sm flex flex-col items-center text-center h-full justify-center transition-colors">
+                <div class="w-24 h-24 rounded-full overflow-hidden shadow-lg mb-4 border-2 border-white dark:border-gray-800 bg-gradient-to-br from-primary-800 to-primary-500 flex items-center justify-center flex-shrink-0">
+                    @if($employee && $employee->foto)
+                        <img src="{{ asset('storage/' . $employee->foto) }}" alt="Profile" class="w-full h-full object-cover">
                     @else
-                        <span class="text-white text-3xl font-extrabold">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
+                        <span class="text-white text-3xl font-extrabold">{{ strtoupper(substr(Auth::user()->nama, 0, 1)) }}</span>
                     @endif
                 </div>
-                <h2 class="text-xl font-bold text-gray-800 dark:text-white">{{ Auth::user()->name }}</h2>
+                <h2 class="text-xl font-bold text-gray-800 dark:text-white">{{ Auth::user()->nama }}</h2>
                 <p class="text-gray-500 dark:text-gray-400 font-medium mt-1">{{ Auth::user()->badge }}</p>
                 <div class="mt-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-semibold border border-green-200 dark:border-green-800/50">
                     <span class="w-2 h-2 rounded-full bg-green-500"></span>
-                    Active
+                    Aktif
                 </div>
             </div>
         </div>
 
         <!-- Profile Details -->
         <div class="md:col-span-2 min-w-0">
-            <div class="bg-white dark:bg-[#1A1A1A] border border-blue-100 dark:border-gray-700/50 rounded-2xl p-6 shadow-sm h-full flex flex-col justify-between transition-colors">
+            <div class="bg-white dark:bg-gray-900 border border-blue-100 dark:border-gray-700 rounded-2xl p-6 shadow-sm h-full flex flex-col justify-between transition-colors">
                 <div>
-                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-700/50 pb-3">Account Information</h3>
+                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-700 pb-3">Informasi Akun</h3>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-y-4 gap-x-6">
                         <div>
-                            <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">Full Name</p>
-                            <p class="font-medium text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</p>
+                            <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">Nama Lengkap</p>
+                            <p class="font-medium text-gray-800 dark:text-gray-200">{{ Auth::user()->nama }}</p>
                         </div>
                         <div>
-                            <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">Badge ID</p>
+                            <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">ID Badge</p>
                             <p class="font-medium text-gray-800 dark:text-gray-200">{{ Auth::user()->badge }}</p>
                         </div>
                         <div>
-                            <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">Joined Since</p>
+                            <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">Bergabung Sejak</p>
                             <p class="font-medium text-gray-800 dark:text-gray-200">{{ Auth::user()->created_at->format('d M Y') }}</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-6 pt-6 border-t border-gray-100 dark:border-gray-700/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="mt-6 pt-6 border-t border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
-                        <p class="text-sm font-semibold text-gray-800 dark:text-white">My Digital Card</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Download SPSI member card in PDF format.</p>
+                        <p class="text-sm font-semibold text-gray-800 dark:text-white">Kartu Digital Saya</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Unduh kartu anggota SPSI dalam format PDF.</p>
                     </div>
                     <a href="{{ route('user.card.download') }}" 
                         class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors shadow-sm shadow-emerald-600/20 no-underline">
                         <x-heroicon-o-arrow-down-tray class="w-4 h-4" />
-                        <span>Download Digital Card</span>
+                        <span>Unduh Kartu Digital</span>
                     </a>
                 </div>
             </div>
@@ -123,34 +123,34 @@
     <div class="grid gap-6 md:grid-cols-3 {{ $accessStatus !== 'registered' ? 'blur-md pointer-events-none select-none opacity-50' : '' }}">
         <!-- Left: Kirim Feedback Form -->
         <div class="md:col-span-1 min-w-0">
-            <div class="bg-white dark:bg-[#1A1A1A] border border-blue-100 dark:border-gray-700/50 rounded-2xl p-6 shadow-sm h-full flex flex-col justify-between transition-colors">
+            <div class="bg-white dark:bg-gray-900 border border-blue-100 dark:border-gray-700 rounded-2xl p-6 shadow-sm h-full flex flex-col justify-between transition-colors">
                 <div>
-                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-700/50 pb-3">Submit Feedback / Suggestion</h3>
+                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-700 pb-3">Kirim Saran / Masukan</h3>
                     
                     <form action="{{ route('user.feedbacks.store') }}" method="POST" enctype="multipart/form-data" class="form-with-loading space-y-4">
                         @csrf
                         <div>
-                            <label for="description" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Your Message <span class="text-red-500">*</span></label>
-                            <textarea id="description" name="description" rows="4" required placeholder="Write your suggestions, feedback, or complaints here..." class="w-full px-4 py-3 bg-gray-50 dark:bg-[#242424] border border-gray-200 dark:border-gray-700/50 text-gray-800 dark:text-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm resize-none"></textarea>
+                            <label for="deskripsi" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Pesan Anda <span class="text-red-500">*</span></label>
+                            <textarea id="deskripsi" name="deskripsi" rows="4" required placeholder="Tulis saran, masukan, atau keluhan Anda di sini..." class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm resize-none"></textarea>
                         </div>
                         
                         <div class="space-y-2">
-                            <label for="document" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Document / File Attachment <span class="text-xs text-gray-400 font-normal">(Optional)</span></label>
-                            <input type="file" id="document" name="document" class="block w-full text-xs text-gray-500 dark:text-gray-400
+                            <label for="dokumen" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Lampiran Dokumen / Berkas <span class="text-xs text-gray-400 font-normal">(Opsional)</span></label>
+                            <input type="file" id="dokumen" name="dokumen" class="block w-full text-xs text-gray-500 dark:text-gray-400
                                 file:mr-3 file:py-2.5 file:px-4
                                 file:rounded-xl file:border-0
                                 file:text-xs file:font-bold
                                 file:bg-primary-50 file:text-primary-800
                                 dark:file:bg-primary-900/30 dark:file:text-primary-400
                                 hover:file:bg-primary-100 dark:hover:file:bg-primary-900/50
-                                border border-gray-200 dark:border-gray-700/50 bg-gray-50 dark:bg-[#242424] rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" />
-                            <p class="text-[10px] text-gray-400 font-semibold leading-normal">Supports PDF, Word, Excel, Image, or ZIP (Max. 10MB)</p>
+                                border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" />
+                            <p class="text-[10px] text-gray-400 font-semibold leading-normal">Mendukung PDF, Word, Excel, Gambar, atau ZIP (Maks. 10MB)</p>
                         </div>
                         
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Your feedback will be sent directly and reviewed by HRD.</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Masukan Anda akan dikirim langsung dan ditinjau oleh HRD.</p>
                         
                         <button type="submit" class="w-full justify-center px-6 py-3 text-sm font-bold bg-primary-600 hover:bg-primary-700 text-white rounded-xl shadow-lg shadow-primary-600/20 transition-all flex items-center gap-2 cursor-pointer">
-                            <span class="btn-text">Submit Feedback</span>
+                            <span class="btn-text">Kirim Masukan</span>
                             <svg class="btn-spinner animate-spin h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -163,35 +163,35 @@
 
         <!-- Right: Riwayat Feedback Saya -->
         <div class="md:col-span-2 min-w-0">
-            <div class="bg-white dark:bg-[#1A1A1A] border border-blue-100 dark:border-gray-700/50 rounded-2xl p-6 shadow-sm h-full flex flex-col transition-colors">
-                <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-700/50 pb-3">My Feedbacks</h3>
+            <div class="bg-white dark:bg-gray-900 border border-blue-100 dark:border-gray-700 rounded-2xl p-6 shadow-sm h-full flex flex-col transition-colors">
+                <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-700 pb-3">Riwayat Saran Saya</h3>
                 
-                <div class="flex-1 overflow-y-auto max-h-[380px] pr-1">
+                <div class="flex-1">
                     <!-- Desktop Table View -->
-                    <div class="hidden md:block border border-gray-200 dark:border-gray-700/50 rounded-xl overflow-hidden bg-white dark:bg-[#1A1A1A]">
+                    <div class="hidden md:block border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden bg-white dark:bg-gray-900">
                         <table class="w-full text-left text-sm text-gray-600 dark:text-gray-400">
-                            <thead class="bg-gray-50 dark:bg-[#242424] text-gray-700 dark:text-gray-300 text-[10px] uppercase font-semibold border-b border-gray-200 dark:border-gray-700/50">
+                            <thead class="bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-[10px] uppercase font-semibold border-b border-gray-200 dark:border-gray-700">
                                 <tr>
                                     <th class="px-4 py-3 w-10">No</th>
-                                    <th class="px-4 py-3">Date</th>
-                                    <th class="px-4 py-3">Content</th>
+                                    <th class="px-4 py-3">Tanggal</th>
+                                    <th class="px-4 py-3">Konten</th>
                                     <th class="px-4 py-3">Status</th>
-                                    <th class="px-4 py-3 w-16 text-center">Action</th>
+                                    <th class="px-4 py-3 w-16 text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
                                 @forelse($feedbacks as $index => $fb)
                                     <tr class="hover:bg-gray-50/50 dark:hover:bg-[#2A2A2A]/50 transition-colors">
-                                        <td class="px-4 py-3 text-gray-500 dark:text-gray-400">{{ $index + 1 }}</td>
+                                        <td class="px-4 py-3 text-gray-500 dark:text-gray-400">{{ $feedbacks->firstItem() + $index }}</td>
                                         <td class="px-4 py-3 whitespace-nowrap text-gray-800 dark:text-gray-200">{{ $fb->created_at->format('d M Y, H:i') }}</td>
-                                        <td class="px-4 py-3 max-w-[220px] truncate text-gray-800 dark:text-gray-200" title="{{ $fb->description }}">
-                                            {{ $fb->description }}
+                                        <td class="px-4 py-3 max-w-[220px] truncate text-gray-800 dark:text-gray-200" title="{{ $fb->deskripsi }}">
+                                            {{ $fb->deskripsi }}
                                         </td>
                                         <td class="px-4 py-3 whitespace-nowrap">
                                             @if($fb->status === 'Completed')
-                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400">Completed</span>
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400">Selesai</span>
                                             @else
-                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400">Waiting</span>
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400">Menunggu</span>
                                             @endif
                                         </td>
                                         <td class="px-4 py-3 whitespace-nowrap text-center">
@@ -200,23 +200,23 @@
                                                     $fbDetail = [
                                                         'id' => $fb->id,
                                                         'date' => $fb->created_at->format('d F Y, H:i'),
-                                                        'description' => $fb->description,
-                                                        'file' => $fb->file,
+                                                        'description' => $fb->deskripsi,
+                                                        'file' => $fb->berkas,
                                                         'status' => $fb->status,
-                                                        'remark' => $fb->remark ?? '',
+                                                        'remark' => $fb->catatan ?? '',
                                                     ];
                                                 @endphp
                                                 <button type="button" 
                                                     data-feedback-detail="{{ json_encode($fbDetail) }}" 
                                                     onclick="openFeedbackDetailModal(this)"
                                                     class="inline-flex p-1.5 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors cursor-pointer" 
-                                                    title="View Details">
+                                                    title="Lihat Detail">
                                                     <x-heroicon-o-eye class="w-5 h-5" />
                                                 </button>
                                                 <form action="{{ route('user.feedbacks.destroy', $fb->id) }}" method="POST" class="inline-flex">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="inline-flex p-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors cursor-pointer" title="Delete Feedback">
+                                                    <button type="submit" class="inline-flex p-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors cursor-pointer" title="Hapus Saran">
                                                         <x-heroicon-o-trash class="w-5 h-5" />
                                                     </button>
                                                 </form>
@@ -228,8 +228,8 @@
                                         <td colspan="5" class="px-4 py-12 text-center text-gray-500 dark:text-gray-400">
                                             <div class="flex flex-col items-center justify-center">
                                                 <x-heroicon-o-chat-bubble-bottom-center-text class="w-10 h-10 text-gray-300 dark:text-gray-600 mb-3" />
-                                                <p class="font-medium text-sm">You have never submitted feedback.</p>
-                                                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Use the form on the left to submit a suggestion.</p>
+                                                <p class="font-medium text-sm">Anda belum pernah mengirim saran.</p>
+                                                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Gunakan form di sebelah kiri untuk mengirim saran.</p>
                                             </div>
                                         </td>
                                     </tr>
@@ -241,55 +241,55 @@
                     <!-- Mobile Accordion View (Beautiful & Natural) -->
                     <div class="block md:hidden space-y-3">
                         @forelse($feedbacks as $index => $fb)
-                            <div class="border border-gray-200 dark:border-gray-700/50 rounded-xl overflow-hidden bg-white dark:bg-[#1A1A1A] shadow-sm transition-all" id="accordion-fb-{{ $fb->id }}">
+                            <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden bg-white dark:bg-gray-900 shadow-sm transition-all" id="accordion-fb-{{ $fb->id }}">
                                 <!-- Accordion Header -->
                                 <button type="button" 
                                     onclick="toggleFeedbackAccordion({{ $fb->id }})"
                                     class="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50/50 dark:hover:bg-[#2A2A2A]/50 transition-colors focus:outline-none select-none cursor-pointer">
                                     <div class="flex items-center gap-3 min-w-0">
-                                        <span class="text-xs font-bold text-gray-400 dark:text-gray-500">#{{ $index + 1 }}</span>
+                                        <span class="text-xs font-bold text-gray-400 dark:text-gray-500">#{{ $feedbacks->firstItem() + $index }}</span>
                                         <div class="min-w-0">
                                             <p class="text-xs font-bold text-gray-800 dark:text-gray-200">{{ $fb->created_at->format('d M Y, H:i') }}</p>
-                                            <p class="text-[11px] text-gray-500 dark:text-gray-400 truncate max-w-[180px] mt-0.5">{{ $fb->description }}</p>
+                                            <p class="text-[11px] text-gray-500 dark:text-gray-400 truncate max-w-[180px] mt-0.5">{{ $fb->deskripsi }}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-2 flex-shrink-0">
                                         @if($fb->status === 'Completed')
-                                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400">Completed</span>
+                                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400">Selesai</span>
                                         @else
-                                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400">Waiting</span>
+                                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400">Menunggu</span>
                                         @endif
                                         <x-heroicon-o-chevron-down class="w-4 h-4 text-gray-400 transition-transform duration-200" id="chevron-fb-{{ $fb->id }}" />
                                     </div>
                                 </button>
 
                                 <!-- Accordion Content (Slides Down/Up) -->
-                                <div id="content-fb-{{ $fb->id }}" class="hidden border-t border-gray-100 dark:border-gray-700/50 bg-gray-50/40 dark:bg-[#242424]/40 p-4 space-y-4">
+                                <div id="content-fb-{{ $fb->id }}" class="hidden border-t border-gray-100 dark:border-gray-700 bg-gray-50/40 dark:bg-gray-800/40 p-4 space-y-4">
                                     <div>
-                                        <p class="text-[9px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Feedback Content</p>
-                                        <p class="text-gray-700 dark:text-gray-300 text-xs leading-relaxed whitespace-pre-wrap font-normal">{{ $fb->description }}</p>
+                                        <p class="text-[9px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Konten Saran</p>
+                                        <p class="text-gray-700 dark:text-gray-300 text-xs leading-relaxed whitespace-pre-wrap font-normal">{{ $fb->deskripsi }}</p>
                                     </div>
 
-                                    @if($fb->file)
+                                    @if($fb->berkas)
                                         <div>
-                                            <p class="text-[9px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1.5">File / Attachment</p>
-                                            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl shadow-sm">
+                                            <p class="text-[9px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1.5">Berkas / Lampiran</p>
+                                            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm">
                                                 <div class="flex items-center gap-2 min-w-0">
                                                     <x-heroicon-o-document-text class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0" />
                                                     <div class="min-w-0">
-                                                        <p class="text-xs font-bold text-gray-800 dark:text-gray-200 truncate">{{ basename($fb->file) }}</p>
+                                                        <p class="text-xs font-bold text-gray-800 dark:text-gray-200 truncate">{{ basename($fb->berkas) }}</p>
                                                     </div>
                                                 </div>
-                                                <a href="/storage/{{ $fb->file }}" download class="flex-shrink-0 flex items-center gap-1 px-2.5 py-1 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-[10px] font-bold transition-all cursor-pointer">
-                                                    <span>Download</span>
+                                                <a href="/storage/{{ $fb->berkas }}" download class="flex-shrink-0 flex items-center gap-1 px-2.5 py-1 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-[10px] font-bold transition-all cursor-pointer">
+                                                    <span>Unduh</span>
                                                     <x-heroicon-o-arrow-down-tray class="w-3 h-3" />
                                                 </a>
                                             </div>
                                         </div>
                                     @endif
 
-                                    <div class="pt-2 border-t border-gray-100 dark:border-gray-700/50">
-                                        <p class="text-[9px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">HRD Response</p>
+                                    <div class="pt-2 border-t border-gray-100 dark:border-gray-700">
+                                        <p class="text-[9px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">Tanggapan HRD</p>
                                         @if($fb->status === 'Completed')
                                             <div class="p-3.5 bg-primary-50/40 dark:bg-primary-900/20 border border-primary-100/80 dark:border-primary-800/30 rounded-2xl shadow-sm">
                                                 <div class="flex items-start gap-2.5">
@@ -298,7 +298,7 @@
                                                     </div>
                                                     <div class="min-w-0 flex-1">
                                                         <p class="text-gray-700 dark:text-gray-300 text-xs leading-relaxed whitespace-pre-wrap font-medium">
-                                                            {{ $fb->remark ?? 'Feedback has been marked as completed without comments.' }}
+                                                            {{ $fb->catatan ?? 'Saran telah ditandai selesai tanpa komentar.' }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -308,18 +308,18 @@
                                                 <div class="p-1 bg-amber-100 dark:bg-amber-900/40 rounded-lg text-amber-700 dark:text-amber-400 flex-shrink-0 mt-0.5">
                                                     <x-heroicon-o-clock class="w-3.5 h-3.5" />
                                                 </div>
-                                                <p class="text-amber-800 dark:text-amber-400 text-[10px] font-semibold leading-relaxed">Waiting for HRD response...</p>
+                                                <p class="text-amber-800 dark:text-amber-400 text-[10px] font-semibold leading-relaxed">Menunggu tanggapan HRD...</p>
                                             </div>
                                         @endif
                                     </div>
 
-                                    <div class="pt-3 border-t border-gray-100 dark:border-gray-700/50 flex justify-end">
+                                    <div class="pt-3 border-t border-gray-100 dark:border-gray-700 flex justify-end">
                                         <form action="{{ route('user.feedbacks.destroy', $fb->id) }}" method="POST" class="inline-flex">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors cursor-pointer">
                                                 <x-heroicon-o-trash class="w-4 h-4" />
-                                                <span>Delete Feedback</span>
+                                                <span>Hapus Saran</span>
                                             </button>
                                         </form>
                                     </div>
@@ -328,65 +328,114 @@
                         @empty
                             <div class="py-12 text-center text-gray-500 dark:text-gray-400 flex flex-col items-center justify-center">
                                 <x-heroicon-o-chat-bubble-bottom-center-text class="w-10 h-10 text-gray-300 dark:text-gray-600 mb-3" />
-                                <p class="font-medium text-sm">You have never submitted feedback.</p>
-                                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Use the form on the left to submit a suggestion.</p>
+                                <p class="font-medium text-sm">Anda belum pernah mengirim saran.</p>
+                                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Gunakan form di sebelah kiri untuk mengirim saran.</p>
                             </div>
                         @endforelse
                     </div>
                 </div>
+                
+                @if($feedbacks instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="text-sm text-gray-500 dark:text-gray-400">
+                        Showing <span class="font-bold text-gray-900 dark:text-white">{{ $feedbacks->firstItem() ?? 0 }}</span> to <span class="font-bold text-gray-900 dark:text-white">{{ $feedbacks->lastItem() ?? 0 }}</span> of <span class="font-bold text-gray-900 dark:text-white">{{ $feedbacks->total() }}</span> results
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-center gap-3">
+                        <div class="inline-flex -space-x-px text-sm rounded-lg shadow-sm">
+                            {{-- Previous Page Link --}}
+                            @if ($feedbacks->onFirstPage())
+                                <span class="flex items-center justify-center px-3 py-2 ms-0 leading-tight text-gray-400 bg-white border border-gray-200 rounded-s-lg dark:bg-gray-800 dark:border-gray-700 dark:text-gray-500 cursor-not-allowed">Previous</span>
+                            @else
+                                <a href="{{ $feedbacks->previousPageUrl() }}" class="flex items-center justify-center px-3 py-2 ms-0 leading-tight text-gray-500 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-50 hover:text-gray-700 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-[#2A2A2A] dark:hover:text-white transition-colors">Previous</a>
+                            @endif
+
+                            {{-- Pagination Elements --}}
+                            @foreach ($feedbacks->links()->elements as $element)
+                                @if (is_string($element))
+                                    <span class="flex items-center justify-center px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-200 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-400">{{ $element }}</span>
+                                @endif
+
+                                @if (is_array($element))
+                                    @foreach ($element as $page => $url)
+                                        @if ($page == $feedbacks->currentPage())
+                                            <span class="flex items-center justify-center px-3.5 py-2 leading-tight text-white bg-indigo-500 border border-indigo-500 dark:border-indigo-600 dark:bg-indigo-600 font-medium z-10">{{ $page }}</span>
+                                        @else
+                                            <a href="{{ $url }}" class="flex items-center justify-center px-3.5 py-2 leading-tight text-gray-500 bg-white border border-gray-200 hover:bg-gray-50 hover:text-gray-700 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-[#2A2A2A] dark:hover:text-white transition-colors">{{ $page }}</a>
+                                        @endif
+                                    @endforeach
+                                @endif
+                            @endforeach
+
+                            {{-- Next Page Link --}}
+                            @if ($feedbacks->hasMorePages())
+                                <a href="{{ $feedbacks->nextPageUrl() }}" class="flex items-center justify-center px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-50 hover:text-gray-700 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-[#2A2A2A] dark:hover:text-white transition-colors">Next</a>
+                            @else
+                                <span class="flex items-center justify-center px-3 py-2 leading-tight text-gray-400 bg-white border border-gray-200 rounded-e-lg dark:bg-gray-800 dark:border-gray-700 dark:text-gray-500 cursor-not-allowed">Next</span>
+                            @endif
+                        </div>
+
+                        <select onchange="window.location.href = '?perPage=' + this.value" class="bg-white border border-gray-200 text-gray-600 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block py-1.5 pl-3 pr-8 dark:bg-gray-900 dark:border-gray-700 dark:placeholder-gray-400 dark:text-gray-300 transition-colors shadow-sm outline-none appearance-none bg-no-repeat cursor-pointer" style="background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%239CA3AF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-position: right 0.7rem top 50%; background-size: 0.65rem auto;">
+                            <option value="5" {{ request('perPage', 5) == 5 ? 'selected' : '' }}>5 per page</option>
+                            <option value="10" {{ request('perPage') == 10 ? 'selected' : '' }}>10 per page</option>
+                            <option value="25" {{ request('perPage') == 25 ? 'selected' : '' }}>25 per page</option>
+                        </select>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>
 
     <!-- User Feedback Detail Off-Canvas Drawer -->
     <div id="userFeedbackDetailDrawer" onclick="if(event.target === this) closeFeedbackDetailModal()" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm transition-opacity">
-        <div class="fixed inset-y-0 right-0 w-full max-w-md bg-white dark:bg-[#242424] shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col border-l border-transparent dark:border-gray-700/50" id="drawerContent">
+        <div class="fixed inset-y-0 right-0 w-full max-w-md bg-white dark:bg-gray-800 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col border-l border-transparent dark:border-gray-700" id="drawerContent">
             <!-- Header -->
-            <div class="px-6 py-5 border-b border-gray-100 dark:border-gray-700/50 flex items-center justify-between bg-white dark:bg-[#242424] z-10 top-0">
+            <div class="px-6 py-5 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between bg-white dark:bg-gray-800 z-10 top-0">
                 <div>
-                    <h3 class="text-lg font-bold text-gray-800 dark:text-white leading-none">Feedback Details</h3>
+                    <h3 class="text-lg font-bold text-gray-800 dark:text-white leading-none">Detail Saran</h3>
                     <div class="mt-2">
                         <span id="modalStatusBadge" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold"></span>
                     </div>
                 </div>
-                <button type="button" onclick="closeFeedbackDetailModal()" class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#1A1A1A] rounded-full transition-colors absolute top-4 right-4 cursor-pointer">
+                <button type="button" onclick="closeFeedbackDetailModal()" class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900 rounded-full transition-colors absolute top-4 right-4 cursor-pointer">
                     <x-heroicon-o-x-mark class="w-5 h-5" />
                 </button>
             </div>
             
             <!-- Body -->
-            <div class="p-6 overflow-y-auto flex-1 bg-gray-50/50 dark:bg-[#1A1A1A] space-y-5">
+            <div class="p-6 overflow-y-auto flex-1 bg-gray-50/50 dark:bg-gray-900 space-y-5">
                 <div class="space-y-5">
                     <div>
-                        <p class="text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Date Submitted</p>
+                        <p class="text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Tanggal Dikirim</p>
                         <p class="font-bold text-gray-800 dark:text-gray-200 text-sm" id="modalDate">-</p>
                     </div>
                     
                     <div>
-                        <p class="text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Feedback / Suggestion Content</p>
+                        <p class="text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Konten Saran / Masukan</p>
                         <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed whitespace-pre-wrap font-normal" id="modalDescription">-</p>
                     </div>
 
                     <!-- File / Document Attached -->
                     <div id="modalFileContainer" class="hidden pt-1">
-                        <p class="text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">Document / File</p>
-                        <div class="flex items-center justify-between p-3 bg-white dark:bg-[#242424] border border-gray-200 dark:border-gray-700/50 rounded-xl shadow-sm">
+                        <p class="text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">Dokumen / Berkas</p>
+                        <div class="flex items-center justify-between p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm">
                             <div class="flex items-center gap-2.5 min-w-0">
                                 <x-heroicon-o-document-text class="w-5.5 h-5.5 text-primary-600 dark:text-primary-400 flex-shrink-0" />
                                 <div class="min-w-0">
                                     <p class="text-xs font-bold text-gray-800 dark:text-gray-200 truncate" id="modalFileName">-</p>
-                                    <p class="text-[10px] text-gray-400 font-semibold leading-none mt-0.5">Your attached file</p>
+                                    <p class="text-[10px] text-gray-400 font-semibold leading-none mt-0.5">Berkas lampiran Anda</p>
                                 </div>
                             </div>
                             <a id="modalDownloadLink" href="" download class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-xs font-bold transition-all cursor-pointer">
-                                <span>Download</span>
+                                <span>Unduh</span>
                                 <x-heroicon-o-arrow-down-tray class="w-3.5 h-3.5" />
                             </a>
                         </div>
                         <!-- Image Preview -->
                         <div id="modalImagePreviewContainer" class="mt-3 hidden">
-                            <p class="text-[10px] font-semibold text-gray-400 dark:text-gray-500 mb-1.5">Image Preview:</p>
-                            <div class="border border-gray-200 dark:border-gray-700/50 rounded-xl overflow-hidden max-h-48 bg-white dark:bg-[#242424] flex items-center justify-center p-2 relative">
+                            <p class="text-[10px] font-semibold text-gray-400 dark:text-gray-500 mb-1.5">Pratinjau Gambar:</p>
+                            <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden max-h-48 bg-white dark:bg-gray-800 flex items-center justify-center p-2 relative">
                                 <div id="modalImageLoading" class="w-full h-24 flex items-center justify-center hidden">
                                     <svg class="animate-spin h-6 w-6 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                 </div>
@@ -396,11 +445,11 @@
                     </div>
                 </div>
 
-                <hr class="border-gray-200 dark:border-gray-700/50">
+                <hr class="border-gray-200 dark:border-gray-700">
 
                 <!-- Admin Response Remark Section -->
                 <div class="space-y-3">
-                    <p class="text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">HRD Response</p>
+                    <p class="text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Tanggapan HRD</p>
                     
                     <div id="modalRemarkContainer">
                         <!-- If already completed -->
@@ -423,7 +472,7 @@
                                 <div class="p-1.5 bg-amber-100 dark:bg-amber-900/40 rounded-xl text-amber-700 dark:text-amber-400 flex-shrink-0">
                                     <x-heroicon-o-clock class="w-4 h-4" />
                                 </div>
-                                <p class="text-amber-800 dark:text-amber-400 text-xs font-semibold leading-relaxed">Waiting for HRD response...</p>
+                                <p class="text-amber-800 dark:text-amber-400 text-xs font-semibold leading-relaxed">Menunggu tanggapan HRD...</p>
                             </div>
                         </div>
                     </div>
@@ -444,10 +493,10 @@
             const badge = document.getElementById('modalStatusBadge');
             if (feedback.status === 'Completed') {
                 badge.className = 'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-green-100 text-green-800';
-                badge.textContent = 'Completed';
+                badge.textContent = 'Selesai';
             } else {
                 badge.className = 'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-yellow-100 text-yellow-800';
-                badge.textContent = 'Waiting';
+                badge.textContent = 'Menunggu';
             }
             
             // File Handling
@@ -497,7 +546,7 @@
                     remarkText.textContent = feedback.remark;
                     remarkText.className = 'text-gray-700 text-sm leading-relaxed whitespace-pre-wrap font-medium';
                 } else {
-                    remarkText.textContent = 'Feedback has been marked as completed without comments.';
+                    remarkText.textContent = 'Saran telah ditandai selesai tanpa komentar.';
                     remarkText.className = 'text-gray-400 text-xs italic font-medium';
                 }
             } else {
@@ -556,7 +605,7 @@
                     const maxSize = 10 * 1024 * 1024; // 10MB
                     if (this.files.length > 0 && this.files[0].size > maxSize) {
                         const sizeMB = (this.files[0].size / (1024 * 1024)).toFixed(1);
-                        showToast('Failed!', `File size (${sizeMB}MB) exceeds the maximum limit of 10MB. Please choose a smaller file.`, 'error');
+                        showToast('Gagal!', `Ukuran file (${sizeMB}MB) melebihi batas maksimum 10MB. Silakan pilih file yang lebih kecil.`, 'error');
                         this.value = '';
                     }
                 });

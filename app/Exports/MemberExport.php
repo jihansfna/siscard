@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\Member;
+use App\Models\Anggota;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -13,13 +13,13 @@ class MemberExport
 {
     public function export()
     {
-        $members = Member::with(['employee', 'role'])->orderBy('created_at', 'asc')->get();
+        $members = Anggota::with(['karyawan', 'jabatan'])->orderBy('created_at', 'asc')->get();
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('Members');
+        $sheet->setTitle('Anggota');
 
         // Headers
-        $headers = ['No', 'Badge', 'Nama Employee', 'Department', 'Position', 'Line', 'Role', 'Status', 'Registered At'];
+        $headers = ['No', 'Badge', 'Nama Karyawan', 'Departemen', 'Jabatan', 'Line', 'Jabatan Anggota', 'Status', 'Terdaftar Pada'];
         $columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
 
         // Header styling
@@ -40,12 +40,12 @@ class MemberExport
         $row = 2;
         foreach ($members as $index => $member) {
             $sheet->setCellValue("A{$row}", $index + 1);
-            $sheet->setCellValue("B{$row}", $member->employee->badge ?? '-');
-            $sheet->setCellValue("C{$row}", $member->employee->name ?? '-');
-            $sheet->setCellValue("D{$row}", $member->employee->department ?? '-');
-            $sheet->setCellValue("E{$row}", $member->employee->position ?? '-');
-            $sheet->setCellValue("F{$row}", $member->employee->line ?? '-');
-            $sheet->setCellValue("G{$row}", $member->role->name ?? 'Member');
+            $sheet->setCellValue("B{$row}", $member->karyawan->badge ?? '-');
+            $sheet->setCellValue("C{$row}", $member->karyawan->nama ?? '-');
+            $sheet->setCellValue("D{$row}", $member->karyawan->departemen ?? '-');
+            $sheet->setCellValue("E{$row}", $member->karyawan->jabatan ?? '-');
+            $sheet->setCellValue("F{$row}", $member->karyawan->line ?? '-');
+            $sheet->setCellValue("G{$row}", $member->jabatan->nama ?? 'Member');
             $sheet->setCellValue("H{$row}", ucfirst($member->status));
             $sheet->setCellValue("I{$row}", $member->created_at?->format('d/m/Y H:i'));
 
@@ -69,7 +69,7 @@ class MemberExport
         }
 
         $writer = new Xlsx($spreadsheet);
-        $filename = 'members_' . date('Y-m-d_His') . '.xlsx';
+        $filename = 'anggota_' . date('Y-m-d_His') . '.xlsx';
         $tempFile = storage_path('app/' . $filename);
         $writer->save($tempFile);
 

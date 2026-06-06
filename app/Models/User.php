@@ -20,11 +20,11 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'nama',
         'badge',
         'password',
-        'role',
-        'login_count',
+        'peran',
+        'jumlah_login',
     ];
 
     /**
@@ -52,8 +52,13 @@ class User extends Authenticatable
     /**
      * Get the activity logs performed by the user.
      */
-    public function memberLogs()
+    public function logAnggota()
     {
-        return $this->hasMany(MemberLog::class, 'actor_id');
+        return $this->hasMany(LogAnggota::class, 'pelaku_id');
     }
+
+    // Accessors for backward compatibility with English views
+    public function getNameAttribute() { return $this->nama; }
+    public function getRoleAttribute() { return $this->peran; }
+    public function getLoginCountAttribute() { return $this->jumlah_login; }
 }

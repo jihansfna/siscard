@@ -1,4 +1,5 @@
 import './bootstrap';
+import 'flowbite';
 
 const chartTooltip = document.createElement('div');
 chartTooltip.className = 'chart-tooltip';

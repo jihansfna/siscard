@@ -7,9 +7,9 @@ use App\Exports\EmployeeExport;
 use App\Exports\MemberExport;
 use App\Exports\FeedbackExport;
 use App\Imports\EmployeeImport;
-use App\Models\Employee;
-use App\Models\Member;
-use App\Models\Feedback;
+use App\Models\Karyawan;
+use App\Models\Anggota;
+use App\Models\Saran;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 
@@ -24,7 +24,7 @@ class ExportImportController extends Controller
 
     public function exportEmployeesPdf()
     {
-        $employees = Employee::orderBy('created_at', 'asc')->get();
+        $employees = Karyawan::orderBy('created_at', 'asc')->get();
         $pdf = Pdf::loadView('exports.employees-pdf', compact('employees'))
             ->setPaper('a4', 'landscape');
         
@@ -49,9 +49,9 @@ class ExportImportController extends Controller
         try {
             $importer = (new EmployeeImport())->import($fullPath);
             
-            $message = $importer->getImported() . ' employee data successfully imported.';
+            $message = $importer->getImported() . ' data karyawan berhasil diimpor.';
             if ($importer->getSkipped() > 0) {
-                $message .= ' ' . $importer->getSkipped() . ' data skipped.';
+                $message .= ' ' . $importer->getSkipped() . ' data dilewati.';
             }
 
             // Clean up
@@ -68,7 +68,7 @@ class ExportImportController extends Controller
         } catch (\Exception $e) {
             @unlink($fullPath);
             return redirect()->route('dashboard.employees.index')
-                ->withErrors(['file' => 'Failed to import file: ' . $e->getMessage()]);
+                ->withErrors(['file' => 'Gagal mengimpor file: ' . $e->getMessage()]);
         }
     }
 
@@ -81,7 +81,7 @@ class ExportImportController extends Controller
 
     public function exportMembersPdf()
     {
-        $members = Member::with(['employee', 'role'])->orderBy('created_at', 'asc')->get();
+        $members = Anggota::with(['karyawan', 'jabatan'])->orderBy('created_at', 'asc')->get();
         $pdf = Pdf::loadView('exports.members-pdf', compact('members'))
             ->setPaper('a4', 'landscape');
 
@@ -97,7 +97,7 @@ class ExportImportController extends Controller
 
     public function exportFeedbacksPdf()
     {
-        $feedbacks = Feedback::with('member.employee')->orderBy('created_at', 'asc')->get();
+        $feedbacks = Saran::with('anggota.karyawan')->orderBy('created_at', 'asc')->get();
         $pdf = Pdf::loadView('exports.feedbacks-pdf', compact('feedbacks'))
             ->setPaper('a4', 'landscape');
 

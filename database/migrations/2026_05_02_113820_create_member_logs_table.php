@@ -8,26 +8,26 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('member_logs', function (Blueprint $table) {
+        Schema::create('log_anggota', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('member_id')
+            $table->foreignId('anggota_id')
                 ->nullable() // Can be nullable if it's a general member action where member was deleted
-                ->constrained()
+                ->constrained('anggota')
                 ->nullOnDelete();
 
-            $table->foreignId('actor_id')
+            $table->foreignId('pelaku_id')
                 ->nullable()
                 ->constrained('users')
                 ->nullOnDelete();
 
-            $table->string('activity'); // e.g., 'created', 'updated', 'status_changed', 'deleted', 'exported'
+            $table->string('aktivitas'); // e.g., 'created', 'updated', 'status_changed', 'deleted', 'exported'
 
             $table->string('status')->nullable(); // new status if applicable
 
-            $table->text('description')->nullable(); // detail description
+            $table->text('deskripsi')->nullable(); // detail description
 
-            $table->text('remark')
+            $table->text('catatan')
                 ->nullable();
 
             $table->timestamps();
@@ -36,6 +36,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('member_logs');
+        Schema::dropIfExists('log_anggota');
     }
 };

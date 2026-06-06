@@ -3,7 +3,7 @@
 
     <section class="text-gray-800 dark:text-gray-200 transition-colors">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Members Management</h2>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Manajemen Anggota</h2>
 
             <div class="flex flex-wrap items-center gap-3">
                 <form class="flex items-center gap-2" method="GET" action="{{ route('dashboard.members') }}">
@@ -11,7 +11,7 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                             <x-heroicon-o-magnifying-glass class="w-5 h-5" />
                         </div>
-                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Search name or badge..." class="pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700/50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 dark:bg-[#242424] dark:text-white dark:placeholder-gray-500 transition-colors">
+                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari nama atau badge..." class="pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500 transition-colors">
                         @if(request('status'))
                             <input type="hidden" name="status" value="{{ request('status') }}">
                         @endif
@@ -25,7 +25,7 @@
                 </form>
 
                 {{-- Filter Button --}}
-                <button type="button" onclick="openFilterModal()" class="flex items-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-700/50 bg-gray-50 dark:bg-[#242424] hover:bg-gray-100 dark:hover:bg-[#2A2A2A] text-gray-700 dark:text-gray-300 rounded-lg text-sm font-semibold transition-all shadow-sm active:scale-95">
+                <button type="button" onclick="openFilterModal()" class="flex items-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-[#2A2A2A] text-gray-700 dark:text-gray-300 rounded-lg text-sm font-semibold transition-all shadow-sm active:scale-95">
                     <x-heroicon-o-funnel class="w-4 h-4" />
                     <span>Filter</span>
                 </button>
@@ -34,23 +34,23 @@
                 <div class="relative" id="exportDropdownContainer">
                     <button type="button" onclick="toggleDropdown('exportDropdown')" class="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-emerald-600/20 active:scale-95">
                         <x-heroicon-o-arrow-down-tray class="w-4 h-4" />
-                        <span>Export</span>
+                        <span>Ekspor</span>
                         <x-heroicon-o-chevron-down class="w-3 h-3" />
                     </button>
-                    <div id="exportDropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-[#242424] rounded-xl shadow-xl border border-gray-100 dark:border-gray-700/50 py-1 z-50 hidden transition-all">
+                    <div id="exportDropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 py-1 z-50 hidden transition-all">
                         <a href="{{ route('dashboard.export.members.excel') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">
                             <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM9.5 11.5l2 3.5-2 3.5h1.5l1.25-2.5L13.5 18.5H15l-2-3.5 2-3.5h-1.5l-1.25 2.5-1.25-2.5H9.5z"/></svg>
-                            <span>Export Excel</span>
+                            <span>Ekspor Excel</span>
                         </a>
                         <a href="{{ route('dashboard.export.members.pdf') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">
                             <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM10.5 11c-.83 0-1.5.67-1.5 1.5v4c0 .83.67 1.5 1.5 1.5h3c.83 0 1.5-.67 1.5-1.5v-4c0-.83-.67-1.5-1.5-1.5h-3z"/></svg>
-                            <span>Export PDF</span>
+                            <span>Ekspor PDF</span>
                         </a>
                     </div>
                 </div>
 
                 <button type="button" onclick="openAddMemberModal()" class="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors shadow-sm shadow-primary-600/30">
-                    <span>Add Members</span>
+                    <span>Tambah Anggota</span>
                     <x-heroicon-o-user-plus class="w-4 h-4" />
                 </button>
             </div>
@@ -71,10 +71,10 @@
         <div id="bulkDeleteBar" class="hidden items-center justify-between bg-red-50 border border-red-100 rounded-xl p-4 mb-4 transition-all duration-300">
             <div class="flex items-center gap-2 text-red-700 text-sm font-semibold">
                 <x-heroicon-o-trash class="w-5 h-5 text-red-500" />
-                <span id="selectedCount">0</span> selected data
+                <span id="selectedCount">0</span> data terpilih
             </div>
             <button type="submit" form="bulkDeleteForm" class="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition-all shadow-md shadow-red-600/20 active:scale-95">
-                <span>Delete Selected</span>
+                <span>Hapus Terpilih</span>
             </button>
         </div>
 
@@ -82,39 +82,39 @@
             @csrf
         </form>
 
-        <div class="bg-white dark:bg-[#242424] border border-gray-200 dark:border-gray-700/50 rounded-xl overflow-hidden shadow-md shadow-gray-200/60 dark:shadow-none transition-all">
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-md shadow-gray-200/60 dark:shadow-none transition-all">
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-gray-600 dark:text-gray-400">
-                    <thead class="bg-gray-50 dark:bg-[#1A1A1A] text-gray-700 dark:text-gray-300 text-xs uppercase font-semibold border-b border-gray-200 dark:border-gray-700/50">
+                    <thead class="bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 text-xs uppercase font-semibold border-b border-gray-200 dark:border-gray-700">
                         <tr>
                             <th class="px-4 py-3 w-10">
-                                <input type="checkbox" id="selectAllMembers" class="rounded border-gray-300 dark:border-gray-600 dark:bg-[#242424] text-primary-600 focus:ring-primary-500" onclick="toggleSelectAllMembers(this)">
+                                <input type="checkbox" id="selectAllMembers" class="rounded border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-primary-600 focus:ring-primary-500" onclick="toggleSelectAllMembers(this)">
                             </th>
                             <th class="px-4 py-3">No</th>
-                            <th class="px-4 py-3">Employee</th>
-                            <th class="px-4 py-3">Position</th>
-                            <th class="px-4 py-3">Department</th>
-                            <th class="px-4 py-3">Role</th>
+                            <th class="px-4 py-3">Karyawan</th>
+                            <th class="px-4 py-3">Jabatan</th>
+                            <th class="px-4 py-3">Departemen</th>
+                            <th class="px-4 py-3">Peran</th>
                             <th class="px-4 py-3">Status</th>
-                            <th class="px-4 py-3">Action</th>
+                            <th class="px-4 py-3">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 dark:divide-gray-700/50">
                         @forelse ($members as $index => $member)
                             <tr class="hover:bg-gray-50/50 dark:hover:bg-[#2A2A2A] transition-colors">
                                 <td class="px-4 py-3">
-                                    <input type="checkbox" name="ids[]" value="{{ $member->id }}" form="bulkDeleteForm" class="member-checkbox rounded border-gray-300 dark:border-gray-600 dark:bg-[#242424] text-primary-600 focus:ring-primary-500" onclick="updateBulkDeleteBar()">
+                                    <input type="checkbox" name="ids[]" value="{{ $member->id }}" form="bulkDeleteForm" class="member-checkbox rounded border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-primary-600 focus:ring-primary-500" onclick="updateBulkDeleteBar()">
                                 </td>
                                 <td class="px-4 py-3">{{ $members->firstItem() + $index }}</td>
                                 <td class="px-4 py-3">
-                                    <div class="font-medium text-gray-900 dark:text-white">{{ $member->employee->name }}</div>
-                                    <div class="text-xs text-gray-500">{{ $member->employee->badge }}</div>
+                                    <div class="font-medium text-gray-900 dark:text-white">{{ $member->karyawan->nama }}</div>
+                                    <div class="text-xs text-gray-500">{{ $member->karyawan->badge }}</div>
                                 </td>
-                                <td class="px-4 py-3">{{ $member->employee->position ?? '-' }}</td>
-                                <td class="px-4 py-3">{{ $member->employee->department ?? '-' }}</td>
+                                <td class="px-4 py-3">{{ $member->karyawan->jabatan ?? '-' }}</td>
+                                <td class="px-4 py-3">{{ $member->karyawan->departemen ?? '-' }}</td>
                                 <td class="px-4 py-3">
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/25 dark:text-blue-300">
-                                        {{ $member->role->name ?? 'Member' }}
+                                        {{ $member->jabatan->nama ?? 'Member' }}
                                     </span>
                                 </td>
                                 <td class="px-4 py-3">
@@ -130,20 +130,20 @@
                                     @php
                                         $memberData = [
                                             'id' => $member->id,
-                                            'name' => $member->employee->name,
-                                            'badge' => $member->employee->badge,
+                                            'name' => $member->karyawan->nama,
+                                            'badge' => $member->karyawan->badge,
                                             'status' => $member->status,
                                             'uuid' => $member->uuid,
                                             'created_at' => $member->created_at->format('d F Y, H:i'),
                                             'added_by' => 'Admin',
-                                            'image' => $member->employee->image,
-                                            'birth_place' => $member->employee->birth_place ?? '-',
-                                            'birth_date' => $member->employee->birth_date?->format('d F Y') ?? '-',
-                                            'join_date' => $member->employee->join_date?->format('d F Y') ?? '-',
-                                            'address' => $member->employee->address ?? '-',
-                                            'role' => $member->role->name ?? '-',
-                                            'member_role_id' => $member->member_role_id,
-                                            'sign_image' => $member->sign_image,
+                                            'image' => $member->karyawan->foto,
+                                            'birth_place' => $member->karyawan->tempat_lahir ?? '-',
+                                            'birth_date' => $member->karyawan->tanggal_lahir?->format('d F Y') ?? '-',
+                                            'join_date' => $member->karyawan->tanggal_masuk?->format('d F Y') ?? '-',
+                                            'address' => $member->karyawan->alamat ?? '-',
+                                            'role' => $member->jabatan->nama ?? '-',
+                                            'member_role_id' => $member->jabatan_anggota_id,
+                                            'sign_image' => $member->tanda_tangan,
                                             'verify_token' => \App\Http\Controllers\CardController::encryptToken($member->uuid),
                                             'card_download_url' => route('dashboard.members.card.download', $member->id),
                                             'update_url' => route('dashboard.members.update', $member->id),
@@ -160,7 +160,7 @@
                                 <td colspan="8" class="px-4 py-8 text-center text-gray-500">
                                     <div class="flex flex-col items-center justify-center">
                                         <x-heroicon-o-users class="w-10 h-10 text-gray-300 mb-3" />
-                                        <p>No member data available.</p>
+                                        <p>Tidak ada data anggota tersedia.</p>
                                     </div>
                                 </td>
                             </tr>
@@ -170,7 +170,7 @@
             </div>
             
             @if($members->hasPages() || $members->total() > 0)
-            <div class="p-4 border-t border-gray-100 dark:border-gray-700/50">
+            <div class="p-4 border-t border-gray-100 dark:border-gray-700">
                 <x-custom-pagination :paginator="$members" />
             </div>
             @endif
@@ -179,9 +179,9 @@
 
     <!-- Add Member Modal -->
     <div id="addMemberModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-gray-900/50 backdrop-blur-sm">
-        <div class="bg-white dark:bg-[#242424] rounded-2xl shadow-xl w-full max-w-4xl overflow-hidden max-h-[90vh] flex flex-col border border-transparent dark:border-gray-700/50">
-            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700/50 flex-shrink-0">
-                <h3 class="text-lg font-bold text-gray-800 dark:text-white">Add New Members</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-4xl overflow-hidden max-h-[90vh] flex flex-col border border-transparent dark:border-gray-700">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex-shrink-0">
+                <h3 class="text-lg font-bold text-gray-800 dark:text-white">Tambah Anggota Baru</h3>
                 <button type="button" onclick="closeAddMemberModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
                     <x-heroicon-o-x-mark class="w-6 h-6" />
                 </button>
@@ -190,22 +190,22 @@
                 @csrf
                 <div class="p-6 overflow-y-auto">
                     <div class="mb-4">
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Select employee below to add as Member. Only active non-member employees are shown.</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Pilih karyawan di bawah ini untuk ditambahkan sebagai Anggota. Hanya karyawan aktif yang bukan anggota yang ditampilkan.</p>
                     </div>
                     
                     <div class="border border-gray-200 rounded-xl overflow-hidden">
                         <table class="w-full text-left text-sm text-gray-600 dark:text-gray-400">
-                            <thead class="bg-gray-50 dark:bg-[#1A1A1A] text-gray-700 dark:text-gray-300 text-xs uppercase font-semibold border-b border-gray-200 dark:border-gray-700/50 sticky top-0">
+                            <thead class="bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 text-xs uppercase font-semibold border-b border-gray-200 dark:border-gray-700 sticky top-0">
                                 <tr>
                                     <th class="px-4 py-3 w-10">
                                         <input type="checkbox" id="selectAllEmployees" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500" onclick="toggleSelectAll(this)">
                                     </th>
                                     <th class="px-4 py-3">No</th>
-                                    <th class="px-4 py-3">Employee</th>
-                                    <th class="px-4 py-3">Position</th>
-                                    <th class="px-4 py-3">Department</th>
-                                    <th class="px-4 py-3">Line Code</th>
-                                    <th class="px-4 py-3">End Date</th>
+                                    <th class="px-4 py-3">Karyawan</th>
+                                    <th class="px-4 py-3">Jabatan</th>
+                                    <th class="px-4 py-3">Departemen</th>
+                                    <th class="px-4 py-3">Kode Line</th>
+                                    <th class="px-4 py-3">Tanggal Keluar</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100 dark:divide-gray-700/50">
@@ -216,24 +216,24 @@
                                         </td>
                                         <td class="px-4 py-3">{{ $index + 1 }}</td>
                                         <td class="px-4 py-3">
-                                            <div class="font-medium text-gray-900 dark:text-white">{{ $emp->name }}</div>
+                                            <div class="font-medium text-gray-900 dark:text-white">{{ $emp->nama }}</div>
                                             <div class="text-xs text-gray-500">{{ $emp->badge }}</div>
                                         </td>
-                                        <td class="px-4 py-3">{{ $emp->position ?? '-' }}</td>
-                                        <td class="px-4 py-3">{{ $emp->department ?? '-' }}</td>
+                                        <td class="px-4 py-3">{{ $emp->jabatan ?? '-' }}</td>
+                                        <td class="px-4 py-3">{{ $emp->departemen ?? '-' }}</td>
                                         <td class="px-4 py-3">{{ $emp->line ?? '-' }}</td>
                                         <td class="px-4 py-3">
-                                            @if($emp->end_date)
-                                                <span class="text-xs text-gray-600">{{ $emp->end_date->format('d M Y') }}</span>
+                                            @if($emp->tanggal_keluar)
+                                                <span class="text-xs text-gray-600">{{ $emp->tanggal_keluar->format('d M Y') }}</span>
                                             @else
-                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Active</span>
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Aktif</span>
                                             @endif
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
                                         <td colspan="7" class="px-4 py-8 text-center text-gray-500">
-                                            <p>All employees are already registered as members or inactive.</p>
+                                            <p>Semua karyawan sudah terdaftar sebagai anggota atau tidak aktif.</p>
                                         </td>
                                     </tr>
                                 @endforelse
@@ -241,21 +241,21 @@
                         </table>
 
                         <!-- Client-side pagination for available employees in modal -->
-                        <div class="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-[#1A1A1A] border-t border-gray-100 dark:border-gray-700/50 hidden" id="availableEmployeesPagination">
-                            <span class="text-xs text-gray-500 font-medium" id="availPageInfo">Showing 1 to 5 of 9 employees</span>
+                        <div class="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-900 border-t border-gray-100 dark:border-gray-700 hidden" id="availableEmployeesPagination">
+                            <span class="text-xs text-gray-500 font-medium" id="availPageInfo">Menampilkan 1 hingga 5 dari 9 karyawan</span>
                             <div class="flex gap-2">
-                                <button type="button" onclick="changeAvailPage(-1)" id="availPrevBtn" class="px-3 py-1.5 text-xs font-bold bg-white border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all">Previous</button>
-                                <button type="button" onclick="changeAvailPage(1)" id="availNextBtn" class="px-3 py-1.5 text-xs font-bold bg-white border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all">Next</button>
+                                <button type="button" onclick="changeAvailPage(-1)" id="availPrevBtn" class="px-3 py-1.5 text-xs font-bold bg-white border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all">Sebelumnya</button>
+                                <button type="button" onclick="changeAvailPage(1)" id="availNextBtn" class="px-3 py-1.5 text-xs font-bold bg-white border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all">Selanjutnya</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700/50 bg-gray-50 dark:bg-[#1A1A1A] flex justify-end gap-3 flex-shrink-0">
+                <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex justify-end gap-3 flex-shrink-0">
                     <button type="button" onclick="closeAddMemberModal()" class="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-200 rounded-lg transition-colors">
-                        Cancel
+                        Batal
                     </button>
                     <button type="submit" class="px-6 py-2.5 text-sm font-bold bg-primary-600 hover:bg-primary-700 text-white rounded-xl shadow-lg shadow-primary-600/20 transition-all flex items-center gap-2">
-                        <span class="btn-text">Add Selected</span>
+                        <span class="btn-text">Tambah Terpilih</span>
                         <svg class="btn-spinner animate-spin h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -268,9 +268,9 @@
 
     <!-- Filter Members Modal -->
     <div id="filterMembersModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 backdrop-blur-sm p-4 transition-opacity">
-        <div class="bg-white dark:bg-[#242424] rounded-2xl shadow-xl w-full max-w-sm flex flex-col border border-transparent dark:border-gray-700/50">
-            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700/50">
-                <h3 class="text-lg font-bold text-gray-800 dark:text-white">Filter Members</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-sm flex flex-col border border-transparent dark:border-gray-700">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700">
+                <h3 class="text-lg font-bold text-gray-800 dark:text-white">Filter Anggota</h3>
                 <button type="button" onclick="closeFilterModal()" class="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer">
                     <x-heroicon-o-x-mark class="w-6 h-6" />
                 </button>
@@ -289,46 +289,46 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Status</label>
                         <div class="relative custom-dropdown-container">
-                            <input type="hidden" name="status" id="statusFilterInput" value="{{ request('status', 'All Status') }}">
-                            <button type="button" onclick="toggleCustomDropdown('statusDropdownMenu')" class="w-full flex items-center justify-between pl-4 pr-3 py-2.5 bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors text-gray-700 dark:text-white cursor-pointer shadow-sm">
-                                <span id="statusFilterBtnText">{{ request('status', 'All Status') }}</span>
+                            <input type="hidden" name="status" id="statusFilterInput" value="{{ request('status', 'Semua Status') }}">
+                            <button type="button" onclick="toggleCustomDropdown('statusDropdownMenu')" class="w-full flex items-center justify-between pl-4 pr-3 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors text-gray-700 dark:text-white cursor-pointer shadow-sm">
+                                <span id="statusFilterBtnText">{{ request('status', 'Semua Status') }}</span>
                                 <svg class="w-4 h-4 text-gray-400 pointer-events-none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>
                             </button>
-                            <div id="statusDropdownMenu" class="custom-dropdown-menu absolute z-50 hidden mt-1.5 w-full bg-white dark:bg-[#242424] border border-gray-100 dark:border-gray-700/50 rounded-xl shadow-lg">
+                            <div id="statusDropdownMenu" class="custom-dropdown-menu absolute z-50 hidden mt-1.5 w-full bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-lg">
                                 <ul class="py-1 text-sm text-gray-700 dark:text-gray-300 font-medium">
-                                    <li><button type="button" onclick="selectDropdownOption('statusFilterInput', 'statusFilterBtnText', 'statusDropdownMenu', 'All Status', 'All Status')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">All Status</button></li>
-                                    <li><button type="button" onclick="selectDropdownOption('statusFilterInput', 'statusFilterBtnText', 'statusDropdownMenu', 'Registered Member', 'Registered Member')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Registered Member</button></li>
-                                    <li><button type="button" onclick="selectDropdownOption('statusFilterInput', 'statusFilterBtnText', 'statusDropdownMenu', 'Pending Verification', 'Pending Verification')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Pending Verification</button></li>
-                                    <li><button type="button" onclick="selectDropdownOption('statusFilterInput', 'statusFilterBtnText', 'statusDropdownMenu', 'Inactive', 'Inactive')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Inactive</button></li>
+                                    <li><button type="button" onclick="selectDropdownOption('statusFilterInput', 'statusFilterBtnText', 'statusDropdownMenu', 'Semua Status', 'Semua Status')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Semua Status</button></li>
+                                    <li><button type="button" onclick="selectDropdownOption('statusFilterInput', 'statusFilterBtnText', 'statusDropdownMenu', 'Registered Member', 'Anggota Terdaftar')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Anggota Terdaftar</button></li>
+                                    <li><button type="button" onclick="selectDropdownOption('statusFilterInput', 'statusFilterBtnText', 'statusDropdownMenu', 'Pending Verification', 'Menunggu Verifikasi')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Menunggu Verifikasi</button></li>
+                                    <li><button type="button" onclick="selectDropdownOption('statusFilterInput', 'statusFilterBtnText', 'statusDropdownMenu', 'Inactive', 'Tidak Aktif')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Tidak Aktif</button></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Sort By</label>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Urutkan Berdasarkan</label>
                         <div class="relative custom-dropdown-container">
                             <input type="hidden" name="sort" id="sortFilterInput" value="{{ request('sort', 'desc') }}">
-                            <button type="button" onclick="toggleCustomDropdown('sortDropdownMenu')" class="w-full flex items-center justify-between pl-4 pr-3 py-2.5 bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors text-gray-700 dark:text-white cursor-pointer shadow-sm">
-                                <span id="sortFilterBtnText">{{ request('sort', 'desc') === 'desc' ? 'Newest Data' : 'Oldest Data' }}</span>
+                            <button type="button" onclick="toggleCustomDropdown('sortDropdownMenu')" class="w-full flex items-center justify-between pl-4 pr-3 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors text-gray-700 dark:text-white cursor-pointer shadow-sm">
+                                <span id="sortFilterBtnText">{{ request('sort', 'desc') === 'desc' ? 'Data Terbaru' : 'Data Terlama' }}</span>
                                 <svg class="w-4 h-4 text-gray-400 pointer-events-none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>
                             </button>
-                            <div id="sortDropdownMenu" class="custom-dropdown-menu absolute z-50 hidden mt-1.5 w-full bg-white dark:bg-[#242424] border border-gray-100 dark:border-gray-700/50 rounded-xl shadow-lg">
+                            <div id="sortDropdownMenu" class="custom-dropdown-menu absolute z-50 hidden mt-1.5 w-full bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-lg">
                                 <ul class="py-1 text-sm text-gray-700 dark:text-gray-300 font-medium">
-                                    <li><button type="button" onclick="selectDropdownOption('sortFilterInput', 'sortFilterBtnText', 'sortDropdownMenu', 'desc', 'Newest Data')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Newest Data</button></li>
-                                    <li><button type="button" onclick="selectDropdownOption('sortFilterInput', 'sortFilterBtnText', 'sortDropdownMenu', 'asc', 'Oldest Data')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Oldest Data</button></li>
+                                    <li><button type="button" onclick="selectDropdownOption('sortFilterInput', 'sortFilterBtnText', 'sortDropdownMenu', 'desc', 'Data Terbaru')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Data Terbaru</button></li>
+                                    <li><button type="button" onclick="selectDropdownOption('sortFilterInput', 'sortFilterBtnText', 'sortDropdownMenu', 'asc', 'Data Terlama')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Data Terlama</button></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="px-6 py-4 flex items-center justify-between border-t border-gray-100 dark:border-gray-700/50 bg-gray-50 dark:bg-[#1A1A1A] rounded-b-2xl">
+                <div class="px-6 py-4 flex items-center justify-between border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-b-2xl">
                     <a href="{{ route('dashboard.members') }}{{ request('q') ? '?q=' . request('q') : '' }}" class="text-sm font-bold text-red-600 hover:text-red-700 transition-colors">
                         Reset Filter
                     </a>
                     <button type="submit" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-red-600/20 active:scale-95 cursor-pointer">
-                        Submit
+                        Kirim
                     </button>
                 </div>
             </form>
@@ -369,7 +369,7 @@
             
             const startIdx = (currentAvailPage - 1) * availPageSize + 1;
             const endIdx = Math.min(startIdx + availPageSize - 1, totalRows);
-            document.getElementById('availPageInfo').textContent = `Showing ${startIdx} to ${endIdx} of ${totalRows} employees`;
+            document.getElementById('availPageInfo').textContent = `Menampilkan ${startIdx} hingga ${endIdx} dari ${totalRows} karyawan`;
             
             document.getElementById('availPrevBtn').disabled = (currentAvailPage === 1);
             document.getElementById('availNextBtn').disabled = (currentAvailPage === totalPages);
@@ -495,7 +495,7 @@
             document.getElementById('detailBadgeTop').textContent = member.badge;
             document.getElementById('detailName').textContent = member.name;
             document.getElementById('detailBadge').textContent = member.badge;
-            document.getElementById('detailAddedInfo').textContent = 'Added by ' + member.added_by + ', ' + member.created_at;
+            document.getElementById('detailAddedInfo').textContent = 'Ditambahkan oleh ' + member.added_by + ', ' + member.created_at;
             
             const statusColors = {
                 'registered': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
@@ -658,7 +658,7 @@
             
             // Render History Timeline — lazy-loaded via AJAX
             const timelineContainer = document.getElementById('detailHistoryTimeline');
-            timelineContainer.innerHTML = '<p class="text-sm text-gray-400 ml-4 animate-pulse">Loading history...</p>';
+            timelineContainer.innerHTML = '<p class="text-sm text-gray-400 ml-4 animate-pulse">Memuat riwayat...</p>';
             
             fetch(member.logs_url)
                 .then(res => res.json())
@@ -673,7 +673,7 @@
                             item.className = 'relative pl-8';
                             item.innerHTML = `
                                 <!-- Theme Dot -->
-                                <div class="absolute w-4 h-4 bg-emerald-500 rounded-full -left-[9px] top-1 border-4 border-white dark:border-[#1A1A1A] shadow-sm shadow-emerald-500/30"></div>
+                                <div class="absolute w-4 h-4 bg-emerald-500 rounded-full -left-[9px] top-1 border-4 border-white dark:border-gray-900 shadow-sm shadow-emerald-500/30"></div>
                                 
                                 <!-- Content -->
                                 <div class="flex flex-col sm:flex-row sm:items-start gap-x-6 gap-y-2">
@@ -698,11 +698,11 @@
                             timelineContainer.appendChild(item);
                         });
                     } else {
-                        timelineContainer.innerHTML = '<p class="text-sm text-gray-500 ml-4">No activity history yet.</p>';
+                        timelineContainer.innerHTML = '<p class="text-sm text-gray-500 ml-4">Belum ada riwayat aktivitas.</p>';
                     }
                 })
                 .catch(() => {
-                    timelineContainer.innerHTML = '<p class="text-sm text-red-500 ml-4">Failed to load history.</p>';
+                    timelineContainer.innerHTML = '<p class="text-sm text-red-500 ml-4">Gagal memuat riwayat.</p>';
                 });
 
             const drawer = document.getElementById('memberDetailDrawer');
@@ -748,16 +748,16 @@
 
     <!-- Member Detail Off-Canvas Modal -->
     <div id="memberDetailDrawer" onclick="if(event.target === this) closeMemberDetail()" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm transition-opacity">
-        <div class="fixed inset-y-0 right-0 w-full max-w-2xl bg-white dark:bg-[#242424] shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col border-l border-transparent dark:border-gray-700/50" id="drawerContent">
+        <div class="fixed inset-y-0 right-0 w-full max-w-2xl bg-white dark:bg-gray-800 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col border-l border-transparent dark:border-gray-700" id="drawerContent">
             <!-- Header -->
-            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700/50 flex items-center justify-between bg-white dark:bg-[#242424] z-10 sticky top-0">
+            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between bg-white dark:bg-gray-800 z-10 sticky top-0">
                 <div>
                     <h3 class="text-xl font-bold text-gray-800 dark:text-white" id="detailNameTop">NAME</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400" id="detailBadgeTop">BADGE</p>
                     <div class="mt-2">
                         <span id="detailStatusBadgeTop" class="inline-flex items-center px-2 py-1 rounded text-xs font-semibold"></span>
                     </div>
-                    <p class="text-xs text-gray-400 mt-2" id="detailAddedInfo">Added by ...</p>
+                    <p class="text-xs text-gray-400 mt-2" id="detailAddedInfo">Ditambahkan oleh ...</p>
                 </div>
                 <button type="button" onclick="closeMemberDetail()" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors absolute top-4 right-4 cursor-pointer">
                     <x-heroicon-o-x-mark class="w-6 h-6" />
@@ -765,14 +765,14 @@
             </div>
             
             <!-- Tabs -->
-            <div class="px-6 border-b border-gray-100 dark:border-gray-700/50 flex gap-6 bg-white dark:bg-[#242424] sticky top-[120px] z-10">
-                <button type="button" onclick="switchMemberTab('info')" id="tabInfoBtn" class="py-3 text-sm font-bold text-primary-600 border-b-2 border-primary-600">Information</button>
-                <button type="button" onclick="switchMemberTab('history')" id="tabHistoryBtn" class="py-3 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">History</button>
+            <div class="px-6 border-b border-gray-100 dark:border-gray-700 flex gap-6 bg-white dark:bg-gray-800 sticky top-[120px] z-10">
+                <button type="button" onclick="switchMemberTab('info')" id="tabInfoBtn" class="py-3 text-sm font-bold text-primary-600 border-b-2 border-primary-600">Informasi</button>
+                <button type="button" onclick="switchMemberTab('history')" id="tabHistoryBtn" class="py-3 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">Riwayat</button>
             </div>
 
             <!-- Body -->
-            <div class="p-6 overflow-y-auto flex-1 bg-gray-50/50 dark:bg-[#1A1A1A]" id="tabInfoContent">
-                <h4 class="text-base font-bold text-gray-800 dark:text-white mb-4">User Information</h4>
+            <div class="p-6 overflow-y-auto flex-1 bg-gray-50/50 dark:bg-gray-900" id="tabInfoContent">
+                <h4 class="text-base font-bold text-gray-800 dark:text-white mb-4">Informasi Pengguna</h4>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                     <!-- Photo & Basic -->
@@ -799,7 +799,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 mb-8">
                     <div>
-                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Birth Place & Date</p>
+                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Tempat & Tanggal Lahir</p>
                         <p class="font-bold text-gray-900 dark:text-white text-sm" id="detailBirth">-</p>
                     </div>
                     <div>
@@ -807,11 +807,11 @@
                         <div><span id="detailStatusBadge" class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-semibold"></span></div>
                     </div>
                     <div>
-                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Join Date</p>
+                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Tanggal Bergabung</p>
                         <p class="font-bold text-gray-900 dark:text-white text-sm" id="detailJoinDate">-</p>
                     </div>
                     <div>
-                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Role</p>
+                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Peran</p>
                         <p class="font-bold text-gray-900 dark:text-white text-sm" id="detailRole">-</p>
                     </div>
                     <div>
@@ -819,11 +819,11 @@
                         <p class="font-bold text-gray-900 dark:text-white text-sm" id="detailPuk">PT. Sat Nusapersada Tbk</p>
                     </div>
                     <div>
-                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Address</p>
+                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Alamat</p>
                         <p class="font-bold text-gray-900 dark:text-white text-sm" id="detailAddress">-</p>
                     </div>
                     <div>
-                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Signature</p>
+                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Tanda Tangan</p>
                         <div id="detailSignContainer" class="relative">
                             <p class="font-bold text-gray-900 dark:text-white text-sm" id="detailSign">-</p>
                             <div id="detailSignLoading" class="mt-1 w-16 h-8 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-800 flex items-center justify-center hidden">
@@ -835,21 +835,21 @@
                 </div>
 
                 <!-- Action Buttons -->
-                <hr class="border-gray-200 dark:border-gray-700/50 mb-6">
+                <hr class="border-gray-200 dark:border-gray-700 mb-6">
                 <div class="flex items-center gap-3 mb-8">
                     <button type="button" onclick="openEditMemberModal()" class="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-primary-600/20 active:scale-95 cursor-pointer">
                         <x-heroicon-o-pencil-square class="w-4 h-4" />
-                        <span>Edit Member</span>
+                        <span>Ubah Anggota</span>
                     </button>
                 </div>
 
                 <!-- Card Preview + Download -->
-                <hr class="border-gray-200 dark:border-gray-700/50 mb-6">
+                <hr class="border-gray-200 dark:border-gray-700 mb-6">
                 <div class="flex items-center justify-between mb-4">
-                    <h4 class="text-base font-bold text-gray-800 dark:text-white">Card Preview</h4>
+                    <h4 class="text-base font-bold text-gray-800 dark:text-white">Pratinjau Kartu</h4>
                     <a id="downloadCardBtn" href="#" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-lg shadow-emerald-600/20 active:scale-95 no-underline">
                         <x-heroicon-o-arrow-down-tray class="w-4 h-4" />
-                        <span>Download Digital Card</span>
+                        <span>Unduh Kartu Digital</span>
                     </a>
                 </div>
                 
@@ -876,7 +876,7 @@
                                         <div id="cardPhotoLoading" class="absolute inset-0 flex items-center justify-center bg-gray-100 hidden">
                                             <svg class="animate-spin h-4 w-4 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                         </div>
-                                        <img id="cardPhotoImg" src="" class="w-full h-full object-cover hidden relative z-10" alt="" style="image-rendering: auto;">
+                                        <img id="cardPhotoImg" src="" class="w-full h-full object-cover hidden relative z-10" alt="">
                                         <div id="cardPhotoFallback" class="w-full h-full flex items-center justify-center text-gray-500 font-bold text-lg relative z-10 hidden"></div>
                                     </div>
                                 </div>
@@ -884,10 +884,10 @@
                                     <div id="cardFrontQrLoading" class="w-14 h-14 border border-gray-200 bg-gray-50 rounded flex items-center justify-center hidden">
                                         <svg class="animate-spin h-4 w-4 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                     </div>
-                                    <img id="cardFrontQr" src="" alt="QR" class="w-14 h-14 border border-gray-200 bg-white p-0.5 rounded hidden" style="image-rendering: auto;">
+                                    <img id="cardFrontQr" src="" alt="QR" class="w-14 h-14 border border-gray-200 bg-white p-0.5 rounded hidden">
                                 </div>
                                 <div class="flex-shrink-0 flex flex-col items-center">
-                                    <img src="{{ asset('logo_lem_spsi.jpg') }}" class="w-14 h-14 rounded-full object-contain" alt="Logo LEM SPSI" style="image-rendering: auto;">
+                                    <img src="{{ asset('logo_lem_spsi.jpg') }}" class="w-14 h-14 object-contain" alt="Logo LEM SPSI">
                                     <p class="text-[6px] text-center text-gray-500 mt-0.5 font-bold">SP LEM - SPSI</p>
                                 </div>
                             </div>
@@ -897,13 +897,13 @@
                     <!-- Card Back Preview -->
                     <div class="border border-gray-200 rounded-xl bg-white shadow-sm p-4 relative h-52 flex flex-col justify-between text-gray-800 dark:text-gray-800">
                         <div class="flex justify-between items-center mb-1.5 border-b border-gray-100 pb-1.5">
-                            <img src="{{ asset('logo_lem_spsi.jpg') }}" class="w-6 h-6 rounded-full object-contain mb-0.5" alt="Logo LEM">
+                            <img src="{{ asset('logo_lem_spsi.jpg') }}" class="w-6 h-6 object-contain mb-0.5" alt="Logo LEM">
                             <div class="text-center">
                                 <p class="text-[8px] font-bold">PIMPINAN UNIT KERJA</p>
                                 <p class="text-[8px] font-bold">SP LEM SPSI</p>
                                 <p class="text-[9px] font-bold">PT XYZ</p>
                             </div>
-                            <img src="{{ asset('logo_kspsi.png') }}" class="w-6 h-6 rounded-full object-contain mb-0.5" alt="Logo KSPSI">
+                            <img src="{{ asset('logo_kspsi.png') }}" class="w-6 h-6 object-contain mb-0.5" alt="Logo KSPSI">
                         </div>
                         <div class="text-[8px] space-y-0.5 flex-1">
                             <div class="flex"><div class="w-14 font-semibold">Nama</div><div>: <span id="cardName"></span></div></div>
@@ -946,13 +946,13 @@
                     </div>
                 </div>
                 <div class="flex justify-between text-xs text-gray-500 mt-2 px-2">
-                    <span>Front View</span>
-                    <span>Back View</span>
+                    <span>Tampak Depan</span>
+                    <span>Tampak Belakang</span>
                 </div>
             </div>
 
             <!-- History Tab Content -->
-            <div class="p-6 overflow-y-auto flex-1 bg-gray-50/50 dark:bg-[#1A1A1A] hidden" id="tabHistoryContent">
+            <div class="p-6 overflow-y-auto flex-1 bg-gray-50/50 dark:bg-gray-900 hidden" id="tabHistoryContent">
                 <div class="relative border-l-2 border-emerald-500 dark:border-emerald-500/40 ml-4 py-2 space-y-8" id="detailHistoryTimeline">
                     <!-- Logs will be injected here via JS -->
                 </div>
@@ -962,11 +962,11 @@
 
     <!-- Edit Member Popup Modal -->
     <div id="editMemberModal" onclick="if(event.target === this) closeEditMemberModal()" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-gray-900/60 backdrop-blur-sm transition-opacity">
-        <div class="bg-white dark:bg-[#242424] rounded-2xl shadow-2xl w-full max-w-md transform scale-95 opacity-0 transition-all duration-200 border border-transparent dark:border-gray-700/50" id="editModalContent">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md transform scale-95 opacity-0 transition-all duration-200 border border-transparent dark:border-gray-700" id="editModalContent">
             <!-- Modal Header -->
-            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700/50 flex items-center justify-between">
+            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
                 <div>
-                    <h3 class="text-lg font-bold text-gray-800 dark:text-white">Edit Member</h3>
+                    <h3 class="text-lg font-bold text-gray-800 dark:text-white">Ubah Anggota</h3>
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5" id="editModalSubtitle">-</p>
                 </div>
                 <button type="button" onclick="closeEditMemberModal()" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors cursor-pointer">
@@ -981,14 +981,14 @@
                 <div class="p-6 space-y-5">
                     <!-- Role Selector -->
                     <div>
-                        <label for="editRole" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Role <span class="text-red-500">*</span></label>
+                        <label for="editRole" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Peran <span class="text-red-500">*</span></label>
                         <div class="relative custom-dropdown-container">
                             <input type="hidden" name="member_role_id" id="editRole" value="">
-                            <button type="button" onclick="toggleCustomDropdown('editRoleDropdownMenu')" class="w-full flex items-center justify-between px-4 py-2.5 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors text-gray-700 dark:text-white cursor-pointer shadow-sm">
-                                <span id="editRoleBtnText" class="truncate font-medium">Select Role</span>
+                            <button type="button" onclick="toggleCustomDropdown('editRoleDropdownMenu')" class="w-full flex items-center justify-between px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors text-gray-700 dark:text-white cursor-pointer shadow-sm">
+                                <span id="editRoleBtnText" class="truncate font-medium">Pilih Peran</span>
                                 <svg class="w-4 h-4 text-gray-400 pointer-events-none flex-shrink-0 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>
                             </button>
-                            <div id="editRoleDropdownMenu" class="custom-dropdown-menu absolute z-50 hidden mt-1.5 w-full bg-white dark:bg-[#242424] border border-gray-100 dark:border-gray-700/50 rounded-xl shadow-lg max-h-60 overflow-y-auto">
+                            <div id="editRoleDropdownMenu" class="custom-dropdown-menu absolute z-50 hidden mt-1.5 w-full bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-lg max-h-60 overflow-y-auto">
                                 <ul class="py-1 text-sm text-gray-700 dark:text-gray-300 font-medium">
                                     @foreach($memberRoles as $role)
                                         <li>
@@ -998,9 +998,9 @@
                                                 <span>{{ $role->name }}</span>
                                                 @if($role->is_sign || $role->is_single)
                                                     <span class="text-[10px] text-gray-400 font-normal mt-0.5">
-                                                        @if($role->is_sign) Signature appears on card @endif
+                                                        @if($role->is_sign) Tanda tangan di kartu @endif
                                                         @if($role->is_sign && $role->is_single) | @endif
-                                                        @if($role->is_single) Max. 1 person @endif
+                                                        @if($role->is_single) Maks 1 orang @endif
                                                     </span>
                                                 @endif
                                             </button>
@@ -1009,17 +1009,17 @@
                                 </ul>
                             </div>
                         </div>
-                        <p class="text-[11px] text-amber-600 dark:text-amber-400 mt-1.5 font-medium" id="editRoleHint">Select a role for this member.</p>
+                        <p class="text-[11px] text-amber-600 dark:text-amber-400 mt-1.5 font-medium" id="editRoleHint">Pilih peran untuk anggota ini.</p>
                     </div>
 
                     <!-- Signature Upload -->
                     <div id="signatureUploadSection">
-                        <label for="editSignImage" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Upload Signature</label>
+                        <label for="editSignImage" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Unggah Tanda Tangan</label>
                         
                         <!-- Current Signature Preview -->
-                        <div id="currentSignPreview" class="hidden mb-3 p-3 bg-gray-50 dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-700/50 rounded-xl">
-                            <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Current Signature</p>
-                            <div id="currentSignLoading" class="w-24 h-12 border border-gray-200 rounded bg-white dark:bg-[#242424] flex items-center justify-center hidden">
+                        <div id="currentSignPreview" class="hidden mb-3 p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl">
+                            <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Tanda Tangan Saat Ini</p>
+                            <div id="currentSignLoading" class="w-24 h-12 border border-gray-200 rounded bg-white dark:bg-gray-800 flex items-center justify-center hidden">
                                 <svg class="animate-spin h-5 w-5 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                             </div>
                             <img id="currentSignImg" src="" alt="Current Signature" class="max-w-[140px] max-h-[70px] border border-gray-200 rounded bg-white p-1 hidden">
@@ -1032,18 +1032,18 @@
                             file:bg-primary-50 file:text-primary-800
                             dark:file:bg-primary-900/30 dark:file:text-primary-300
                             hover:file:bg-primary-100
-                            border border-gray-200 dark:border-gray-700/50 bg-gray-50 dark:bg-[#1A1A1A] rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" />
-                        <p class="text-[11px] text-gray-400 mt-1.5">Format PNG/JPG, max 2MB. Signature will appear on the digital card.</p>
+                            border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" />
+                        <p class="text-[11px] text-gray-400 mt-1.5">Format PNG/JPG, maks 2MB. Tanda tangan akan muncul pada kartu digital.</p>
                     </div>
                 </div>
 
                 <!-- Modal Footer -->
-                <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700/50 bg-gray-50/80 dark:bg-[#1A1A1A] flex items-center justify-end gap-3 rounded-b-2xl">
+                <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-900 flex items-center justify-end gap-3 rounded-b-2xl">
                     <button type="button" onclick="closeEditMemberModal()" class="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer">
-                        Cancel
+                        Batal
                     </button>
                     <button type="submit" class="px-6 py-2.5 text-sm font-bold bg-primary-600 hover:bg-primary-700 text-white rounded-xl shadow-lg shadow-primary-600/20 transition-all flex items-center gap-2 cursor-pointer">
-                        <span class="btn-text">Save Changes</span>
+                        <span class="btn-text">Simpan Perubahan</span>
                         <svg class="btn-spinner animate-spin h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>

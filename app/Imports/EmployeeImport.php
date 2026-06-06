@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Models\Employee;
+use App\Models\Karyawan;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -29,60 +29,60 @@ class EmployeeImport
             }
 
             $badge = trim($row['A'] ?? '');
-            $name = trim($row['B'] ?? '');
+            $nama = trim($row['B'] ?? '');
 
             // Skip empty rows
-            if (empty($badge) && empty($name)) {
+            if (empty($badge) && empty($nama)) {
                 continue;
             }
 
             // Validate required fields
             if (empty($badge)) {
-                $this->errors[] = "Row {$rowIndex}: Badge cannot be empty.";
+                $this->errors[] = "Baris {$rowIndex}: Badge tidak boleh kosong.";
                 $this->skipped++;
                 continue;
             }
 
-            if (empty($name)) {
-                $this->errors[] = "Row {$rowIndex}: Name cannot be empty.";
+            if (empty($nama)) {
+                $this->errors[] = "Baris {$rowIndex}: Nama tidak boleh kosong.";
                 $this->skipped++;
                 continue;
             }
 
             // Check for duplicate badge
-            if (Employee::where('badge', $badge)->exists()) {
-                $this->errors[] = "Row {$rowIndex}: Badge '{$badge}' is already registered, data skipped.";
+            if (Karyawan::where('badge', $badge)->exists()) {
+                $this->errors[] = "Baris {$rowIndex}: Badge '{$badge}' sudah terdaftar, data dilewati.";
                 $this->skipped++;
                 continue;
             }
 
             try {
-                $employee = Employee::create([
+                $karyawan = Karyawan::create([
                     'badge' => $badge,
-                    'name' => $name,
-                    'department' => !empty(trim($row['C'] ?? '')) ? trim($row['C']) : null,
+                    'nama' => $nama,
+                    'departemen' => !empty(trim($row['C'] ?? '')) ? trim($row['C']) : null,
                     'line' => !empty(trim($row['D'] ?? '')) ? trim($row['D']) : null,
-                    'position' => !empty(trim($row['E'] ?? '')) ? trim($row['E']) : null,
-                    'join_date' => $this->parseDate($row['F'] ?? ''),
-                    'end_date' => $this->parseDate($row['G'] ?? ''),
-                    'birth_place' => !empty(trim($row['H'] ?? '')) ? trim($row['H']) : null,
-                    'birth_date' => $this->parseDate($row['I'] ?? ''),
-                    'address' => !empty(trim($row['J'] ?? '')) ? trim($row['J']) : null,
+                    'jabatan' => !empty(trim($row['E'] ?? '')) ? trim($row['E']) : null,
+                    'tanggal_masuk' => $this->parseDate($row['F'] ?? ''),
+                    'tanggal_keluar' => $this->parseDate($row['G'] ?? ''),
+                    'tempat_lahir' => !empty(trim($row['H'] ?? '')) ? trim($row['H']) : null,
+                    'tanggal_lahir' => $this->parseDate($row['I'] ?? ''),
+                    'alamat' => !empty(trim($row['J'] ?? '')) ? trim($row['J']) : null,
                 ]);
 
                 // Create user account
                 User::firstOrCreate(
                     ['badge' => $badge],
                     [
-                        'name' => $name,
+                        'nama' => $nama,
                         'password' => Hash::make('P4ssword'),
-                        'role' => 'user',
+                        'peran' => 'user',
                     ]
                 );
 
                 $this->imported++;
             } catch (\Exception $e) {
-                $this->errors[] = "Row {$rowIndex}: Failed to save data - {$e->getMessage()}";
+                $this->errors[] = "Baris {$rowIndex}: Gagal menyimpan data - {$e->getMessage()}";
                 $this->skipped++;
             }
         }

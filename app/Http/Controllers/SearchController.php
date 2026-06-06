@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Employee;
-use App\Models\Member;
-use App\Models\Feedback;
-use App\Models\MemberLog;
+use App\Models\Karyawan;
+use App\Models\Anggota;
+use App\Models\Saran;
+use App\Models\LogAnggota;
 
 class SearchController extends Controller
 {
@@ -23,44 +23,44 @@ class SearchController extends Controller
 
         switch ($type) {
             case 'employees':
-                $results = Employee::where('name', 'like', "%{$q}%")
+                $results = Karyawan::where('nama', 'like', "%{$q}%")
                     ->orWhere('badge', 'like', "%{$q}%")
                     ->limit(8)
-                    ->get(['id', 'badge', 'name', 'department'])
+                    ->get(['id', 'badge', 'nama', 'departemen'])
                     ->map(fn($e) => [
-                        'text' => $e->name,
-                        'sub' => $e->badge . ($e->department ? ' · ' . $e->department : ''),
-                        'value' => $e->name,
+                        'text' => $e->nama,
+                        'sub' => $e->badge . ($e->departemen ? ' · ' . $e->departemen : ''),
+                        'value' => $e->nama,
                     ]);
                 break;
 
             case 'members':
-                $results = Member::with('employee')
-                    ->whereHas('employee', function($query) use ($q) {
-                        $query->where('name', 'like', "%{$q}%")
+                $results = Anggota::with('karyawan')
+                    ->whereHas('karyawan', function($query) use ($q) {
+                        $query->where('nama', 'like', "%{$q}%")
                               ->orWhere('badge', 'like', "%{$q}%");
                     })
                     ->limit(8)
                     ->get()
                     ->map(fn($m) => [
-                        'text' => $m->employee->name ?? 'Unknown',
-                        'sub' => ($m->employee->badge ?? '') . ' · ' . ucfirst($m->status),
-                        'value' => $m->employee->name ?? '',
+                        'text' => $m->karyawan->nama ?? 'Tidak diketahui',
+                        'sub' => ($m->karyawan->badge ?? '') . ' · ' . ucfirst($m->status),
+                        'value' => $m->karyawan->nama ?? '',
                     ]);
                 break;
 
             case 'feedbacks':
-                $results = Feedback::with('member.employee')
-                    ->whereHas('member.employee', function($query) use ($q) {
-                        $query->where('name', 'like', "%{$q}%")
+                $results = Saran::with('anggota.karyawan')
+                    ->whereHas('anggota.karyawan', function($query) use ($q) {
+                        $query->where('nama', 'like', "%{$q}%")
                               ->orWhere('badge', 'like', "%{$q}%");
                     })
                     ->limit(8)
                     ->get()
                     ->map(fn($f) => [
-                        'text' => $f->member->employee->name ?? 'Unknown',
-                        'sub' => ($f->member->employee->badge ?? '') . ' · ' . $f->status,
-                        'value' => $f->member->employee->name ?? '',
+                        'text' => $f->anggota->karyawan->nama ?? 'Tidak diketahui',
+                        'sub' => ($f->anggota->karyawan->badge ?? '') . ' · ' . $f->status,
+                        'value' => $f->anggota->karyawan->nama ?? '',
                     ])
                     ->unique('text')
                     ->values();
@@ -68,19 +68,19 @@ class SearchController extends Controller
 
             case 'history':
                 // Search by activity, description, actor name, or target member name
-                $results = MemberLog::with(['actor', 'member.employee'])
+                $results = LogAnggota::with(['pelaku', 'anggota.karyawan'])
                     ->where(function($query) use ($q) {
-                        $query->where('activity', 'like', "%{$q}%")
-                              ->orWhere('description', 'like', "%{$q}%")
-                              ->orWhereHas('actor', fn($qr) => $qr->where('name', 'like', "%{$q}%"))
-                              ->orWhereHas('member.employee', fn($qr) => $qr->where('name', 'like', "%{$q}%"));
+                        $query->where('aktivitas', 'like', "%{$q}%")
+                              ->orWhere('deskripsi', 'like', "%{$q}%")
+                              ->orWhereHas('pelaku', fn($qr) => $qr->where('nama', 'like', "%{$q}%"))
+                              ->orWhereHas('anggota.karyawan', fn($qr) => $qr->where('nama', 'like', "%{$q}%"));
                     })
                     ->latest()
                     ->limit(8)
                     ->get()
                     ->map(fn($l) => [
-                        'text' => ucfirst($l->activity) . ' — ' . ($l->member?->employee?->name ?? 'Unknown'),
-                        'sub' => ($l->actor?->name ?? 'System') . ' · ' . $l->created_at->format('d M Y'),
+                        'text' => ucfirst($l->aktivitas) . ' — ' . ($l->anggota?->karyawan?->nama ?? 'Tidak diketahui'),
+                        'sub' => ($l->pelaku?->nama ?? 'System') . ' · ' . $l->created_at->format('d M Y'),
                         'value' => $q,
                     ])
                     ->unique('text')

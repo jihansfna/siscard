@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\MemberRole;
+use App\Models\JabatanAnggota;
 
-class MemberRoleSeeder extends Seeder
+class JabatanAnggotaSeeder extends Seeder
 {
     /**
      * Seed the member_roles table.
@@ -17,20 +17,20 @@ class MemberRoleSeeder extends Seeder
     {
         $roles = [
             [
-                'name'      => 'Ketua',
-                'is_single' => true,
-                'is_sign'   => true,
+                'nama'      => 'Ketua',
+                'tunggal' => true,
+                'penandatangan'   => true,
             ],
             [
-                'name'      => 'Sekretaris',
-                'is_single' => true,
-                'is_sign'   => true,
+                'nama'      => 'Sekretaris',
+                'tunggal' => true,
+                'penandatangan'   => true,
             ],
         ];
 
         foreach ($roles as $role) {
-            MemberRole::firstOrCreate(
-                ['name' => $role['name']],
+            JabatanAnggota::firstOrCreate(
+                ['nama' => $role['nama']],
                 $role
             );
         }

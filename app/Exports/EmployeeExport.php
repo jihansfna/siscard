@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\Employee;
+use App\Models\Karyawan;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -13,13 +13,13 @@ class EmployeeExport
 {
     public function export()
     {
-        $employees = Employee::orderBy('created_at', 'asc')->get();
+        $employees = Karyawan::orderBy('created_at', 'asc')->get();
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('Employees');
+        $sheet->setTitle('Karyawan');
 
         // Headers
-        $headers = ['No', 'Badge', 'Nama', 'Department', 'Line', 'Position', 'Join Date', 'End Date', 'Tempat Lahir', 'Tanggal Lahir', 'Alamat'];
+        $headers = ['No', 'Badge', 'Nama', 'Departemen', 'Line', 'Jabatan', 'Tanggal Masuk', 'Tanggal Keluar', 'Tempat Lahir', 'Tanggal Lahir', 'Alamat'];
         $columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'];
 
         // Header styling
@@ -42,15 +42,15 @@ class EmployeeExport
         foreach ($employees as $index => $emp) {
             $sheet->setCellValue("A{$row}", $index + 1);
             $sheet->setCellValue("B{$row}", $emp->badge);
-            $sheet->setCellValue("C{$row}", $emp->name);
-            $sheet->setCellValue("D{$row}", $emp->department ?? '-');
+            $sheet->setCellValue("C{$row}", $emp->nama);
+            $sheet->setCellValue("D{$row}", $emp->departemen ?? '-');
             $sheet->setCellValue("E{$row}", $emp->line ?? '-');
-            $sheet->setCellValue("F{$row}", $emp->position ?? '-');
-            $sheet->setCellValue("G{$row}", $emp->join_date?->format('d/m/Y') ?? '-');
-            $sheet->setCellValue("H{$row}", $emp->end_date?->format('d/m/Y') ?? '-');
-            $sheet->setCellValue("I{$row}", $emp->birth_place ?? '-');
-            $sheet->setCellValue("J{$row}", $emp->birth_date?->format('d/m/Y') ?? '-');
-            $sheet->setCellValue("K{$row}", $emp->address ?? '-');
+            $sheet->setCellValue("F{$row}", $emp->jabatan ?? '-');
+            $sheet->setCellValue("G{$row}", $emp->tanggal_masuk?->format('d/m/Y') ?? '-');
+            $sheet->setCellValue("H{$row}", $emp->tanggal_keluar?->format('d/m/Y') ?? '-');
+            $sheet->setCellValue("I{$row}", $emp->tempat_lahir ?? '-');
+            $sheet->setCellValue("J{$row}", $emp->tanggal_lahir?->format('d/m/Y') ?? '-');
+            $sheet->setCellValue("K{$row}", $emp->alamat ?? '-');
 
             // Alternate row color
             if ($index % 2 === 0) {
@@ -76,7 +76,7 @@ class EmployeeExport
         }
 
         $writer = new Xlsx($spreadsheet);
-        $filename = 'employees_' . date('Y-m-d_His') . '.xlsx';
+        $filename = 'karyawan_' . date('Y-m-d_His') . '.xlsx';
         $tempFile = storage_path('app/' . $filename);
         $writer->save($tempFile);
 
@@ -89,7 +89,7 @@ class EmployeeExport
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Template Import');
 
-        $headers = ['Badge *', 'Nama *', 'Department', 'Line', 'Position', 'Join Date (dd/mm/yyyy)', 'End Date (dd/mm/yyyy)', 'Tempat Lahir', 'Tanggal Lahir (dd/mm/yyyy)', 'Alamat'];
+        $headers = ['Badge *', 'Nama *', 'Departemen', 'Line', 'Jabatan', 'Tanggal Masuk (dd/mm/yyyy)', 'Tanggal Keluar (dd/mm/yyyy)', 'Tempat Lahir', 'Tanggal Lahir (dd/mm/yyyy)', 'Alamat'];
         $columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
         $headerStyle = [
@@ -124,7 +124,7 @@ class EmployeeExport
         }
 
         $writer = new Xlsx($spreadsheet);
-        $filename = 'template_import_employees.xlsx';
+        $filename = 'template_import_karyawan.xlsx';
         $tempFile = storage_path('app/' . $filename);
         $writer->save($tempFile);
 

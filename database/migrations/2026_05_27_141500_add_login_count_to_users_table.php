@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->unsignedInteger('login_count')->default(0)->after('role');
+            $table->unsignedInteger('jumlah_login')->default(0)->after('peran');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('login_count');
+            $table->dropColumn('jumlah_login');
         });
     }
 };

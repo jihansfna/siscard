@@ -11,21 +11,21 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('feedbacks', function (Blueprint $table) {
+        Schema::create('saran', function (Blueprint $table) {
             $table->id();
 
             $table->uuid('uuid')
                 ->unique()
                 ->default(DB::raw('(UUID())'));
 
-            $table->foreignId('member_id')
-                ->constrained()
+            $table->foreignId('anggota_id')
+                ->constrained('anggota')
                 ->cascadeOnDelete();
 
-            $table->string('file')
+            $table->string('berkas')
                 ->nullable();
 
-            $table->text('description');
+            $table->text('deskripsi');
 
             $table->enum('status', [
                 'pending',
@@ -40,6 +40,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('feedbacks');
+        Schema::dropIfExists('saran');
     }
 };
