@@ -368,10 +368,10 @@
                 </div>
                 
                 <div class="px-6 py-4 flex items-center justify-between border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-b-2xl">
-                    <a href="{{ route('dashboard.feedbacks') }}{{ request('q') ? '?q=' . request('q') : '' }}" class="text-sm font-bold text-red-600 hover:text-red-700 transition-colors">
+                    <a href="{{ route('dashboard.feedbacks') }}{{ request('q') ? '?q=' . request('q') : '' }}" class="text-sm font-bold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors">
                         Reset Filter
                     </a>
-                    <button type="submit" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-red-600/20 active:scale-95 cursor-pointer">
+                    <button type="submit" class="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-primary-600/20 active:scale-95 cursor-pointer">
                         Kirim
                     </button>
                 </div>
