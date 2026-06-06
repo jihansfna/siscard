@@ -37,7 +37,7 @@ class DashboardController extends Controller
 
         // 4. Feedbacks Received
         $totalFeedbacks = Saran::count();
-        $pendingFeedbacks = Saran::where('status', 'pending')->count();
+        $pendingFeedbacks = Saran::where('status', 'Waiting')->count();
 
         // 5. Grafik Scan Barcode (Current Month)
         $daysInMonth = Carbon::now()->daysInMonth;
