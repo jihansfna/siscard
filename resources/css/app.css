@@ -6,7 +6,7 @@
 @theme {
     --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
-        
+
     --color-primary-50: #eef2ff;
     --color-primary-100: #e0e7ff;
     --color-primary-200: #c7d2fe;
@@ -24,57 +24,5 @@
 @layer base {
     body {
         @apply antialiased text-gray-900 bg-gray-50;
-    }
-
-    /* Premium Custom Checkboxes override globally */
-    input[type="checkbox"] {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        background-color: #fff;
-        margin: 0;
-        font: inherit;
-        color: currentColor;
-        width: 1.25rem;
-        height: 1.25rem;
-        border: 2px solid #cbd5e1; /* border-slate-300 */
-        border-radius: 0.375rem; /* rounded-md */
-        display: inline-grid;
-        place-content: center;
-        cursor: pointer;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        vertical-align: middle;
-    }
-
-    input[type="checkbox"]::before {
-        content: "";
-        width: 0.65rem;
-        height: 0.65rem;
-        transform: scale(0);
-        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        box-shadow: inset 1rem 1rem #4f46e5; /* Primary-600 */
-        transform-origin: center;
-        clip-path: polygon(14% 44%, 0 58%, 38% 96%, 100% 16%, 86% 2%, 38% 68%);
-    }
-
-    input[type="checkbox"]:checked {
-        border-color: #4f46e5;
-        background-color: #eef2ff;
-        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
-    }
-
-    input[type="checkbox"]:checked::before {
-        transform: scale(1);
-    }
-
-    input[type="checkbox"]:hover {
-        border-color: #4f46e5;
-        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.08);
-    }
-
-    input[type="checkbox"]:focus {
-        outline: none;
-        border-color: #4f46e5;
-        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2);
     }
 }

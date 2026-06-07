@@ -63,7 +63,7 @@
                     <thead class="bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 text-xs uppercase font-semibold border-b border-gray-200 dark:border-gray-700">
                         <tr>
                             <th class="px-4 py-3 w-10">
-                                <input type="checkbox" id="selectAllEmployees" class="rounded border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-primary-600 focus:ring-primary-500" onclick="toggleSelectAllEmployees(this)">
+                                <x-checkbox id="selectAllEmployees" onclick="toggleSelectAllEmployees(this)" />
                             </th>
                             <th class="px-4 py-3">Badge</th>
                             <th class="px-4 py-3">Nama</th>
@@ -79,7 +79,7 @@
                         @forelse ($employees as $employee)
                             <tr class="hover:bg-gray-50/50 dark:hover:bg-[#2A2A2A] transition-colors">
                                 <td class="px-4 py-3">
-                                    <input type="checkbox" name="ids[]" value="{{ $employee->id }}" form="bulkDeleteForm" class="employee-checkbox rounded border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-primary-600 focus:ring-primary-500" onclick="updateBulkDeleteBar()">
+                                    <x-checkbox name="ids[]" value="{{ $employee->id }}" form="bulkDeleteForm" class="employee-checkbox" onclick="updateBulkDeleteBar()" />
                                 </td>
                                 <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">{{ $employee->badge }}</td>
                                 <td class="px-4 py-3">{{ $employee->nama }}</td>

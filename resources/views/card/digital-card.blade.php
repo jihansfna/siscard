@@ -135,7 +135,7 @@
 
         .back-info {
             width: 100%;
-            font-size: 6.5pt;
+            font-size: 5.5pt;
             line-height: 1.3;
             border-collapse: collapse;
             margin-bottom: 2pt;
@@ -153,7 +153,7 @@
         }
         .back-sig-city {
             text-align: center;
-            font-size: 6pt;
+            font-size: 5pt;
             margin-bottom: 2pt;
             color: #333;
         }
@@ -173,12 +173,15 @@
             display: block;
         }
         .back-sig-name {
-            font-size: 6pt;
+            font-size: 5pt;
             color: #333;
             margin-top: 0pt;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .back-sig-role {
-            font-size: 6pt;
+            font-size: 5pt;
             color: #333;
             margin-top: 0pt;
         }

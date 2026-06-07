@@ -27,11 +27,11 @@ class MemberController extends Controller
                        ->orWhere('badge', 'like', "%{$q}%");
                 });
             })
-            ->when($status && $status !== 'All Status', function($query) use ($status) {
+            ->when($status && $status !== 'Semua Status', function($query) use ($status) {
                 $statusMap = [
-                    'Registered Member' => 'registered',
-                    'Pending Verification' => 'pending',
-                    'Inactive' => 'inactive'
+                    'Anggota Terdaftar' => 'registered',
+                    'Menunggu Verifikasi' => 'pending',
+                    'Tidak Aktif' => 'inactive'
                 ];
                 if (isset($statusMap[$status])) {
                     $query->where('status', $statusMap[$status]);
@@ -54,7 +54,7 @@ class MemberController extends Controller
             })
             ->get();
 
-        $memberRoles = JabatanAnggota::where('nama', '!=', 'Member')->orderBy('nama')->get();
+        $memberRoles = JabatanAnggota::where('nama', '!=', 'Anggota')->orderBy('nama')->get();
 
         // Optimized: single query for Ketua & Sekretaris instead of 4 separate queries
         $signRoles = JabatanAnggota::whereIn('nama', ['Ketua', 'Sekretaris'])->pluck('id', 'nama');
@@ -107,7 +107,7 @@ class MemberController extends Controller
 
         // Enforce tunggal: if the new role is single-holder, demote the current holder
         if ($newRole->tunggal) {
-            $defaultRole = JabatanAnggota::where('nama', 'Member')->first();
+            $defaultRole = JabatanAnggota::where('nama', 'Anggota')->first();
             if ($defaultRole) {
                 // Find old holders of this specific role
                 $oldHolders = Anggota::where('jabatan_anggota_id', $newRole->id)
@@ -188,7 +188,7 @@ class MemberController extends Controller
         }
 
         $defaultRole = JabatanAnggota::firstOrCreate(
-            ['nama' => 'Member'],
+            ['nama' => 'Anggota'],
             ['tunggal' => false, 'penandatangan' => false]
         );
 

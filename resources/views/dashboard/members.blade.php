@@ -88,7 +88,7 @@
                     <thead class="bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 text-xs uppercase font-semibold border-b border-gray-200 dark:border-gray-700">
                         <tr>
                             <th class="px-4 py-3 w-10">
-                                <input type="checkbox" id="selectAllMembers" class="rounded border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-primary-600 focus:ring-primary-500" onclick="toggleSelectAllMembers(this)">
+                                <x-checkbox id="selectAllMembers" onclick="toggleSelectAllMembers(this)" />
                             </th>
                             <th class="px-4 py-3">No</th>
                             <th class="px-4 py-3">Karyawan</th>
@@ -103,7 +103,7 @@
                         @forelse ($members as $index => $member)
                             <tr class="hover:bg-gray-50/50 dark:hover:bg-[#2A2A2A] transition-colors">
                                 <td class="px-4 py-3">
-                                    <input type="checkbox" name="ids[]" value="{{ $member->id }}" form="bulkDeleteForm" class="member-checkbox rounded border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-primary-600 focus:ring-primary-500" onclick="updateBulkDeleteBar()">
+                                    <x-checkbox name="ids[]" value="{{ $member->id }}" form="bulkDeleteForm" class="member-checkbox" onclick="updateBulkDeleteBar()" />
                                 </td>
                                 <td class="px-4 py-3">{{ $members->firstItem() + $index }}</td>
                                 <td class="px-4 py-3">
@@ -114,14 +114,18 @@
                                 <td class="px-4 py-3">{{ $member->karyawan->departemen ?? '-' }}</td>
                                 <td class="px-4 py-3">
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/25 dark:text-blue-300">
-                                        {{ $member->jabatan->nama ?? 'Member' }}
+                                        {{ $member->jabatan->nama ?? 'Anggota' }}
                                     </span>
                                 </td>
                                 <td class="px-4 py-3">
                                     @if($member->status == 'registered')
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Registered</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Terdaftar</span>
                                     @elseif($member->status == 'pending')
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">Pending</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">Menunggu Verifikasi</span>
+                                    @elseif($member->status == 'inactive')
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-400">Tidak Aktif</span>
+                                    @elseif($member->status == 'rejected')
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">Ditolak</span>
                                     @else
                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-400">{{ ucfirst($member->status) }}</span>
                                     @endif
@@ -141,7 +145,7 @@
                                             'birth_date' => $member->karyawan->tanggal_lahir?->format('d F Y') ?? '-',
                                             'join_date' => $member->karyawan->tanggal_masuk?->format('d F Y') ?? '-',
                                             'address' => $member->karyawan->alamat ?? '-',
-                                            'role' => $member->jabatan->nama ?? '-',
+                                            'role' => $member->jabatan->nama ?? 'Anggota',
                                             'member_role_id' => $member->jabatan_anggota_id,
                                             'sign_image' => $member->tanda_tangan,
                                             'verify_token' => \App\Http\Controllers\CardController::encryptToken($member->uuid),
@@ -198,7 +202,7 @@
                             <thead class="bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 text-xs uppercase font-semibold border-b border-gray-200 dark:border-gray-700 sticky top-0">
                                 <tr>
                                     <th class="px-4 py-3 w-10">
-                                        <input type="checkbox" id="selectAllEmployees" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500" onclick="toggleSelectAll(this)">
+                                        <x-checkbox id="selectAllEmployees" onclick="toggleSelectAll(this)" />
                                     </th>
                                     <th class="px-4 py-3">No</th>
                                     <th class="px-4 py-3">Karyawan</th>
@@ -212,7 +216,7 @@
                                 @forelse ($availableEmployees as $index => $emp)
                                     <tr class="hover:bg-gray-50/50 dark:hover:bg-[#2A2A2A] transition-colors available-employee-row">
                                         <td class="px-4 py-3">
-                                            <input type="checkbox" name="employee_ids[]" value="{{ $emp->id }}" class="employee-checkbox rounded border-gray-300 text-primary-600 focus:ring-primary-500" onclick="updateSelectAllHeaderState()">
+                                            <x-checkbox name="employee_ids[]" value="{{ $emp->id }}" class="employee-checkbox" onclick="updateSelectAllHeaderState()" />
                                         </td>
                                         <td class="px-4 py-3">{{ $index + 1 }}</td>
                                         <td class="px-4 py-3">
@@ -297,9 +301,9 @@
                             <div id="statusDropdownMenu" class="custom-dropdown-menu absolute z-50 hidden mt-1.5 w-full bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-lg">
                                 <ul class="py-1 text-sm text-gray-700 dark:text-gray-300 font-medium">
                                     <li><button type="button" onclick="selectDropdownOption('statusFilterInput', 'statusFilterBtnText', 'statusDropdownMenu', 'Semua Status', 'Semua Status')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Semua Status</button></li>
-                                    <li><button type="button" onclick="selectDropdownOption('statusFilterInput', 'statusFilterBtnText', 'statusDropdownMenu', 'Registered Member', 'Anggota Terdaftar')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Anggota Terdaftar</button></li>
-                                    <li><button type="button" onclick="selectDropdownOption('statusFilterInput', 'statusFilterBtnText', 'statusDropdownMenu', 'Pending Verification', 'Menunggu Verifikasi')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Menunggu Verifikasi</button></li>
-                                    <li><button type="button" onclick="selectDropdownOption('statusFilterInput', 'statusFilterBtnText', 'statusDropdownMenu', 'Inactive', 'Tidak Aktif')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Tidak Aktif</button></li>
+                                    <li><button type="button" onclick="selectDropdownOption('statusFilterInput', 'statusFilterBtnText', 'statusDropdownMenu', 'Anggota Terdaftar', 'Anggota Terdaftar')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Anggota Terdaftar</button></li>
+                                    <li><button type="button" onclick="selectDropdownOption('statusFilterInput', 'statusFilterBtnText', 'statusDropdownMenu', 'Menunggu Verifikasi', 'Menunggu Verifikasi')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Menunggu Verifikasi</button></li>
+                                    <li><button type="button" onclick="selectDropdownOption('statusFilterInput', 'statusFilterBtnText', 'statusDropdownMenu', 'Tidak Aktif', 'Tidak Aktif')" class="inline-flex items-center w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">Tidak Aktif</button></li>
                                 </ul>
                             </div>
                         </div>
@@ -504,10 +508,10 @@
                 'rejected': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
             };
             const statusLabels = {
-                'registered': 'Registered',
-                'pending': 'Pending Verification',
-                'inactive': 'Inactive',
-                'rejected': 'Rejected'
+                'registered': 'Terdaftar',
+                'pending': 'Menunggu Verifikasi',
+                'inactive': 'Tidak Aktif',
+                'rejected': 'Ditolak'
             };
             const sColor = statusColors[member.status] || 'bg-gray-100 text-gray-800';
             const sLabel = statusLabels[member.status] || member.status;
@@ -599,16 +603,16 @@
                 
                 // Set custom message based on status
                 if (member.status === 'pending') {
-                    msgText.textContent = 'Waiting for admin confirmation. Digital card cannot be generated yet.';
+                    msgText.textContent = 'Menunggu konfirmasi admin. Kartu digital belum dapat dibuat.';
                     msgContainer.className = 'mb-4 p-4 border rounded-xl text-sm font-semibold flex items-center gap-3 bg-blue-50 border-blue-200 text-blue-800';
                 } else if (member.status === 'inactive') {
-                    msgText.textContent = 'Member is inactive. Digital card access revoked.';
+                    msgText.textContent = 'Anggota tidak aktif. Akses kartu digital dicabut.';
                     msgContainer.className = 'mb-4 p-4 border rounded-xl text-sm font-semibold flex items-center gap-3 bg-red-50 border-red-200 text-red-800';
                 } else if (member.status === 'rejected') {
-                    msgText.textContent = 'Registration rejected. Digital card not available.';
+                    msgText.textContent = 'Pendaftaran ditolak. Kartu digital tidak tersedia.';
                     msgContainer.className = 'mb-4 p-4 border rounded-xl text-sm font-semibold flex items-center gap-3 bg-red-50 border-red-200 text-red-800';
                 } else {
-                    msgText.textContent = 'Digital card cannot be generated yet. Member status must be "Registered".';
+                    msgText.textContent = 'Kartu digital belum dapat dibuat. Status anggota harus "Terdaftar".';
                     msgContainer.className = 'mb-4 p-4 border rounded-xl text-sm font-semibold flex items-center gap-3 bg-amber-50 border-amber-200 text-amber-800';
                 }
             }
@@ -905,16 +909,16 @@
                             </div>
                             <img src="{{ asset('logo_kspsi.png') }}" class="w-6 h-6 object-contain mb-0.5" alt="Logo KSPSI">
                         </div>
-                        <div class="text-[8px] space-y-0.5 flex-1">
+                        <div class="space-y-0.5 flex-1" style="font-size: 6px;">
                             <div class="flex"><div class="w-14 font-semibold">Nama</div><div>: <span id="cardName"></span></div></div>
-                            <div class="flex"><div class="w-14 font-semibold">Tempat/Tgl</div><div>: <span id="cardBirth"></span></div></div>
+                            <div class="flex"><div class="w-14 font-semibold">Tempat/Tgl.Lahir</div><div>: <span id="cardBirth"></span></div></div>
                             <div class="flex"><div class="w-14 font-semibold">P.U.K</div><div>: PT. Satnusa Persada Tbk</div></div>
                             <div class="flex"><div class="w-14 font-semibold">Alamat</div><div class="flex-1 truncate">: <span id="cardAddress"></span></div></div>
                         </div>
                         <div class="flex mt-1">
                             <div class="w-[45%]"></div>
                             <div class="w-[55%]">
-                                <p class="text-[7px] text-center text-gray-500 mb-0.5">Batam,</p>
+                                <p class="text-center text-gray-500 mb-0.5" style="font-size: 5px;">Batam,</p>
                                 <div class="flex justify-around">
                                     <div class="text-[8px] text-center">
                                         <div id="cardKetuaSign" class="h-5 flex items-center justify-center">
@@ -924,9 +928,9 @@
                                                 <img id="cardKetuaSignImg" src="" class="max-h-4 hidden" alt="">
                                             @endif
                                         </div>
-                                        <p class="text-gray-800 text-[7px]" id="cardKetuaName">{{ isset($ketua) ? $ketua->employee->name : '' }}</p>
+                                        <p class="text-gray-800" style="font-size: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="cardKetuaName">{{ isset($ketua) ? ($ketua->karyawan->nama ?? $ketua->employee->name ?? '') : '' }}</p>
                                         <div class="border-b border-gray-300 w-[90%] mx-auto mt-0.5 mb-0.5"></div>
-                                        <p class="text-gray-600 text-[7px]">Ketua</p>
+                                        <p class="text-gray-600" style="font-size: 5px;">Ketua</p>
                                     </div>
                                     <div class="text-[8px] text-center">
                                         <div id="cardSekretarisSign" class="h-5 flex items-center justify-center">
@@ -936,9 +940,9 @@
                                                 <img id="cardSekretarisSignImg" src="" class="max-h-4 hidden" alt="">
                                             @endif
                                         </div>
-                                        <p class="text-gray-800 text-[7px]" id="cardSekretarisName">{{ isset($sekretaris) ? $sekretaris->employee->name : '' }}</p>
+                                        <p class="text-gray-800" style="font-size: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="cardSekretarisName">{{ isset($sekretaris) ? ($sekretaris->karyawan->nama ?? $sekretaris->employee->name ?? '') : '' }}</p>
                                         <div class="border-b border-gray-300 w-[90%] mx-auto mt-0.5 mb-0.5"></div>
-                                        <p class="text-gray-600 text-[7px]">Sekretaris</p>
+                                        <p class="text-gray-600" style="font-size: 5px;">Sekretaris</p>
                                     </div>
                                 </div>
                             </div>
@@ -983,7 +987,7 @@
                     <div>
                         <label for="editRole" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Peran <span class="text-red-500">*</span></label>
                         <div class="relative custom-dropdown-container">
-                            <input type="hidden" name="member_role_id" id="editRole" value="">
+                            <input type="hidden" name="jabatan_anggota_id" id="editRole" value="">
                             <button type="button" onclick="toggleCustomDropdown('editRoleDropdownMenu')" class="w-full flex items-center justify-between px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors text-gray-700 dark:text-white cursor-pointer shadow-sm">
                                 <span id="editRoleBtnText" class="truncate font-medium">Pilih Peran</span>
                                 <svg class="w-4 h-4 text-gray-400 pointer-events-none flex-shrink-0 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>
@@ -993,14 +997,14 @@
                                     @foreach($memberRoles as $role)
                                         <li>
                                             <button type="button" 
-                                                onclick="selectEditRole('{{ $role->id }}', '{{ $role->name }}')" 
+                                                onclick="selectEditRole('{{ $role->id }}', '{{ $role->nama }}')" 
                                                 class="inline-flex flex-col items-start w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors text-left">
-                                                <span>{{ $role->name }}</span>
-                                                @if($role->is_sign || $role->is_single)
+                                                <span>{{ $role->nama }}</span>
+                                                @if($role->penandatangan || $role->tunggal)
                                                     <span class="text-[10px] text-gray-400 font-normal mt-0.5">
-                                                        @if($role->is_sign) Tanda tangan di kartu @endif
-                                                        @if($role->is_sign && $role->is_single) | @endif
-                                                        @if($role->is_single) Maks 1 orang @endif
+                                                        @if($role->penandatangan) Tanda tangan di kartu @endif
+                                                        @if($role->penandatangan && $role->tunggal) | @endif
+                                                        @if($role->tunggal) Maks 1 orang @endif
                                                     </span>
                                                 @endif
                                             </button>
@@ -1025,14 +1029,14 @@
                             <img id="currentSignImg" src="" alt="Current Signature" class="max-w-[140px] max-h-[70px] border border-gray-200 rounded bg-white p-1 hidden">
                         </div>
 
-                        <input type="file" id="editSignImage" name="sign_image" accept="image/png,image/jpeg" class="block w-full text-xs text-gray-500 dark:text-gray-400
-                            file:mr-3 file:py-2.5 file:px-4
-                            file:rounded-xl file:border-0
+                        <input type="file" id="editSignImage" name="tanda_tangan" accept="image/png,image/jpeg" class="block w-full text-xs text-gray-500 dark:text-gray-400
+                            p-1.5 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all
+                            file:mr-3 file:py-1.5 file:px-4
+                            file:rounded-lg file:border-0
                             file:text-xs file:font-bold
                             file:bg-primary-50 file:text-primary-800
                             dark:file:bg-primary-900/30 dark:file:text-primary-300
-                            hover:file:bg-primary-100
-                            border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" />
+                            hover:file:bg-primary-100" />
                         <p class="text-[11px] text-gray-400 mt-1.5">Format PNG/JPG, maks 2MB. Tanda tangan akan muncul pada kartu digital.</p>
                     </div>
                 </div>
@@ -1121,7 +1125,7 @@
 
         const roleData = {
             @foreach($memberRoles as $role)
-                '{{ $role->id }}': { isSign: {{ $role->is_sign ? 'true' : 'false' }}, isSingle: {{ $role->is_single ? 'true' : 'false' }}, name: '{{ addslashes($role->name) }}' },
+                '{{ $role->id }}': { isSign: {{ $role->penandatangan ? 'true' : 'false' }}, isSingle: {{ $role->tunggal ? 'true' : 'false' }}, name: '{{ addslashes($role->nama) }}' },
             @endforeach
         };
 
@@ -1142,13 +1146,13 @@
             
             let hintText = '';
             if (isSign && isSingle) {
-                hintText = 'This role can only be held by 1 person. Signature will appear on digital card.';
+                hintText = 'Jabatan ini hanya bisa dipegang oleh 1 orang. Tanda tangan akan muncul di kartu digital.';
             } else if (isSingle) {
-                hintText = 'This role can only be held by 1 person.';
+                hintText = 'Jabatan ini hanya bisa dipegang oleh 1 orang.';
             } else if (isSign) {
-                hintText = 'This role\'s signature will appear on the digital card.';
+                hintText = 'Tanda tangan jabatan akan muncul di kartu digital.';
             } else {
-                hintText = 'Standard SPSI member role.';
+                hintText = 'Jabatan anggota SPSI.';
             }
             hint.textContent = hintText;
         }

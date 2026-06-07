@@ -82,7 +82,7 @@
                     <thead class="bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 text-xs uppercase font-semibold border-b border-gray-200 dark:border-gray-700">
                         <tr>
                             <th class="px-4 py-3 w-10">
-                                <input type="checkbox" id="selectAllFeedbacks" class="rounded border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-primary-600 focus:ring-primary-500" onclick="toggleSelectAllFeedbacks(this)">
+                                <x-checkbox id="selectAllFeedbacks" onclick="toggleSelectAllFeedbacks(this)" />
                             </th>
                             <th class="px-4 py-3 w-10">No</th>
                             <th class="px-4 py-3">Pengirim</th>
@@ -96,7 +96,7 @@
                         @forelse($feedbacks as $index => $fb)
                             <tr class="hover:bg-gray-50/50 dark:hover:bg-[#2A2A2A] transition-colors">
                                 <td class="px-4 py-3">
-                                    <input type="checkbox" name="ids[]" value="{{ $fb->id }}" form="bulkDeleteForm" class="feedback-checkbox rounded border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-primary-600 focus:ring-primary-500" onclick="updateBulkDeleteBar()">
+                                    <x-checkbox name="ids[]" value="{{ $fb->id }}" form="bulkDeleteForm" class="feedback-checkbox" onclick="updateBulkDeleteBar()" />
                                 </td>
                                 <td class="px-4 py-3 text-gray-500 dark:text-gray-400">{{ $feedbacks->firstItem() + $index }}</td>
                                 <td class="px-4 py-3">
