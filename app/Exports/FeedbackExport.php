@@ -40,8 +40,8 @@ class FeedbackExport
         $row = 2;
         foreach ($feedbacks as $index => $fb) {
             $sheet->setCellValue("A{$row}", $index + 1);
-            $sheet->setCellValue("B{$row}", $fb->anggota->karyawan->badge ?? '-');
-            $sheet->setCellValue("C{$row}", $fb->anggota->karyawan->nama ?? 'Tidak diketahui');
+            $sheet->setCellValue("B{$row}", $fb->anonim ? 'Rahasia' : ($fb->anggota->karyawan->badge ?? '-'));
+            $sheet->setCellValue("C{$row}", $fb->anonim ? 'Anonim' : ($fb->anggota->karyawan->nama ?? 'Tidak diketahui'));
             $sheet->setCellValue("D{$row}", $fb->deskripsi);
             $sheet->setCellValue("E{$row}", $fb->created_at?->format('d/m/Y H:i'));
             $sheet->setCellValue("F{$row}", $fb->status);

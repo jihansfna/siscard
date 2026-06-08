@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-slot name="title">Manajemen Tanggapan</x-slot>
+    <x-slot name="title">Saran</x-slot>
 
     <section class="text-gray-800 dark:text-gray-200 transition-colors">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -100,8 +100,18 @@
                                 </td>
                                 <td class="px-4 py-3 text-gray-500 dark:text-gray-400">{{ $feedbacks->firstItem() + $index }}</td>
                                 <td class="px-4 py-3">
-                                    <div class="font-bold text-gray-800 dark:text-white">{{ $fb->anggota->karyawan->nama ?? 'Unknown' }}</div>
-                                    <div class="text-xs text-gray-500">{{ $fb->anggota->karyawan->badge ?? '-' }}</div>
+                                    @if($fb->anonim)
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-bold text-gray-800 dark:text-white italic">Anonim</span>
+                                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">
+                                                <x-heroicon-o-eye-slash class="w-3 h-3 mr-0.5" />Tersembunyi
+                                            </span>
+                                        </div>
+                                        <div class="text-xs text-gray-400 italic">Identitas dirahasiakan</div>
+                                    @else
+                                        <div class="font-bold text-gray-800 dark:text-white">{{ $fb->anggota->karyawan->nama ?? 'Unknown' }}</div>
+                                        <div class="text-xs text-gray-500">{{ $fb->anggota->karyawan->badge ?? '-' }}</div>
+                                    @endif
                                 </td>
                                 <td class="px-4 py-3 max-w-xs truncate" title="{{ $fb->deskripsi }}">
                                     {{ $fb->deskripsi }}
@@ -127,6 +137,7 @@
                                                 'status' => $fb->status,
                                                 'remark' => $fb->catatan ?? '',
                                                 'image' => $fb->anggota->karyawan->foto ?? null,
+                                                'anonim' => $fb->anonim,
                                             ];
                                         @endphp
                                         <button type="button" title="Lihat Detail" data-feedback="{{ json_encode($feedbackData) }}" onclick="openFeedbackDetail(this)" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer">
@@ -405,21 +416,29 @@
         function openFeedbackDetail(btn) {
             const feedback = JSON.parse(btn.dataset.feedback);
             
-            // Set sender info
-            document.getElementById('detailSenderName').textContent = feedback.name;
-            document.getElementById('detailSenderBadge').textContent = 'Badge: ' + feedback.badge;
-            
-            // Set sender image/fallback
+            // Set sender info (handle anonymous)
             const senderImage = document.getElementById('detailSenderImage');
             const senderFallback = document.getElementById('detailSenderFallback');
-            if (feedback.image) {
-                senderImage.src = '/storage/' + feedback.image;
-                senderImage.classList.remove('hidden');
-                senderFallback.classList.add('hidden');
-            } else {
+            
+            if (feedback.anonim) {
+                document.getElementById('detailSenderName').textContent = 'Anonim';
+                document.getElementById('detailSenderBadge').textContent = 'Identitas dirahasiakan';
                 senderImage.classList.add('hidden');
                 senderFallback.classList.remove('hidden');
-                senderFallback.textContent = feedback.name.charAt(0).toUpperCase();
+                senderFallback.textContent = '?';
+            } else {
+                document.getElementById('detailSenderName').textContent = feedback.name;
+                document.getElementById('detailSenderBadge').textContent = 'Badge: ' + feedback.badge;
+                
+                if (feedback.image) {
+                    senderImage.src = '/storage/' + feedback.image;
+                    senderImage.classList.remove('hidden');
+                    senderFallback.classList.add('hidden');
+                } else {
+                    senderImage.classList.add('hidden');
+                    senderFallback.classList.remove('hidden');
+                    senderFallback.textContent = feedback.name.charAt(0).toUpperCase();
+                }
             }
             
             // Set date and description

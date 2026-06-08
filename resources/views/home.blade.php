@@ -131,24 +131,29 @@
                         @csrf
                         <div>
                             <label for="deskripsi" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Pesan Anda <span class="text-red-500">*</span></label>
-                            <textarea id="deskripsi" name="deskripsi" rows="4" required placeholder="Tulis saran, masukan, atau keluhan Anda di sini..." class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm resize-none"></textarea>
+                            <textarea id="deskripsi" name="deskripsi" rows="4" required placeholder="Tulis saran, masukan, atau keluhan Anda di sini..." class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm resize-none"></textarea>
                         </div>
                         
                         <div class="space-y-2">
                             <label for="dokumen" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Lampiran Dokumen / Berkas <span class="text-xs text-gray-400 font-normal">(Opsional)</span></label>
-                            <input type="file" id="dokumen" name="dokumen" class="block w-full text-xs text-gray-500 dark:text-gray-400
-                                file:mr-3 file:py-2.5 file:px-4
-                                file:rounded-xl file:border-0
-                                file:text-xs file:font-bold
-                                file:bg-primary-50 file:text-primary-800
-                                dark:file:bg-primary-900/30 dark:file:text-primary-400
-                                hover:file:bg-primary-100 dark:hover:file:bg-primary-900/50
-                                border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" />
+                            <input type="file" id="dokumen" name="dokumen" class="block w-full text-sm text-gray-500 border border-gray-200 rounded-xl cursor-pointer bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:border-gray-700 focus:outline-none file:cursor-pointer file:bg-primary-50 dark:file:bg-primary-900/30 file:border-0 file:border-r file:border-solid file:border-gray-200 dark:file:border-gray-700 file:!mr-4 file:!py-3 file:!px-5 dark:file:text-primary-400 file:!text-primary-700 file:!font-bold hover:file:bg-primary-100 dark:hover:file:bg-primary-900/50 transition-all" />
                             <p class="text-[10px] text-gray-400 font-semibold leading-normal">Mendukung PDF, Word, Excel, Gambar, atau ZIP (Maks. 10MB)</p>
                         </div>
                         
                         <p class="text-xs text-gray-500 dark:text-gray-400">Masukan Anda akan dikirim langsung dan ditinjau oleh HRD.</p>
-                        
+
+                        {{-- Toggle Anonim --}}
+                        <div class="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl">
+                            <label for="anonim" class="relative inline-flex items-center cursor-pointer flex-shrink-0 mt-0.5">
+                                <input type="checkbox" id="anonim" name="anonim" value="1" class="sr-only peer">
+                                <div class="w-9 h-5 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:after:border-gray-500 peer-checked:bg-primary-600"></div>
+                            </label>
+                            <div>
+                                <p class="text-sm font-bold text-gray-700 dark:text-gray-300">Kirim sebagai anonim</p>
+                                <p class="text-[11px] text-gray-400 dark:text-gray-500 mt-0.5">Identitas Anda tidak akan ditampilkan kepada admin saat meninjau saran ini.</p>
+                            </div>
+                        </div>
+
                         <button type="submit" class="w-full justify-center px-6 py-3 text-sm font-bold bg-primary-600 hover:bg-primary-700 text-white rounded-xl shadow-lg shadow-primary-600/20 transition-all flex items-center gap-2 cursor-pointer">
                             <span class="btn-text">Kirim Masukan</span>
                             <svg class="btn-spinner animate-spin h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

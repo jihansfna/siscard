@@ -65,7 +65,10 @@ class UserController extends Controller
             abort(403, 'Masa kerja Anda telah berakhir.');
         }
 
-        $anggota->update(['status' => 'registered']);
+        $anggota->update([
+            'status' => 'registered',
+            'disetujui_pada' => now()
+        ]);
 
         LogAnggota::create([
             'anggota_id' => $anggota->id,

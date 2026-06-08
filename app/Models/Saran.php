@@ -13,8 +13,13 @@ class Saran extends Model
         'anggota_id',
         'berkas',
         'deskripsi',
+        'anonim',
         'status',
         'catatan',
+    ];
+
+    protected $casts = [
+        'anonim' => 'boolean',
     ];
 
     public function anggota()

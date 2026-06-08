@@ -93,6 +93,7 @@ class FeedbackController extends Controller
             'anggota_id' => $anggota->id,
             'deskripsi' => $request->deskripsi,
             'berkas' => $filePath,
+            'anonim' => $request->boolean('anonim'),
             'status' => 'Waiting',
         ]);
 

@@ -51,8 +51,8 @@
             @foreach($feedbacks as $index => $fb)
             <tr>
                 <td style="text-align: center;">{{ $index + 1 }}</td>
-                <td>{{ $fb->anggota->karyawan->nama ?? 'Tidak diketahui' }}</td>
-                <td>{{ $fb->anggota->karyawan->badge ?? '-' }}</td>
+                <td>{{ $fb->anonim ? 'Anonim' : ($fb->anggota->karyawan->nama ?? 'Tidak diketahui') }}</td>
+                <td>{{ $fb->anonim ? 'Rahasia' : ($fb->anggota->karyawan->badge ?? '-') }}</td>
                 <td>{{ $fb->deskripsi }}</td>
                 <td>{{ $fb->created_at?->format('d/m/Y H:i') }}</td>
                 <td>

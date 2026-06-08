@@ -13,77 +13,100 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // 1. Total Members (Registered)
-        $totalMembers = Anggota::where('status', 'registered')->count();
-        $totalMembersThisMonth = Anggota::where('status', 'registered')
+        // ─── RINGKASAN CARDS ─────────────────────────────────────
+
+        // 1. Total Anggota Aktif
+        $totalActiveMembers = Anggota::where('status', 'registered')->count();
+        $totalActiveMembersThisMonth = Anggota::where('status', 'registered')
             ->whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', Carbon::now()->year)
             ->count();
 
-        // 2. Download Kartu Hari Ini
-        $downloadsToday = LogAnggota::where('aktivitas', 'Download Card')
-            ->whereDate('created_at', Carbon::today())
-            ->count();
-        
-        $downloadsYesterday = LogAnggota::where('aktivitas', 'Download Card')
-            ->whereDate('created_at', Carbon::yesterday())
-            ->count();
-            
-        $downloadsDiff = $downloadsToday - $downloadsYesterday;
-        $downloadsDiffText = $downloadsDiff >= 0 ? "+{$downloadsDiff} dari kemarin" : "{$downloadsDiff} dari kemarin";
-
-        // 3. Pending Verification
+        // 2. Pending Verifikasi
         $pendingMembers = Anggota::where('status', 'pending')->count();
+        // Average verification time (days from created to disetujui_pada)
+        $avgVerificationDays = Anggota::whereNotNull('disetujui_pada')
+            ->selectRaw('AVG(DATEDIFF(disetujui_pada, created_at)) as avg_days')
+            ->value('avg_days');
+        $avgVerificationDays = $avgVerificationDays ? round($avgVerificationDays, 1) : 0;
 
-        // 4. Feedbacks Received
-        $totalFeedbacks = Saran::count();
+        // 3. Aduan Belum Selesai
         $pendingFeedbacks = Saran::where('status', 'Waiting')->count();
 
-        // 5. Grafik Scan Barcode (Current Month)
-        $daysInMonth = Carbon::now()->daysInMonth;
-        $scansPerDay = array_fill(1, $daysInMonth, 0);
-        
-        $scanLogs = LogAnggota::select(DB::raw('DAY(created_at) as day'), DB::raw('count(*) as total'))
-            ->where('aktivitas', 'Verify Card')
-            ->whereMonth('created_at', Carbon::now()->month)
-            ->whereYear('created_at', Carbon::now()->year)
-            ->groupBy('day')
-            ->get();
-            
-        foreach ($scanLogs as $log) {
-            $scansPerDay[$log->day] = $log->total;
-        }
-        
-        $chartData = [
-            'labels' => array_keys($scansPerDay),
-            'data' => array_values($scansPerDay),
-            'monthName' => Carbon::now()->translatedFormat('F Y'),
-            'average' => count(array_filter($scansPerDay)) > 0 ? round(array_sum($scansPerDay) / count(array_filter($scansPerDay)), 1) : 0
-        ];
+        // ─── GRAFIK: PERTUMBUHAN ANGGOTA (6 BULAN TERAKHIR) ──────
 
-        // 6. Member Status (Donut Chart)
+        $monthlyGrowth = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $date = Carbon::now()->subMonths($i);
+            $monthName = $date->translatedFormat('M');
+
+            // Anggota baru bulan ini
+            $newMembers = Anggota::whereMonth('created_at', $date->month)
+                ->whereYear('created_at', $date->year)
+                ->count();
+
+            // Anggota keluar/nonaktif bulan ini
+            $exitedMembers = Anggota::whereIn('status', ['inactive', 'rejected'])
+                ->whereMonth('updated_at', $date->month)
+                ->whereYear('updated_at', $date->year)
+                ->count();
+
+            $monthlyGrowth[] = [
+                'month' => $monthName,
+                'new' => $newMembers,
+                'exited' => $exitedMembers,
+            ];
+        }
+
+        $growthLabels = array_column($monthlyGrowth, 'month');
+        $growthNew = array_column($monthlyGrowth, 'new');
+        $growthExited = array_column($monthlyGrowth, 'exited');
+
+        $now = Carbon::now();
+        $sixMonthsAgo = Carbon::now()->subMonths(5)->startOfMonth();
+        $growthPeriodLabel = $sixMonthsAgo->translatedFormat('M') . ' – ' . $now->translatedFormat('M Y');
+
+        // ─── GRAFIK: AKTIVITAS KARTU DIGITAL (30 HARI TERAKHIR) ──
+
+        $activityDownloads = [];
+        $activityScans = [];
+        $activityLabels = [];
+
+        for ($i = 29; $i >= 0; $i--) {
+            $date = Carbon::today()->subDays($i);
+            $activityLabels[] = $date->format('j');
+
+            $downloads = LogAnggota::where('aktivitas', 'Download Card')
+                ->whereDate('created_at', $date)
+                ->count();
+            $activityDownloads[] = $downloads;
+
+            $scans = LogAnggota::where('aktivitas', 'Verify Card')
+                ->whereDate('created_at', $date)
+                ->count();
+            $activityScans[] = $scans;
+        }
+
+        // ─── STATUS ANGGOTA (PROGRESS BARS) ──────────────────────
+
         $allMembers = Anggota::count();
         if ($allMembers > 0) {
-            $active = round((Anggota::where('status', 'registered')->count() / $allMembers) * 100);
-            $inactive = round((Anggota::where('status', 'inactive')->count() / $allMembers) * 100);
-            // using rejected/pending for the rest
-            $exited = round((Anggota::whereIn('status', ['rejected', 'pending'])->count() / $allMembers) * 100);
+            $activePercent = round((Anggota::where('status', 'registered')->count() / $allMembers) * 100);
+            $inactivePercent = round((Anggota::where('status', 'inactive')->count() / $allMembers) * 100);
+            $exitedPercent = 100 - $activePercent - $inactivePercent;
         } else {
-            $active = 0; $inactive = 0; $exited = 0;
+            $activePercent = 0;
+            $inactivePercent = 0;
+            $exitedPercent = 0;
         }
 
-        $donutData = [
-            'active' => $active,
-            'inactive' => $inactive,
-            'exited' => $exited
-        ];
-
         return view('dashboard', compact(
-            'totalMembers', 'totalMembersThisMonth',
-            'downloadsToday', 'downloadsDiffText',
-            'pendingMembers',
-            'totalFeedbacks', 'pendingFeedbacks',
-            'chartData', 'donutData'
+            'totalActiveMembers', 'totalActiveMembersThisMonth',
+            'pendingMembers', 'avgVerificationDays',
+            'pendingFeedbacks',
+            'growthLabels', 'growthNew', 'growthExited', 'growthPeriodLabel',
+            'activityLabels', 'activityDownloads', 'activityScans',
+            'activePercent', 'inactivePercent', 'exitedPercent'
         ));
     }
 }

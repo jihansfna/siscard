@@ -1029,14 +1029,7 @@
                             <img id="currentSignImg" src="" alt="Current Signature" class="max-w-[140px] max-h-[70px] border border-gray-200 rounded bg-white p-1 hidden">
                         </div>
 
-                        <input type="file" id="editSignImage" name="tanda_tangan" accept="image/png,image/jpeg" class="block w-full text-xs text-gray-500 dark:text-gray-400
-                            p-1.5 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all
-                            file:mr-3 file:py-1.5 file:px-4
-                            file:rounded-lg file:border-0
-                            file:text-xs file:font-bold
-                            file:bg-primary-50 file:text-primary-800
-                            dark:file:bg-primary-900/30 dark:file:text-primary-300
-                            hover:file:bg-primary-100" />
+                        <input type="file" id="editSignImage" name="tanda_tangan" accept="image/png,image/jpeg" class="block w-full text-sm text-gray-500 border border-gray-200 rounded-xl cursor-pointer bg-gray-50 dark:text-gray-400 dark:bg-gray-900 dark:border-gray-700 focus:outline-none file:cursor-pointer file:bg-primary-50 dark:file:bg-primary-900/30 file:border-0 file:border-r file:border-solid file:border-gray-200 dark:file:border-gray-700 file:!mr-4 file:!py-3 file:!px-5 dark:file:text-primary-400 file:!text-primary-700 file:!font-bold hover:file:bg-primary-100 dark:hover:file:bg-primary-900/50 transition-all" />
                         <p class="text-[11px] text-gray-400 mt-1.5">Format PNG/JPG, maks 2MB. Tanda tangan akan muncul pada kartu digital.</p>
                     </div>
                 </div>

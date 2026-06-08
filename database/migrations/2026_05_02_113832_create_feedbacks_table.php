@@ -27,6 +27,8 @@ return new class extends Migration
 
             $table->text('deskripsi');
 
+            $table->boolean('anonim')->default(false);
+
             $table->enum('status', [
                 'pending',
                 'reviewed',
