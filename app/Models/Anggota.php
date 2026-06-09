@@ -16,8 +16,6 @@ class Anggota extends Model
         'karyawan_id',
         'jabatan_anggota_id',
         'status',
-        'aktif',
-        'tampil',
         'disetujui_pada',
         'tanda_tangan',
     ];

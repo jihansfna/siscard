@@ -33,12 +33,6 @@ return new class extends Migration
                 'rejected'
             ])->default('pending');
 
-            $table->boolean('aktif')
-                ->default(true);
-
-            $table->boolean('tampil')
-                ->default(true);
-
             $table->timestamp('disetujui_pada')
                 ->nullable();
 
