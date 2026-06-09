@@ -26,10 +26,7 @@ return new class extends Migration
             $table->string('status')->nullable(); // new status if applicable
 
             $table->text('deskripsi')->nullable(); // detail description
-
-            $table->text('catatan')
-                ->nullable();
-
+            
             $table->timestamps();
         });
     }
