@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LogAnggota;
+use App\Models\RiwayatAnggota;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -11,7 +11,7 @@ class HistoryController extends Controller
 {
     public function index(Request $request)
     {
-        $query = LogAnggota::with(['anggota.karyawan', 'pelaku'])->latest();
+        $query = RiwayatAnggota::with(['anggota.karyawan', 'pelaku'])->latest();
 
         if ($request->filled('q')) {
             $search = $request->q;
@@ -41,8 +41,8 @@ class HistoryController extends Controller
 
         $logs = $query->paginate($request->query('perPage', 10))->withQueryString();
         
-        $activities = LogAnggota::select('aktivitas')->distinct()->pluck('aktivitas');
-        $actors = User::whereHas('logAnggota')->get(); // Get users who have done something
+        $activities = RiwayatAnggota::select('aktivitas')->distinct()->pluck('aktivitas');
+        $actors = User::whereHas('riwayatAnggota')->get(); // Get users who have done something
 
         return view('dashboard.history', compact('logs', 'activities', 'actors'));
     }
@@ -54,7 +54,7 @@ class HistoryController extends Controller
     
     public function exportPdf(Request $request)
     {
-        $logs = LogAnggota::with(['anggota.karyawan', 'pelaku'])->latest()->get();
+        $logs = RiwayatAnggota::with(['anggota.karyawan', 'pelaku'])->latest()->get();
         $pdf = Pdf::loadView('exports.history-pdf', compact('logs'));
         $pdf->setPaper('A4', 'landscape');
         return $pdf->download('history_export_' . date('Y-m-d_H-i-s') . '.pdf');

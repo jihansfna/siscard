@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Anggota;
 use App\Models\Saran;
-use App\Models\LogAnggota;
+use App\Models\RiwayatAnggota;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -76,12 +76,12 @@ class DashboardController extends Controller
             $date = Carbon::today()->subDays($i);
             $activityLabels[] = $date->format('j');
 
-            $downloads = LogAnggota::where('aktivitas', 'Download Card')
+            $downloads = RiwayatAnggota::where('aktivitas', 'Download Card')
                 ->whereDate('created_at', $date)
                 ->count();
             $activityDownloads[] = $downloads;
 
-            $scans = LogAnggota::where('aktivitas', 'Verify Card')
+            $scans = RiwayatAnggota::where('aktivitas', 'Verify Card')
                 ->whereDate('created_at', $date)
                 ->count();
             $activityScans[] = $scans;

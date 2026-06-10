@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Karyawan;
 use App\Models\Anggota;
 use App\Models\Saran;
-use App\Models\LogAnggota;
+use App\Models\RiwayatAnggota;
 
 class SearchController extends Controller
 {
@@ -68,7 +68,7 @@ class SearchController extends Controller
 
             case 'history':
                 // Search by activity, description, actor name, or target member name
-                $results = LogAnggota::with(['pelaku', 'anggota.karyawan'])
+                $results = RiwayatAnggota::with(['pelaku', 'anggota.karyawan'])
                     ->where(function($query) use ($q) {
                         $query->where('aktivitas', 'like', "%{$q}%")
                               ->orWhere('deskripsi', 'like', "%{$q}%")

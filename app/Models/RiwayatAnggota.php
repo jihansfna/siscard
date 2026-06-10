@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LogAnggota extends Model
+class RiwayatAnggota extends Model
 {
     use HasFactory;
 
-    protected $table = 'log_anggota';
+    protected $table = 'riwayat_anggota';
 
     protected $guarded = ['id'];
 

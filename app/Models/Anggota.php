@@ -34,9 +34,9 @@ class Anggota extends Model
         return $this->belongsTo(JabatanAnggota::class, 'jabatan_anggota_id');
     }
 
-    public function logAnggota()
+    public function riwayatAnggota()
     {
-        return $this->hasMany(LogAnggota::class, 'anggota_id')->orderBy('created_at', 'asc');
+        return $this->hasMany(RiwayatAnggota::class, 'anggota_id')->orderBy('created_at', 'asc');
     }
 
     // Accessors for backward compatibility with English views

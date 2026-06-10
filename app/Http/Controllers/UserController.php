@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Karyawan;
 use App\Models\Anggota;
 use App\Models\Saran;
-use App\Models\LogAnggota;
+use App\Models\RiwayatAnggota;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -70,7 +70,7 @@ class UserController extends Controller
             'disetujui_pada' => now()
         ]);
 
-        LogAnggota::create([
+        RiwayatAnggota::create([
             'anggota_id' => $anggota->id,
             'pelaku_id' => auth()->id(),
             'aktivitas' => 'Update Status',

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Anggota;
 use App\Models\Karyawan;
 use App\Models\JabatanAnggota;
-use App\Models\LogAnggota;
+use App\Models\RiwayatAnggota;
 use Illuminate\Support\Str;
 
 class MemberController extends Controller
@@ -19,7 +19,7 @@ class MemberController extends Controller
 
         $sortDirection = $sort === 'asc' ? 'asc' : 'desc';
 
-        // Optimized: removed 'logAnggota.pelaku' — now loaded on-demand via AJAX
+        // Optimized: removed 'riwayatAnggota.pelaku' — now loaded on-demand via AJAX
         $members = Anggota::with(['karyawan', 'jabatan'])
             ->when($q, function($query, $q) {
                 $query->whereHas('karyawan', function($q2) use ($q) {
@@ -76,7 +76,7 @@ class MemberController extends Controller
      */
     public function logs(Anggota $member)
     {
-        $logs = $member->logAnggota()->with('pelaku')->orderBy('created_at', 'asc')->get();
+        $logs = $member->riwayatAnggota()->with('pelaku')->orderBy('created_at', 'asc')->get();
 
         return response()->json($logs->map(function($log) {
             return [
@@ -151,7 +151,7 @@ class MemberController extends Controller
 
         $member->update($data);
 
-        LogAnggota::create([
+        RiwayatAnggota::create([
             'anggota_id' => $member->id,
             'pelaku_id' => auth()->id(),
             'aktivitas' => 'Update',
@@ -229,7 +229,7 @@ class MemberController extends Controller
                 'updated_at' => now()->addSecond(),
             ];
         }
-        LogAnggota::insert($logsToInsert);
+        RiwayatAnggota::insert($logsToInsert);
 
         $message = count($activeEmployees) . ' Anggota berhasil ditambahkan.';
         if ($inactiveCount > 0) {
@@ -259,7 +259,7 @@ class MemberController extends Controller
                 'updated_at' => now(),
             ];
         }
-        LogAnggota::insert($logsToInsert);
+        RiwayatAnggota::insert($logsToInsert);
 
         Anggota::whereIn('id', $request->ids)->delete();
 

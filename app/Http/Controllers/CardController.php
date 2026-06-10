@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Anggota;
 use App\Models\Karyawan;
 use App\Models\JabatanAnggota;
-use App\Models\LogAnggota;
+use App\Models\RiwayatAnggota;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -82,7 +82,7 @@ class CardController extends Controller
 
         $filename = 'Kartu_Digital_SPSI_' . str_replace(' ', '_', $member->karyawan->nama) . '.pdf';
 
-        LogAnggota::create([
+        RiwayatAnggota::create([
             'anggota_id' => $member->id,
             'pelaku_id' => auth()->id(),
             'aktivitas' => 'Download Card',
@@ -123,7 +123,7 @@ class CardController extends Controller
 
         $filename = 'Kartu_Digital_SPSI_' . str_replace(' ', '_', $member->karyawan->nama) . '.pdf';
 
-        LogAnggota::create([
+        RiwayatAnggota::create([
             'anggota_id' => $member->id,
             'pelaku_id' => auth()->id(),
             'aktivitas' => 'Download Card',
@@ -164,7 +164,7 @@ class CardController extends Controller
         // Build verification data including signatures for display
         $verifyData = $this->buildVerifyData($member);
 
-        LogAnggota::create([
+        RiwayatAnggota::create([
             'anggota_id' => $member->id,
             'pelaku_id' => null, // Public scan
             'aktivitas' => 'Verify Card',

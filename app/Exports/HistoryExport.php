@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\LogAnggota;
+use App\Models\RiwayatAnggota;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -13,7 +13,7 @@ class HistoryExport
 {
     public function export()
     {
-        $logs = LogAnggota::with(['anggota.karyawan', 'pelaku'])->orderBy('created_at', 'desc')->get();
+        $logs = RiwayatAnggota::with(['anggota.karyawan', 'pelaku'])->orderBy('created_at', 'desc')->get();
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Riwayat Log');

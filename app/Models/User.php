@@ -52,9 +52,9 @@ class User extends Authenticatable
     /**
      * Get the activity logs performed by the user.
      */
-    public function logAnggota()
+    public function riwayatAnggota()
     {
-        return $this->hasMany(LogAnggota::class, 'pelaku_id');
+        return $this->hasMany(RiwayatAnggota::class, 'pelaku_id');
     }
 
     // Accessors for backward compatibility with English views
