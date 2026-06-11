@@ -332,7 +332,7 @@
                 <img src="{{ asset('logo_kspsi.png') }}" alt="Logo KSPSI">
             </div>
             <h1>VERIFIKASI KEANGGOTAAN SPSI</h1>
-            <p>SP LEM SPSI &mdash; PT. Sat Nusapersada Tbk</p>
+            <p>SP LEM SPSI &mdash; PT XYZ</p>
         </div>
         <div class="card-body">
             @if($verified)
@@ -379,7 +379,7 @@
                         </div>
                         <div class="info-item">
                             <label>PUK</label>
-                            <p>PT. Sat Nusapersada Tbk</p>
+                            <p>PT XYZ</p>
                         </div>
                     </div>
                     <div class="divider"></div>

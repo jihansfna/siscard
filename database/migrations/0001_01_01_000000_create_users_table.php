@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('nama');
             $table->string('badge')->unique();
             $table->string('password');
+            $table->string('pertanyaan_rahasia', 500)->nullable();
+            $table->string('jawaban_rahasia')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

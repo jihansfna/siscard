@@ -22,10 +22,6 @@ class MasterEmployeeController extends Controller
         return view('dashboard.employees.index', ['employees' => $karyawan]);
     }
 
-    public function create()
-    {
-        return view('dashboard.employees.create');
-    }
 
     public function store(Request $request)
     {
@@ -41,6 +37,8 @@ class MasterEmployeeController extends Controller
             'tanggal_lahir' => 'nullable|date|before:tanggal_masuk',
             'alamat' => 'nullable|string',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'pertanyaan_rahasia' => 'nullable|string|max:500',
+            'jawaban_rahasia' => 'nullable|string|max:255|required_with:pertanyaan_rahasia',
         ], [
             'badge.required' => 'Badge ID wajib diisi.',
             'badge.unique' => 'Badge ID sudah terdaftar.',
@@ -50,32 +48,43 @@ class MasterEmployeeController extends Controller
             'foto.image' => 'File foto harus berupa gambar.',
             'foto.mimes' => 'Format foto harus jpeg, png, atau jpg.',
             'foto.max' => 'Ukuran foto maksimal 2MB.',
+            'pertanyaan_rahasia.max' => 'Pertanyaan rahasia maksimal 500 karakter.',
+            'jawaban_rahasia.max' => 'Jawaban rahasia maksimal 255 karakter.',
+            'jawaban_rahasia.required_with' => 'Jawaban rahasia wajib diisi jika pertanyaan rahasia diisi.',
         ]);
 
         if ($request->hasFile('foto')) {
             $validated['foto'] = $request->file('foto')->store('employees', 'public');
         }
 
+        // Extract security question fields before creating employee
+        $pertanyaanRahasia = $validated['pertanyaan_rahasia'] ?? null;
+        $jawabanRahasia = $validated['jawaban_rahasia'] ?? null;
+        unset($validated['pertanyaan_rahasia'], $validated['jawaban_rahasia']);
+
         Karyawan::create($validated);
 
-        // Create associated user account with default password
+        // Create associated user account with default password and security question
+        $userData = [
+            'nama' => $validated['nama'],
+            'password' => Hash::make('P4ssword'),
+            'peran' => 'user',
+        ];
+
+        if ($pertanyaanRahasia && $jawabanRahasia) {
+            $userData['pertanyaan_rahasia'] = $pertanyaanRahasia;
+            $userData['jawaban_rahasia'] = Hash::make(strtolower(trim($jawabanRahasia)));
+        }
+
         User::firstOrCreate(
             ['badge' => $validated['badge']],
-            [
-                'nama' => $validated['nama'],
-                'password' => Hash::make('P4ssword'),
-                'peran' => 'user'
-            ]
+            $userData
         );
 
         return redirect()->route('dashboard.employees.index')
             ->with('success', 'Data karyawan berhasil ditambahkan.');
     }
 
-    public function edit(Karyawan $employee)
-    {
-        return view('dashboard.employees.edit', ['employee' => $employee]);
-    }
 
     public function update(Request $request, Karyawan $employee)
     {
@@ -91,6 +100,8 @@ class MasterEmployeeController extends Controller
             'tanggal_lahir' => 'nullable|date|before:tanggal_masuk',
             'alamat' => 'nullable|string',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'pertanyaan_rahasia' => 'nullable|string|max:500',
+            'jawaban_rahasia' => 'nullable|string|max:255|required_with:pertanyaan_rahasia',
         ], [
             'badge.required' => 'Badge ID wajib diisi.',
             'badge.unique' => 'Badge ID sudah terdaftar.',
@@ -100,6 +111,9 @@ class MasterEmployeeController extends Controller
             'foto.image' => 'File foto harus berupa gambar.',
             'foto.mimes' => 'Format foto harus jpeg, png, atau jpg.',
             'foto.max' => 'Ukuran foto maksimal 2MB.',
+            'pertanyaan_rahasia.max' => 'Pertanyaan rahasia maksimal 500 karakter.',
+            'jawaban_rahasia.max' => 'Jawaban rahasia maksimal 255 karakter.',
+            'jawaban_rahasia.required_with' => 'Jawaban rahasia wajib diisi jika pertanyaan rahasia diisi.',
         ]);
 
         if ($request->hasFile('foto')) {
@@ -109,16 +123,31 @@ class MasterEmployeeController extends Controller
             $validated['foto'] = $request->file('foto')->store('employees', 'public');
         }
 
+        // Extract security question fields before updating employee
+        $pertanyaanRahasia = $validated['pertanyaan_rahasia'] ?? null;
+        $jawabanRahasia = $validated['jawaban_rahasia'] ?? null;
+        unset($validated['pertanyaan_rahasia'], $validated['jawaban_rahasia']);
+
         $oldBadge = $employee->badge;
         $employee->update($validated);
 
         // Update associated user account if it exists
         $user = User::where('badge', $oldBadge)->first();
         if ($user) {
-            $user->update([
+            $userUpdate = [
                 'badge' => $validated['badge'],
                 'nama' => $validated['nama'],
-            ]);
+            ];
+
+            // Update security question if provided
+            if ($pertanyaanRahasia) {
+                $userUpdate['pertanyaan_rahasia'] = $pertanyaanRahasia;
+                if ($jawabanRahasia) {
+                    $userUpdate['jawaban_rahasia'] = Hash::make(strtolower(trim($jawabanRahasia)));
+                }
+            }
+
+            $user->update($userUpdate);
         }
 
         return redirect()->route('dashboard.employees.index')

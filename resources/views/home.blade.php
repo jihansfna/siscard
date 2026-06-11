@@ -61,59 +61,81 @@
         </div>
     @endif
 
-    <!-- Top Grid: Account Details -->
+    {{-- ═══ PROFILE + DIGITAL CARD ═══ --}}
     <div class="grid gap-6 md:grid-cols-3 mb-6 {{ $accessStatus !== 'registered' ? 'blur-md pointer-events-none select-none opacity-50' : '' }}">
-        <!-- Profile Sidebar -->
+        {{-- Profile Card --}}
         <div class="md:col-span-1 min-w-0">
-            <div class="bg-white dark:bg-gray-900 border border-blue-100 dark:border-gray-700 rounded-2xl p-6 shadow-sm flex flex-col items-center text-center h-full justify-center transition-colors">
-                <div class="w-24 h-24 rounded-full overflow-hidden shadow-lg mb-4 border-2 border-white dark:border-gray-800 bg-gradient-to-br from-primary-800 to-primary-500 flex items-center justify-center flex-shrink-0">
+            <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-700 rounded-2xl p-6 shadow-sm flex flex-col items-center text-center h-full transition-colors">
+                <div class="w-24 h-24 rounded-2xl overflow-hidden shadow-lg mb-4 bg-gradient-to-br from-primary-800 to-primary-500 flex items-center justify-center flex-shrink-0 ring-4 ring-primary-100 dark:ring-primary-900/30 relative">
                     @if($employee && $employee->foto)
-                        <img src="{{ asset('storage/' . $employee->foto) }}" alt="Profile" class="w-full h-full object-cover">
+                        <!-- Loading Spinner -->
+                        <div id="profilePhotoLoading" class="absolute inset-0 bg-gray-50 dark:bg-gray-800 flex items-center justify-center z-10">
+                            <svg class="animate-spin w-6 h-6 text-primary-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        </div>
+                        <img src="{{ asset('storage/' . $employee->foto) }}" alt="Profile" class="w-full h-full object-cover opacity-0 transition-opacity duration-300 relative z-20" onload="document.getElementById('profilePhotoLoading')?.remove(); this.classList.remove('opacity-0');">
                     @else
-                        <span class="text-white text-3xl font-extrabold">{{ strtoupper(substr(Auth::user()->nama, 0, 1)) }}</span>
+                        <span class="text-white text-3xl font-extrabold relative z-20">{{ strtoupper(substr(Auth::user()->nama, 0, 1)) }}</span>
                     @endif
                 </div>
-                <h2 class="text-xl font-bold text-gray-800 dark:text-white">{{ Auth::user()->nama }}</h2>
-                <p class="text-gray-500 dark:text-gray-400 font-medium mt-1">{{ Auth::user()->badge }}</p>
-                <div class="mt-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-semibold border border-green-200 dark:border-green-800/50">
-                    <span class="w-2 h-2 rounded-full bg-green-500"></span>
-                    Aktif
+                <h2 class="text-lg font-bold text-gray-800 dark:text-white">{{ Auth::user()->nama }}</h2>
+                <p class="text-gray-500 dark:text-gray-400 text-sm mt-0.5">{{ $employee->jabatan ?? 'Karyawan' }}</p>
+
+                <div class="mt-4 w-full space-y-2.5 text-left">
+                    <div class="flex items-center justify-between py-2 border-b border-gray-50 dark:border-gray-800">
+                        <span class="text-xs text-gray-400 font-medium">Bergabung</span>
+                        <span class="text-xs font-bold text-gray-700 dark:text-gray-300">{{ $member?->disetujui_pada?->format('d M Y') ?? Auth::user()->created_at->format('d M Y') }}</span>
+                    </div>
+                    <div class="flex items-center justify-between py-2">
+                        <span class="text-xs text-gray-400 font-medium">Status</span>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Aktif
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Profile Details -->
-        <div class="md:col-span-2 min-w-0">
-            <div class="bg-white dark:bg-gray-900 border border-blue-100 dark:border-gray-700 rounded-2xl p-6 shadow-sm h-full flex flex-col justify-between transition-colors">
-                <div>
-                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-700 pb-3">Informasi Akun</h3>
+        {{-- Digital Card Preview --}}
+        <div class="md:col-span-2 min-w-0 flex flex-col h-full">
+            <div class="rounded-2xl overflow-hidden shadow-lg relative flex flex-col h-full" style="background: linear-gradient(135deg, #1b007c 0%, #3730a3 100%);">
+                <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px); background-size: 40px 40px;"></div>
+                
+                <div class="relative p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6 flex-1">
+                    <div class="text-center sm:text-left flex-1 max-w-md">
+                        <p class="text-indigo-300 text-xs font-bold uppercase tracking-widest mb-4 flex items-center justify-center sm:justify-start gap-2">
+                            <x-heroicon-s-identification class="w-4 h-4" />
+                            Kartu Anggota Digital
+                        </p>
+                        <p class="text-white text-base sm:text-lg leading-relaxed font-medium">
+                            Silahkan download kartu digital SPSI anda berikut dibawah ini atau anda bisa scan barcode yang tersedia.
+                        </p>
+                    </div>
                     
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-y-4 gap-x-6">
-                        <div>
-                            <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">Nama Lengkap</p>
-                            <p class="font-medium text-gray-800 dark:text-gray-200">{{ Auth::user()->nama }}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">ID Badge</p>
-                            <p class="font-medium text-gray-800 dark:text-gray-200">{{ Auth::user()->badge }}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">Bergabung Sejak</p>
-                            <p class="font-medium text-gray-800 dark:text-gray-200">{{ Auth::user()->created_at->format('d M Y') }}</p>
-                        </div>
+                    <div class="flex-shrink-0 w-36 h-36 bg-white rounded-2xl flex items-center justify-center shadow-2xl overflow-hidden p-3 ring-4 ring-white/20 relative">
+                        @if($member && $member->uuid)
+                            <!-- Loading Spinner -->
+                            <div id="qrCodeLoading" class="absolute inset-0 bg-gray-50 flex items-center justify-center z-10">
+                                <svg class="animate-spin w-8 h-8 text-primary-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            </div>
+                            <img src="{{ route('qr.image', ['data' => url('/verify/' . \App\Http\Controllers\CardController::encryptToken($member->uuid))]) }}" alt="QR Code Verifikasi" class="w-full h-full object-contain opacity-0 transition-opacity duration-300 relative z-20" onload="document.getElementById('qrCodeLoading')?.remove(); this.classList.remove('opacity-0');">
+                        @else
+                            <div class="w-full h-full bg-gray-50 flex items-center justify-center text-gray-400 text-xs font-medium">QR Code</div>
+                        @endif
                     </div>
                 </div>
 
-                <div class="mt-6 pt-6 border-t border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div>
-                        <p class="text-sm font-semibold text-gray-800 dark:text-white">Kartu Digital Saya</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Unduh kartu anggota SPSI dalam format PDF.</p>
+                <div class="px-6 sm:px-8 pb-6 relative mt-auto">
+                    <div class="h-px bg-white/10 mb-5"></div>
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <a href="{{ route('user.card.download') }}"
+                           id="btnDownloadCard"
+                           class="inline-flex w-full sm:w-auto justify-center items-center gap-2 px-6 py-3 bg-white text-primary-800 rounded-xl text-sm font-bold hover:bg-indigo-50 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all shadow focus:outline-none">
+                            <x-heroicon-o-arrow-down-tray class="w-5 h-5 download-icon" />
+                            <svg class="download-spinner animate-spin w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            <span class="download-text">Unduh Kartu Digital (PDF)</span>
+                        </a>
+                        <p class="text-indigo-300/80 text-xs text-center sm:text-right hidden sm:block">Format resmi ber-barcode<br>SPSI PT XYZ</p>
                     </div>
-                    <a href="{{ route('user.card.download') }}" 
-                        class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors shadow-sm shadow-emerald-600/20 no-underline">
-                        <x-heroicon-o-arrow-down-tray class="w-4 h-4" />
-                        <span>Unduh Kartu Digital</span>
-                    </a>
                 </div>
             </div>
         </div>
@@ -230,11 +252,13 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="px-4 py-12 text-center text-gray-500 dark:text-gray-400">
-                                            <div class="flex flex-col items-center justify-center">
-                                                <x-heroicon-o-chat-bubble-bottom-center-text class="w-10 h-10 text-gray-300 dark:text-gray-600 mb-3" />
-                                                <p class="font-medium text-sm">Anda belum pernah mengirim saran.</p>
-                                                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Gunakan form di sebelah kiri untuk mengirim saran.</p>
+                                        <td colspan="5" class="px-4 py-16 text-center">
+                                            <div class="flex flex-col items-center justify-center gap-3">
+                                                <div class="w-16 h-16 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center">
+                                                    <x-heroicon-o-chat-bubble-bottom-center-text class="w-8 h-8 text-indigo-400" />
+                                                </div>
+                                                <p class="font-bold text-gray-700 dark:text-gray-300">Belum ada saran dikirim</p>
+                                                <p class="text-sm text-gray-400 dark:text-gray-500 max-w-xs">Gunakan form di sebelah kiri untuk menyampaikan saran atau masukan Anda kepada HRD.</p>
                                             </div>
                                         </td>
                                     </tr>
@@ -331,10 +355,12 @@
                                 </div>
                             </div>
                         @empty
-                            <div class="py-12 text-center text-gray-500 dark:text-gray-400 flex flex-col items-center justify-center">
-                                <x-heroicon-o-chat-bubble-bottom-center-text class="w-10 h-10 text-gray-300 dark:text-gray-600 mb-3" />
-                                <p class="font-medium text-sm">Anda belum pernah mengirim saran.</p>
-                                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Gunakan form di sebelah kiri untuk mengirim saran.</p>
+                            <div class="py-16 text-center flex flex-col items-center justify-center gap-3">
+                                <div class="w-16 h-16 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center">
+                                    <x-heroicon-o-chat-bubble-bottom-center-text class="w-8 h-8 text-indigo-400" />
+                                </div>
+                                <p class="font-bold text-gray-700 dark:text-gray-300">Belum ada saran dikirim</p>
+                                <p class="text-sm text-gray-400 dark:text-gray-500 max-w-xs">Gunakan form di sebelah kiri untuk menyampaikan saran kepada HRD.</p>
                             </div>
                         @endforelse
                     </div>
@@ -616,5 +642,36 @@
                 });
             }
         });
+
+        // Efek loading saat klik unduh kartu PDF
+        document.getElementById('btnDownloadCard')?.addEventListener('click', function(e) {
+            const btn = this;
+            const icon = btn.querySelector('.download-icon');
+            const spinner = btn.querySelector('.download-spinner');
+            const text = btn.querySelector('.download-text');
+            
+            // Tampilkan state loading
+            icon.classList.add('hidden');
+            spinner.classList.remove('hidden');
+            text.textContent = 'Menyiapkan PDF...';
+            btn.classList.add('pointer-events-none', 'opacity-80');
+
+            // Kembalikan ke state awal setelah 3.5 detik (asumsi waktu download mulai)
+            setTimeout(() => {
+                icon.classList.remove('hidden');
+                spinner.classList.add('hidden');
+                text.textContent = 'Unduh Kartu Digital (PDF)';
+                btn.classList.remove('pointer-events-none', 'opacity-80');
+            }, 3500);
+        });
     </script>
+
+    {{-- ═══ FOOTER ═══ --}}
+    <footer class="mt-10 pt-6 border-t border-gray-100 dark:border-gray-800">
+        <div class="flex justify-center items-center">
+            <p class="text-xs text-gray-400 dark:text-gray-500 text-center">
+                © 2027 PT XYZ — All Rights Reserved
+            </p>
+        </div>
+    </footer>
 </x-app-layout>

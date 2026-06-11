@@ -13,6 +13,8 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
     
+    Route::post('/password/verify-badge', [AuthController::class, 'verifyBadge'])->name('password.verify_badge');
+    Route::post('/password/verify-answer', [AuthController::class, 'verifySecurityAnswer'])->name('password.verify_answer');
     Route::post('/password/reset', [AuthController::class, 'resetPassword'])->name('password.reset.submit');
 });
 
@@ -49,7 +51,7 @@ Route::middleware(['auth', 'role:admin', 'check.default.password'])->prefix('das
     Route::post('/import/employees', [\App\Http\Controllers\ExportImportController::class, 'importEmployees'])->name('dashboard.import.employees');
 
     // Master Employee CRUD
-    Route::resource('employees', \App\Http\Controllers\MasterEmployeeController::class)->names('dashboard.employees');
+    Route::resource('employees', \App\Http\Controllers\MasterEmployeeController::class)->except(['create', 'edit'])->names('dashboard.employees');
     Route::patch('/employees/{employee}/set-inactive', [\App\Http\Controllers\MasterEmployeeController::class, 'setInactive'])->name('dashboard.employees.set_inactive');
 
     // Members

@@ -164,7 +164,7 @@
                                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                         <div class="space-y-2">
                                                             <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Badge ID <span class="text-red-500">*</span></label>
-                                                            <input name="badge" type="text" value="{{ old('badge', $employee->badge) }}" required 
+                                                            <input name="badge" type="text" value="{{ old('badge', $employee->badge) }}" required autocomplete="off"
                                                                 class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
                                                         </div>
 
@@ -221,14 +221,14 @@
                                                                     <img src="{{ asset('storage/' . $employee->foto) }}" alt="Photo" class="w-20 h-20 object-cover rounded-lg border border-gray-200">
                                                                 </div>
                                                                 <input name="foto" type="file" accept=".jpg,.jpeg,.png" onchange="handleFileChange(this)"
-                                                                    class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                                                    class="block w-full text-sm text-gray-500 border border-gray-200 rounded-xl cursor-pointer bg-gray-50 dark:text-gray-400 dark:bg-gray-900 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent file:cursor-pointer file:bg-primary-50 dark:file:bg-primary-900/30 file:border-0 file:border-r file:border-solid file:border-gray-200 dark:file:border-gray-700 file:!mr-4 file:!py-3 file:!px-5 dark:file:text-primary-400 file:!text-primary-700 file:!font-bold hover:file:bg-primary-100 dark:hover:file:bg-primary-900/50 transition-all">
                                                                 <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, JPEG. Maks: 2MB</p>
                                                             </div>
                                                         @else
                                                             <div class="space-y-2">
                                                                 <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Foto Karyawan</label>
                                                                 <input name="foto" type="file" accept=".jpg,.jpeg,.png" onchange="handleFileChange(this)"
-                                                                    class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                                                    class="block w-full text-sm text-gray-500 border border-gray-200 rounded-xl cursor-pointer bg-gray-50 dark:text-gray-400 dark:bg-gray-900 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent file:cursor-pointer file:bg-primary-50 dark:file:bg-primary-900/30 file:border-0 file:border-r file:border-solid file:border-gray-200 dark:file:border-gray-700 file:!mr-4 file:!py-3 file:!px-5 dark:file:text-primary-400 file:!text-primary-700 file:!font-bold hover:file:bg-primary-100 dark:hover:file:bg-primary-900/50 transition-all">
                                                                 <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, JPEG. Maks: 2MB</p>
                                                             </div>
                                                         @endif
@@ -237,6 +237,47 @@
                                                             <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Alamat</label>
                                                             <textarea name="alamat" rows="3" placeholder="Alamat lengkap..." 
                                                                 class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm resize-none dark:text-white dark:placeholder-gray-500">{{ old('alamat', $employee->alamat) }}</textarea>
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Pertanyaan Keamanan --}}
+                                                    @php $userRecord = \App\Models\User::where('badge', $employee->badge)->first(); @endphp
+                                                    <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+                                                        <div class="flex items-center gap-2 mb-4">
+                                                            <x-heroicon-o-shield-check class="w-5 h-5 text-primary-600" />
+                                                            <h3 class="text-base font-bold text-gray-800 dark:text-white">Pertanyaan Keamanan</h3>
+                                                            @if ($userRecord && $userRecord->pertanyaan_rahasia)
+                                                                <span class="ml-auto inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                                                                    <x-heroicon-m-check-circle class="w-3.5 h-3.5" />
+                                                                    Sudah diatur
+                                                                </span>
+                                                            @else
+                                                                <span class="ml-auto inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">
+                                                                    <x-heroicon-m-exclamation-triangle class="w-3.5 h-3.5" />
+                                                                    Belum diatur
+                                                                </span>
+                                                            @endif
+                                                        </div>
+                                                        <p class="text-xs text-gray-500 mb-4">Digunakan untuk verifikasi identitas saat pemulihan kata sandi. Jawaban akan dienkripsi.</p>
+                                                        
+                                                        <div class="grid grid-cols-1 gap-6">
+                                                            <div class="space-y-2 group">
+                                                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Pertanyaan Rahasia</label>
+                                                                <input name="pertanyaan_rahasia" type="text" 
+                                                                    value="{{ old('pertanyaan_rahasia', $userRecord->pertanyaan_rahasia ?? '') }}" 
+                                                                    placeholder="Contoh: Apa nama hewan peliharaan pertama saya?" maxlength="500"
+                                                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                                            </div>
+
+                                                            <div class="space-y-2 group">
+                                                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Jawaban Rahasia</label>
+                                                                <input name="jawaban_rahasia" type="password" autocomplete="new-password"
+                                                                    placeholder="{{ ($userRecord && $userRecord->jawaban_rahasia) ? 'Kosongkan jika tidak ingin mengubah' : 'Masukkan jawaban rahasia' }}" maxlength="255"
+                                                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                                                @if ($userRecord && $userRecord->jawaban_rahasia)
+                                                                    <p class="text-xs text-gray-400 mt-1">Jawaban tersimpan terenkripsi. Isi ulang hanya jika ingin mengubah.</p>
+                                                                @endif
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -305,7 +346,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2 group">
                             <label for="badge" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Badge ID <span class="text-red-500">*</span></label>
-                            <input id="badge" name="badge" type="text" value="{{ old('badge') }}" placeholder="Contoh: 12345" required 
+                            <input id="badge" name="badge" type="text" value="{{ old('badge') }}" placeholder="Contoh: 12345" required autocomplete="off"
                                 class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
                         </div>
 
@@ -358,7 +399,7 @@
                         <div class="space-y-2 group">
                             <label for="foto" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Foto Karyawan</label>
                             <input id="foto" name="foto" type="file" accept=".jpg,.jpeg,.png" onchange="handleFileChange(this)"
-                                class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                class="block w-full text-sm text-gray-500 border border-gray-200 rounded-xl cursor-pointer bg-gray-50 dark:text-gray-400 dark:bg-gray-900 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent file:cursor-pointer file:bg-primary-50 dark:file:bg-primary-900/30 file:border-0 file:border-r file:border-solid file:border-gray-200 dark:file:border-gray-700 file:!mr-4 file:!py-3 file:!px-5 dark:file:text-primary-400 file:!text-primary-700 file:!font-bold hover:file:bg-primary-100 dark:hover:file:bg-primary-900/50 transition-all">
                             <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, JPEG. Maks: 2MB</p>
                         </div>
 
@@ -366,6 +407,31 @@
                             <label for="alamat" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Alamat</label>
                             <textarea id="alamat" name="alamat" rows="3" placeholder="Alamat lengkap..." 
                                 class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm resize-none dark:text-white dark:placeholder-gray-500">{{ old('alamat') }}</textarea>
+                        </div>
+                    </div>
+
+                    {{-- Pertanyaan Keamanan --}}
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+                        <div class="flex items-center gap-2 mb-4">
+                            <x-heroicon-o-shield-check class="w-5 h-5 text-primary-600" />
+                            <h3 class="text-base font-bold text-gray-800 dark:text-white">Pertanyaan Keamanan</h3>
+                        </div>
+                        <p class="text-xs text-gray-500 mb-4">Digunakan untuk verifikasi identitas saat pemulihan kata sandi. Jawaban akan dienkripsi dan tidak dapat dilihat oleh siapapun.</p>
+                        
+                        <div class="grid grid-cols-1 gap-6">
+                            <div class="space-y-2 group">
+                                <label for="pertanyaan_rahasia" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Pertanyaan Rahasia</label>
+                                <input id="pertanyaan_rahasia" name="pertanyaan_rahasia" type="text" value="{{ old('pertanyaan_rahasia') }}" 
+                                    placeholder="Contoh: Apa nama hewan peliharaan pertama saya?" maxlength="500"
+                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                            </div>
+
+                            <div class="space-y-2 group">
+                                <label for="jawaban_rahasia" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Jawaban Rahasia</label>
+                                <input id="jawaban_rahasia" name="jawaban_rahasia" type="password" value="{{ old('jawaban_rahasia') }}" autocomplete="new-password"
+                                    placeholder="Masukkan jawaban rahasia" maxlength="255"
+                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                            </div>
                         </div>
                     </div>
                 </form>

@@ -820,7 +820,7 @@
                     </div>
                     <div>
                         <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">PUK</p>
-                        <p class="font-bold text-gray-900 dark:text-white text-sm" id="detailPuk">PT. Sat Nusapersada Tbk</p>
+                        <p class="font-bold text-gray-900 dark:text-white text-sm" id="detailPuk">PT XYZ</p>
                     </div>
                     <div>
                         <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Alamat</p>

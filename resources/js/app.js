@@ -1,5 +1,5 @@
 import './bootstrap';
-import 'flowbite';
+
 
 const chartTooltip = document.createElement('div');
 chartTooltip.className = 'chart-tooltip';
@@ -138,7 +138,7 @@ document.addEventListener('click', (event) => {
             <text x="110" y="80" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff">${escapedQrValue}</text>
             <text x="110" y="100" font-family="Arial, sans-serif" font-size="12" fill="#cbd5e1">MEMBER ID</text>
             <image x="280" y="60" width="100" height="100" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${qrValue}"/>
-            <text x="20" y="220" font-family="Arial, sans-serif" font-size="10" fill="#ffffff" fill-opacity="0.6">PT. Sat Nusapersada Tbk</text>
+            <text x="20" y="220" font-family="Arial, sans-serif" font-size="10" fill="#ffffff" fill-opacity="0.6">PT XYZ</text>
         </svg>
     `.trim();
     const blob = new Blob([svg], { type: 'image/svg+xml' });

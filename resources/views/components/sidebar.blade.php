@@ -20,15 +20,14 @@ $currentUrl = request()->url();
 
 <aside id="sidebarMenu" class="w-64 flex-shrink-0 flex flex-col border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-xl shadow-gray-200/50 dark:shadow-none min-h-screen fixed inset-y-0 left-0 z-50 h-full transition-all duration-300 transform -translate-x-full md:translate-x-0">
     <div>
-        <div class="border-b border-gray-100 dark:border-gray-800 p-6 flex items-center justify-between">
-            <div>
-                <h2 class="text-2xl font-bold text-primary-800 dark:text-primary-400 tracking-tight">SISCARD</h2>
-                <span class="block mt-1 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ $sidebarLabel }}</span>
-            </div>
-            <!-- Mobile Close Button -->
-            <button type="button" onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors focus:outline-none cursor-pointer" aria-label="Close Menu">
+        <div class="px-5 pt-4 pb-0 md:hidden flex justify-end">
+            <button type="button" onclick="toggleSidebar()" class="p-2 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-red-600 dark:hover:text-red-400 transition-colors focus:outline-none cursor-pointer" aria-label="Close Sidebar">
                 <x-heroicon-o-x-mark class="w-6 h-6" />
             </button>
+        </div>
+        <div class="border-b border-gray-100 dark:border-gray-800 px-6 pb-5 pt-2 md:pt-6">
+            <h2 class="text-2xl font-bold text-primary-800 dark:text-primary-400 tracking-tight">SISCARD</h2>
+            <span class="block mt-1 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ $sidebarLabel }}</span>
         </div>
 
         <nav class="p-4 space-y-1">

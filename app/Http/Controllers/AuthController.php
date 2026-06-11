@@ -177,12 +177,12 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle password reset request.
+     * Step 1: Verify badge and return security question.
      */
-    public function resetPassword(Request $request)
+    public function verifyBadge(Request $request)
     {
         $request->validate([
-            'badge' => ['required', 'string'],
+            'badge' => ['required', 'string', 'max:255'],
         ], [
             'badge.required' => 'Badge ID wajib diisi.',
         ]);
@@ -190,20 +190,122 @@ class AuthController extends Controller
         $user = User::whereRaw('BINARY badge = ?', [$request->badge])->first();
 
         if (!$user) {
-            return back()->withErrors(['badge' => 'Badge ID tidak ditemukan dalam sistem.']);
+            return response()->json([
+                'success' => false,
+                'message' => 'Badge ID tidak ditemukan dalam sistem.',
+            ], 422);
         }
 
-        if (Hash::check('P4ssword', $user->password)) {
-            return back()->withInput()->withErrors([
-                'badge' => 'Password akun sudah dalam keadaan default.',
-            ]);
+        if (!$user->pertanyaan_rahasia || !$user->jawaban_rahasia) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Akun ini belum memiliki pertanyaan keamanan. Silakan hubungi HRD untuk mengatur ulang kata sandi.',
+            ], 422);
+        }
+
+        return response()->json([
+            'success' => true,
+            'pertanyaan_rahasia' => $user->pertanyaan_rahasia,
+            'badge' => $user->badge,
+        ]);
+    }
+
+    /**
+     * Step 2: Verify security answer.
+     */
+    public function verifySecurityAnswer(Request $request)
+    {
+        $request->validate([
+            'badge' => ['required', 'string', 'max:255'],
+            'jawaban_rahasia' => ['required', 'string', 'max:255'],
+        ], [
+            'badge.required' => 'Badge ID wajib diisi.',
+            'jawaban_rahasia.required' => 'Jawaban keamanan wajib diisi.',
+        ]);
+
+        $user = User::whereRaw('BINARY badge = ?', [$request->badge])->first();
+
+        if (!$user || !$user->pertanyaan_rahasia || !$user->jawaban_rahasia) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Verifikasi gagal. Silakan coba lagi.',
+            ], 422);
+        }
+
+        $answerNormalized = strtolower(trim($request->jawaban_rahasia));
+
+        if (!Hash::check($answerNormalized, $user->jawaban_rahasia)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Jawaban keamanan tidak sesuai.',
+            ], 422);
+        }
+
+        // Store a temporary token in session to authorize password reset
+        $resetToken = bin2hex(random_bytes(32));
+        session(['password_reset_token' => $resetToken, 'password_reset_badge' => $user->badge]);
+
+        return response()->json([
+            'success' => true,
+            'reset_token' => $resetToken,
+        ]);
+    }
+
+    /**
+     * Step 3: Reset password with new password after security verification.
+     */
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'badge' => ['required', 'string', 'max:255'],
+            'reset_token' => ['required', 'string'],
+            'new_password' => ['required', 'confirmed', Password::min(8)->letters()->mixedCase()->numbers()],
+        ], [
+            'badge.required' => 'Badge ID wajib diisi.',
+            'reset_token.required' => 'Token reset tidak valid.',
+            'new_password.required' => 'Kata sandi baru wajib diisi.',
+            'new_password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
+            'new_password.min' => 'Kata sandi minimal :min karakter.',
+        ]);
+
+        // Verify the reset token from session
+        $sessionToken = session('password_reset_token');
+        $sessionBadge = session('password_reset_badge');
+
+        if (!$sessionToken || $sessionToken !== $request->reset_token || $sessionBadge !== $request->badge) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sesi reset tidak valid. Silakan ulangi proses dari awal.',
+            ], 422);
+        }
+
+        $user = User::whereRaw('BINARY badge = ?', [$request->badge])->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Pengguna tidak ditemukan.',
+            ], 422);
+        }
+
+        if (Hash::check($request->new_password, $user->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kata sandi baru tidak boleh sama dengan kata sandi saat ini.',
+            ], 422);
         }
 
         $user->update([
-            'password' => Hash::make('P4ssword')
+            'password' => Hash::make($request->new_password),
         ]);
 
-        return redirect()->route('login')->with('success', 'Password berhasil direset ke password default.');
+        // Clear the session tokens
+        session()->forget(['password_reset_token', 'password_reset_badge']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Kata sandi berhasil diperbarui. Silakan masuk dengan kata sandi baru.',
+        ]);
     }
 
     /**

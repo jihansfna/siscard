@@ -317,7 +317,7 @@
                 </td>
                 <td class="info-cell">
                     <div class="info-label">PUK</div>
-                    <div class="info-value">PT. Sat Nusapersada Tbk</div>
+                    <div class="info-value">PT XYZ</div>
                 </td>
             </tr>
         </table>
