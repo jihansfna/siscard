@@ -181,6 +181,12 @@
                                                         </div>
 
                                                         <div class="space-y-2">
+                                                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Nomor Telepon (WA)</label>
+                                                            <input name="nomor_telp" type="text" value="{{ old('nomor_telp', $employee->nomor_telp) }}" placeholder="Contoh: 08123456789"
+                                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                                        </div>
+
+                                                        <div class="space-y-2">
                                                             <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Jabatan</label>
                                                             <input name="jabatan" type="text" value="{{ old('jabatan', $employee->jabatan) }}" 
                                                                 class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
@@ -359,6 +365,12 @@
                         <div class="space-y-2 group">
                             <label for="departemen" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Departemen</label>
                             <input id="departemen" name="departemen" type="text" value="{{ old('departemen') }}" placeholder="Contoh: IT" 
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                        </div>
+
+                        <div class="space-y-2 group">
+                            <label for="nomor_telp" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Nomor Telepon (WA)</label>
+                            <input id="nomor_telp" name="nomor_telp" type="text" value="{{ old('nomor_telp') }}" placeholder="Contoh: 08123456789" 
                                 class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
                         </div>
 

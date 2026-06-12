@@ -14,7 +14,7 @@ class Anggota extends Model
 
     protected $fillable = [
         'karyawan_id',
-        'jabatan_anggota_id',
+        'jabatan_id',
         'status',
         'disetujui_pada',
         'tanda_tangan',
@@ -31,7 +31,7 @@ class Anggota extends Model
 
     public function jabatan()
     {
-        return $this->belongsTo(JabatanAnggota::class, 'jabatan_anggota_id');
+        return $this->belongsTo(Jabatan::class, 'jabatan_id');
     }
 
     public function riwayatAnggota()
@@ -42,6 +42,6 @@ class Anggota extends Model
     // Accessors for backward compatibility with English views
     public function getEmployeeAttribute() { return $this->karyawan; }
     public function getRoleAttribute() { return $this->jabatan; }
-    public function getMemberRoleIdAttribute() { return $this->jabatan_anggota_id; }
+    public function getMemberRoleIdAttribute() { return $this->jabatan_id; }
     public function getSignImageAttribute() { return $this->tanda_tangan; }
 }

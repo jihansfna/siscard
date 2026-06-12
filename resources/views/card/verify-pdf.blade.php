@@ -183,7 +183,7 @@
             margin-top: 30pt;
         }
         .sig-location {
-            text-align: right;
+            text-align: center;
             font-size: 10pt;
             font-weight: bold;
             margin-bottom: 6pt;
@@ -215,28 +215,22 @@
             margin: 0 auto;
         }
         .sig-name {
-            font-size: 10pt;
+            font-size: 8pt;
             font-weight: bold;
             color: #1a1a1a;
-            border-top: 1pt solid #1a1a1a;
-            padding-top: 3pt;
-            display: inline-block;
+            margin-top: 2pt;
+        }
+        .sig-line {
+            border-bottom: 1pt solid #1a1a1a;
+            width: 80%;
+            margin: 2pt auto;
         }
         .sig-role {
-            font-size: 9pt;
+            font-size: 7pt;
             color: #6b7280;
         }
 
-        /* Stamp */
-        .stamp-wrapper {
-            text-align: center;
-            margin: 0 auto;
-        }
-        .stamp-wrapper img {
-            width: 65pt;
-            height: 65pt;
-            opacity: 0.7;
-        }
+
 
         /* Footer verification */
         .verify-footer {
@@ -269,7 +263,7 @@
                 <td class="header-text">
                     <div class="h1">PIMPINAN UNIT KERJA</div>
                     <div class="h2">SP LEM SPSI</div>
-                    <div class="h3">PT.SAT NUSAPERSADA TBK</div>
+                    <div class="h3">PT XYZ</div>
                 </td>
                 <td class="header-logo" style="text-align: right;">
                     @if($logoKspsi)
@@ -333,33 +327,35 @@
 
         <!-- Signatures -->
         <div class="sig-section">
-            <div class="sig-location">Batam,</div>
-            <table class="sig-table" cellpadding="0" cellspacing="0">
+            <table style="width: 100%;" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td class="sig-cell">
-                        <div class="sig-img-container">
-                            @if($ketuaSign)
-                                <img src="{{ $ketuaSign }}" class="sig-img" alt="TTD Ketua">
-                            @endif
-                        </div>
-                        <div class="sig-name">{{ $ketuaName }}</div>
-                        <div class="sig-role">Ketua</div>
-                    </td>
-                    <td class="sig-stamp-cell">
-                        <div class="stamp-wrapper">
-                            @if($logoLemSpsi)
-                                <img src="{{ $logoLemSpsi }}" alt="Stempel" style="opacity: 0.35;">
-                            @endif
-                        </div>
-                    </td>
-                    <td class="sig-cell">
-                        <div class="sig-img-container">
-                            @if($sekretarisSign)
-                                <img src="{{ $sekretarisSign }}" class="sig-img" alt="TTD Sekretaris">
-                            @endif
-                        </div>
-                        <div class="sig-name">{{ $sekretarisName }}</div>
-                        <div class="sig-role">Sekretaris</div>
+                    <td style="width: 40%;"></td>
+                    <td style="width: 60%; vertical-align: top;">
+                        <div class="sig-location">Batam,</div>
+                        <table class="sig-table" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td class="sig-cell">
+                                    <div class="sig-img-container">
+                                        @if($ketuaSign)
+                                            <img src="{{ $ketuaSign }}" class="sig-img" alt="TTD Ketua">
+                                        @endif
+                                    </div>
+                                    <div class="sig-name">{{ $ketuaName }}</div>
+                                    <div class="sig-line"></div>
+                                    <div class="sig-role">Ketua</div>
+                                </td>
+                                <td class="sig-cell">
+                                    <div class="sig-img-container">
+                                        @if($sekretarisSign)
+                                            <img src="{{ $sekretarisSign }}" class="sig-img" alt="TTD Sekretaris">
+                                        @endif
+                                    </div>
+                                    <div class="sig-name">{{ $sekretarisName }}</div>
+                                    <div class="sig-line"></div>
+                                    <div class="sig-role">Sekretaris</div>
+                                </td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
             </table>

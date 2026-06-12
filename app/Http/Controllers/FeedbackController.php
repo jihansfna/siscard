@@ -8,6 +8,7 @@ use App\Models\Saran;
 use App\Models\Karyawan;
 use App\Models\Anggota;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class FeedbackController extends Controller
 {
@@ -36,7 +37,7 @@ class FeedbackController extends Controller
     }
 
     // ADMIN: Mark feedback as completed with remark
-    public function complete(Request $request, Saran $feedback)
+    public function complete(Request $request, Saran $feedback, \App\Services\FonnteService $fonnte)
     {
         $request->validate([
             'catatan' => 'required|string',
@@ -49,7 +50,25 @@ class FeedbackController extends Controller
             'catatan' => $request->catatan,
         ]);
 
-        return back()->with('success', 'Saran berhasil ditandai sebagai Selesai.');
+        // Load relations to get phone number
+        $feedback->load('anggota.karyawan');
+        $namaAnggota = $feedback->anggota->karyawan->nama ?? 'Anggota';
+        $nomorWa = $feedback->anggota->karyawan->nomor_telp ?? null;
+
+        $pesanNotif = '';
+        if ($nomorWa) {
+            $pesan = "Halo {$namaAnggota},\n\nSaran yang Anda kirim melalui SIS-CARD telah mendapatkan tanggapan dari HRD.\n\nSilakan masuk ke sistem SIS-CARD untuk melihat detail tanggapan.\n\nTerima kasih.";
+            
+            $berhasilKirim = $fonnte->kirimPesan($nomorWa, $pesan);
+            
+            if (!$berhasilKirim) {
+                $pesanNotif = ' namun notifikasi WhatsApp gagal dikirim (cek log).';
+            }
+        } else {
+            $pesanNotif = ' namun nomor WA anggota belum terdaftar.';
+        }
+
+        return back()->with('success', 'Saran berhasil ditandai sebagai Selesai' . $pesanNotif);
     }
 
     // USER: Store a new feedback
@@ -107,6 +126,13 @@ class FeedbackController extends Controller
             'ids.*' => 'exists:saran,id',
         ]);
 
+        $feedbacks = Saran::whereIn('id', $request->ids)->get();
+        foreach ($feedbacks as $fb) {
+            if ($fb->berkas) {
+                Storage::disk('public')->delete($fb->berkas);
+            }
+        }
+
         Saran::whereIn('id', $request->ids)->delete();
 
         return redirect()->route('dashboard.feedbacks')
@@ -128,7 +154,7 @@ class FeedbackController extends Controller
 
         // Delete attachment if present
         if ($feedback->berkas) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($feedback->berkas);
+            Storage::disk('public')->delete($feedback->berkas);
         }
 
         $feedback->delete();

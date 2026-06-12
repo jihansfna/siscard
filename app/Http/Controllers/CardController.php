@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Anggota;
 use App\Models\Karyawan;
-use App\Models\JabatanAnggota;
+use App\Models\Jabatan;
 use App\Models\RiwayatAnggota;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -240,16 +240,16 @@ class CardController extends Controller
     {
         $karyawan = $member->karyawan;
 
-        // Get Ketua and Sekretaris from jabatan_anggota
-        $ketuaRole = JabatanAnggota::where('nama', 'Ketua')->first();
-        $sekretarisRole = JabatanAnggota::where('nama', 'Sekretaris')->first();
+        // Get Ketua and Sekretaris from jabatan
+        $ketuaRole = Jabatan::where('nama', 'Ketua')->first();
+        $sekretarisRole = Jabatan::where('nama', 'Sekretaris')->first();
 
         $ketua = null;
         $sekretaris = null;
 
         if ($ketuaRole) {
             $ketua = Anggota::with('karyawan')
-                ->where('jabatan_anggota_id', $ketuaRole->id)
+                ->where('jabatan_id', $ketuaRole->id)
                 ->where('status', 'registered')
                 ->whereNull('deleted_at')
                 ->first();
@@ -257,7 +257,7 @@ class CardController extends Controller
 
         if ($sekretarisRole) {
             $sekretaris = Anggota::with('karyawan')
-                ->where('jabatan_anggota_id', $sekretarisRole->id)
+                ->where('jabatan_id', $sekretarisRole->id)
                 ->where('status', 'registered')
                 ->whereNull('deleted_at')
                 ->first();
@@ -348,15 +348,15 @@ class CardController extends Controller
      */
     private function buildVerifyData(Anggota $member): array
     {
-        $ketuaRole = JabatanAnggota::where('nama', 'Ketua')->first();
-        $sekretarisRole = JabatanAnggota::where('nama', 'Sekretaris')->first();
+        $ketuaRole = Jabatan::where('nama', 'Ketua')->first();
+        $sekretarisRole = Jabatan::where('nama', 'Sekretaris')->first();
 
         $ketua = null;
         $sekretaris = null;
 
         if ($ketuaRole) {
             $ketua = Anggota::with('karyawan')
-                ->where('jabatan_anggota_id', $ketuaRole->id)
+                ->where('jabatan_id', $ketuaRole->id)
                 ->where('status', 'registered')
                 ->whereNull('deleted_at')
                 ->first();
@@ -364,7 +364,7 @@ class CardController extends Controller
 
         if ($sekretarisRole) {
             $sekretaris = Anggota::with('karyawan')
-                ->where('jabatan_anggota_id', $sekretarisRole->id)
+                ->where('jabatan_id', $sekretarisRole->id)
                 ->where('status', 'registered')
                 ->whereNull('deleted_at')
                 ->first();

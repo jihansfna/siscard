@@ -36,6 +36,7 @@ class MasterEmployeeController extends Controller
             'tempat_lahir' => 'nullable|string|max:255',
             'tanggal_lahir' => 'nullable|date|before:tanggal_masuk',
             'alamat' => 'nullable|string',
+            'nomor_telp' => 'nullable|string|max:20',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'pertanyaan_rahasia' => 'nullable|string|max:500',
             'jawaban_rahasia' => 'nullable|string|max:255|required_with:pertanyaan_rahasia',
@@ -99,6 +100,7 @@ class MasterEmployeeController extends Controller
             'tempat_lahir' => 'nullable|string|max:255',
             'tanggal_lahir' => 'nullable|date|before:tanggal_masuk',
             'alamat' => 'nullable|string',
+            'nomor_telp' => 'nullable|string|max:20',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'pertanyaan_rahasia' => 'nullable|string|max:500',
             'jawaban_rahasia' => 'nullable|string|max:255|required_with:pertanyaan_rahasia',
@@ -157,6 +159,12 @@ class MasterEmployeeController extends Controller
     public function destroy(Karyawan $employee)
     {
         $badge = $employee->badge;
+
+        // Hapus foto dari storage jika ada
+        if ($employee->foto) {
+            Storage::disk('public')->delete($employee->foto);
+        }
+
         $employee->delete();
         
         // Also delete the associated user account
@@ -175,6 +183,13 @@ class MasterEmployeeController extends Controller
 
         $karyawanList = Karyawan::whereIn('id', $request->ids)->get();
         $badges = $karyawanList->pluck('badge')->toArray();
+
+        // Hapus foto-foto dari storage
+        foreach ($karyawanList as $emp) {
+            if ($emp->foto) {
+                Storage::disk('public')->delete($emp->foto);
+            }
+        }
 
         // Delete associated user accounts
         User::whereIn('badge', $badges)->delete();

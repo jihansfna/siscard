@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Anggota;
 use App\Models\Karyawan;
-use App\Models\JabatanAnggota;
+use App\Models\Jabatan;
 use App\Models\RiwayatAnggota;
 use Illuminate\Support\Str;
 
@@ -54,16 +54,16 @@ class MemberController extends Controller
             })
             ->get();
 
-        $memberRoles = JabatanAnggota::where('nama', '!=', 'Anggota')->orderBy('nama')->get();
+        $memberRoles = Jabatan::where('nama', '!=', 'Anggota')->orderBy('nama')->get();
 
         // Optimized: single query for Ketua & Sekretaris instead of 4 separate queries
-        $signRoles = JabatanAnggota::whereIn('nama', ['Ketua', 'Sekretaris'])->pluck('id', 'nama');
+        $signRoles = Jabatan::whereIn('nama', ['Ketua', 'Sekretaris'])->pluck('id', 'nama');
         $signMembers = Anggota::with('karyawan')
-            ->whereIn('jabatan_anggota_id', $signRoles->values())
+            ->whereIn('jabatan_id', $signRoles->values())
             ->where('status', 'registered')
             ->whereNull('deleted_at')
             ->get()
-            ->keyBy('jabatan_anggota_id');
+            ->keyBy('jabatan_id');
 
         $ketua = $signMembers->get($signRoles->get('Ketua'));
         $sekretaris = $signMembers->get($signRoles->get('Sekretaris'));
@@ -93,24 +93,24 @@ class MemberController extends Controller
     public function update(Request $request, Anggota $member)
     {
         $request->validate([
-            'jabatan_anggota_id' => 'required|exists:jabatan_anggota,id',
+            'jabatan_id' => 'required|exists:jabatan,id',
             'tanda_tangan' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
         ], [
-            'jabatan_anggota_id.required' => 'Jabatan anggota wajib dipilih.',
-            'jabatan_anggota_id.exists' => 'Jabatan anggota tidak valid.',
+            'jabatan_id.required' => 'Jabatan wajib dipilih.',
+            'jabatan_id.exists' => 'Jabatan tidak valid.',
             'tanda_tangan.image' => 'Tanda tangan harus berupa gambar.',
             'tanda_tangan.mimes' => 'Format tanda tangan harus png, jpg, atau jpeg.',
             'tanda_tangan.max' => 'Ukuran tanda tangan maksimal 2MB.',
         ]);
 
-        $newRole = JabatanAnggota::findOrFail($request->jabatan_anggota_id);
+        $newRole = Jabatan::findOrFail($request->jabatan_id);
 
         // Enforce tunggal: if the new role is single-holder, demote the current holder
         if ($newRole->tunggal) {
-            $defaultRole = JabatanAnggota::where('nama', 'Anggota')->first();
+            $defaultRole = Jabatan::where('nama', 'Anggota')->first();
             if ($defaultRole) {
                 // Find old holders of this specific role
-                $oldHolders = Anggota::where('jabatan_anggota_id', $newRole->id)
+                $oldHolders = Anggota::where('jabatan_id', $newRole->id)
                     ->where('id', '!=', $member->id)
                     ->whereNull('deleted_at')
                     ->get();
@@ -126,7 +126,7 @@ class MemberController extends Controller
                     
                     // Demote to Member and clear signature
                     $oldHolder->update([
-                        'jabatan_anggota_id' => $defaultRole->id,
+                        'jabatan_id' => $defaultRole->id,
                         'tanda_tangan' => null
                     ]);
                 }
@@ -134,7 +134,7 @@ class MemberController extends Controller
         }
 
         $data = [
-            'jabatan_anggota_id' => $request->jabatan_anggota_id,
+            'jabatan_id' => $request->jabatan_id,
         ];
 
         // Handle signature upload
@@ -187,7 +187,7 @@ class MemberController extends Controller
             return back()->withErrors(['employee_ids' => 'Semua karyawan yang dipilih sudah tidak aktif (tanggal_keluar sudah lewat).']);
         }
 
-        $defaultRole = JabatanAnggota::firstOrCreate(
+        $defaultRole = Jabatan::firstOrCreate(
             ['nama' => 'Anggota'],
             ['tunggal' => false, 'penandatangan' => false]
         );
@@ -197,7 +197,7 @@ class MemberController extends Controller
             $anggotaToInsert[] = [
                 'uuid' => Str::uuid(),
                 'karyawan_id' => $empId,
-                'jabatan_anggota_id' => $defaultRole->id,
+                'jabatan_id' => $defaultRole->id,
                 'status' => 'pending',
                 'aktif' => true,
                 'created_at' => now(),

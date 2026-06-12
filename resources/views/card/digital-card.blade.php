@@ -279,7 +279,7 @@
             <tr>
                 <td class="info-label">P.U.K</td>
                 <td class="info-sep">:</td>
-                <td>PT. Satnusa Persada Tbk</td>
+                <td>PT XYZ</td>
             </tr>
             <tr>
                 <td class="info-label">Alamat</td>

@@ -22,8 +22,8 @@ return new class extends Migration
                 ->constrained('karyawan')
                 ->cascadeOnDelete();
 
-            $table->foreignId('jabatan_anggota_id')
-                ->constrained('jabatan_anggota')
+            $table->foreignId('jabatan_id')
+                ->constrained('jabatan')
                 ->cascadeOnUpdate();
             
             $table->enum('status', [

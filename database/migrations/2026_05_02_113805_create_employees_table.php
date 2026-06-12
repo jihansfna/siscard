@@ -26,6 +26,7 @@ return new class extends Migration
             $table->date('tanggal_masuk')->nullable();
             $table->date('tanggal_keluar')->nullable();
             $table->string('foto')->nullable();
+            $table->string('nomor_telp')->nullable();
             $table->string('tempat_lahir')->nullable();
             $table->date('tanggal_lahir')->nullable();
             $table->text('alamat')->nullable();

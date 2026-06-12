@@ -146,7 +146,7 @@
                                             'join_date' => $member->karyawan->tanggal_masuk?->format('d F Y') ?? '-',
                                             'address' => $member->karyawan->alamat ?? '-',
                                             'role' => $member->jabatan->nama ?? 'Anggota',
-                                            'member_role_id' => $member->jabatan_anggota_id,
+                                            'member_role_id' => $member->jabatan_id,
                                             'sign_image' => $member->tanda_tangan,
                                             'verify_token' => \App\Http\Controllers\CardController::encryptToken($member->uuid),
                                             'card_download_url' => route('dashboard.members.card.download', $member->id),
@@ -912,7 +912,7 @@
                         <div class="space-y-0.5 flex-1" style="font-size: 6px;">
                             <div class="flex"><div class="w-14 font-semibold">Nama</div><div>: <span id="cardName"></span></div></div>
                             <div class="flex"><div class="w-14 font-semibold">Tempat/Tgl.Lahir</div><div>: <span id="cardBirth"></span></div></div>
-                            <div class="flex"><div class="w-14 font-semibold">P.U.K</div><div>: PT. Satnusa Persada Tbk</div></div>
+                            <div class="flex"><div class="w-14 font-semibold">P.U.K</div><div>: PT XYZ</div></div>
                             <div class="flex"><div class="w-14 font-semibold">Alamat</div><div class="flex-1 truncate">: <span id="cardAddress"></span></div></div>
                         </div>
                         <div class="flex mt-1">
@@ -987,7 +987,7 @@
                     <div>
                         <label for="editRole" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Peran <span class="text-red-500">*</span></label>
                         <div class="relative custom-dropdown-container">
-                            <input type="hidden" name="jabatan_anggota_id" id="editRole" value="">
+                            <input type="hidden" name="jabatan_id" id="editRole" value="">
                             <button type="button" onclick="toggleCustomDropdown('editRoleDropdownMenu')" class="w-full flex items-center justify-between px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors text-gray-700 dark:text-white cursor-pointer shadow-sm">
                                 <span id="editRoleBtnText" class="truncate font-medium">Pilih Peran</span>
                                 <svg class="w-4 h-4 text-gray-400 pointer-events-none flex-shrink-0 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>

@@ -101,11 +101,7 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-between pt-2">
-                        <label class="flex items-center gap-2 cursor-pointer group">
-                            <input type="checkbox" name="remember" id="remember" class="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 cursor-pointer">
-                            <span class="text-sm font-medium text-gray-600 group-hover:text-gray-900 transition-colors">Ingat saya</span>
-                        </label>
+                    <div class="flex items-center justify-end pt-2">
                         <button type="button" id="show-reset-btn" class="text-sm font-bold text-primary-600 hover:text-primary-800 transition-colors">Lupa Kata Sandi?</button>
                     </div>
 

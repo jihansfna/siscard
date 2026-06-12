@@ -147,7 +147,7 @@ class AuthController extends Controller
         $isFirstLogin = $user->jumlah_login === 0 || $user->jumlah_login === null;
         $user->increment('jumlah_login');
 
-        Auth::login($user, $request->boolean('remember'));
+        Auth::login($user);
         $request->session()->regenerate();
 
         $greeting = $isFirstLogin

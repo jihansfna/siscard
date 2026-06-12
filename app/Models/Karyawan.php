@@ -20,6 +20,7 @@ class Karyawan extends Model
         'tanggal_masuk',
         'tanggal_keluar',
         'foto',
+        'nomor_telp',
         'tempat_lahir',
         'tanggal_lahir',
         'alamat',
