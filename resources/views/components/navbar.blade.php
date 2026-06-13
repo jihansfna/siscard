@@ -1,6 +1,6 @@
 @props(['activePage' => 'Beranda', 'adminName' => 'Admin'])
 
-<header class="flex items-center justify-between gap-4 min-h-[4rem] px-6 py-3 bg-white dark:bg-gray-900 border-b-2 border-primary-800 z-30 sticky top-0 transition-colors">
+<header class="flex items-center justify-between gap-3 sm:gap-4 min-h-[3.5rem] px-4 sm:px-6 py-2 bg-white dark:bg-gray-900 border-b-2 border-primary-800 z-30 sticky top-0 transition-colors">
     <div class="flex items-center gap-3">
         @if(Auth::user() && Auth::user()->peran === 'admin')
         <!-- Mobile Menu Toggle Button -->
@@ -11,11 +11,11 @@
 
         <div>
             @if(request()->routeIs('user.home'))
-                <div class="flex items-center gap-3 sm:gap-5 py-2 sm:py-3">
-                    <img src="{{ asset('siscard_logo.png') }}" alt="Logo SPSI" class="h-16 sm:h-24 w-auto min-w-[120px] sm:min-w-[180px] object-contain drop-shadow-sm" fetchpriority="high" decoding="sync">
+                <div class="flex items-center gap-3 sm:gap-4 py-1">
+                    <img src="{{ asset('siscard_logo.png') }}" alt="Logo SPSI" class="h-10 sm:h-14 w-auto object-contain drop-shadow-sm" fetchpriority="high" decoding="sync">
                     <div class="hidden sm:block">
-                        <p class="text-primary-800/70 dark:text-primary-400/70 text-xs font-bold uppercase tracking-widest leading-none mb-1.5">SPSI · SIS-CARD</p>
-                        <h1 class="text-base sm:text-xl font-black text-primary-900 dark:text-primary-300 leading-tight">Sistem Informasi<br class="hidden lg:block"> Keanggotaan Digital</h1>
+                        <p class="text-primary-800/70 dark:text-primary-400/70 text-[10px] sm:text-xs font-bold uppercase tracking-widest leading-none mb-1">SPSI · SIS-CARD</p>
+                        <h1 class="text-xs sm:text-base font-extrabold text-primary-900 dark:text-primary-300 leading-tight">Sistem Informasi<br class="hidden lg:block"> Keanggotaan Digital</h1>
                     </div>
                     <div class="block sm:hidden">
                         <p class="text-primary-800/70 dark:text-primary-400/70 text-[10px] font-bold uppercase tracking-widest leading-none mb-0.5">SPSI</p>
@@ -42,8 +42,8 @@
         </button>
 
         <div class="relative inline-block text-left" id="profileDropdownContainer">
-        <button type="button" onclick="toggleProfileDropdown()" class="flex items-center gap-3 text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-800 dark:hover:text-primary-400 transition-all focus:outline-none py-1.5 px-2.5 rounded-xl hover:bg-gray-50/80 dark:hover:bg-gray-800 active:scale-95 duration-200">
-            <div class="w-11 h-11 rounded-full overflow-hidden flex-shrink-0 bg-gradient-to-br from-primary-800 to-primary-500 text-white font-extrabold shadow-md flex items-center justify-center border border-gray-100 dark:border-gray-800 relative">
+        <button type="button" onclick="toggleProfileDropdown()" class="flex items-center gap-2 sm:gap-3 text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-800 dark:hover:text-primary-400 transition-all focus:outline-none py-1 px-1.5 sm:px-2.5 rounded-xl hover:bg-gray-50/80 dark:hover:bg-gray-800 active:scale-95 duration-200">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden flex-shrink-0 bg-gradient-to-br from-primary-800 to-primary-500 text-white font-extrabold shadow-md flex items-center justify-center border border-gray-100 dark:border-gray-800 relative">
                 @if($employee && $employee->foto)
                     <!-- Loading Spinner -->
                     <div id="navProfileLoading" class="absolute inset-0 bg-gray-50 dark:bg-gray-800 flex items-center justify-center z-10">
