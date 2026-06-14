@@ -140,29 +140,26 @@ class CardController extends Controller
      */
     public function verify($token)
     {
-        // Decrypt the token to get the original UUID
-        $uuid = self::decryptToken($token);
+        $member = Anggota::with(['karyawan', 'jabatan'])
+            ->where('qr_token', $token)
+            ->first();
 
-        if (!$uuid) {
+        // Fallback for old encrypted token
+        if (!$member) {
+            $uuid = self::decryptToken($token);
+            if ($uuid) {
+                $member = Anggota::with(['karyawan', 'jabatan'])
+                    ->where('uuid', $uuid)
+                    ->first();
+            }
+        }
+
+        if (!$member) {
             return view('card.verify', [
                 'verified' => false,
                 'message' => 'Data anggota tidak ditemukan. Token verifikasi tidak valid atau kedaluwarsa.',
             ]);
         }
-
-        $member = Anggota::with(['karyawan', 'jabatan'])
-            ->where('uuid', $uuid)
-            ->first();
-
-        if (!$member) {
-            return view('card.verify', [
-                'verified' => false,
-                'message' => 'Data anggota tidak ditemukan.',
-            ]);
-        }
-
-        // Build verification data including signatures for display
-        $verifyData = $this->buildVerifyData($member);
 
         RiwayatAnggota::create([
             'anggota_id' => $member->id,
@@ -171,12 +168,14 @@ class CardController extends Controller
             'deskripsi' => 'QR Code dipindai untuk verifikasi.',
         ]);
 
-        return view('card.verify', array_merge([
-            'verified' => true,
-            'member' => $member,
-            'scanTime' => now()->format('Y-m-d H:i'),
-            'token' => strtoupper(substr(md5($member->uuid . config('app.key')), 0, 10)),
-        ], $verifyData));
+        $cardData = $this->buildCardData($member);
+
+        $pdf = Pdf::loadView('card.verify-pdf', $cardData);
+        $pdf->setPaper('A4', 'portrait');
+
+        $filename = 'Verifikasi_SPSI_' . str_replace(' ', '_', $member->karyawan->nama) . '.pdf';
+
+        return $pdf->download($filename);
     }
 
     /**
@@ -209,18 +208,22 @@ class CardController extends Controller
      */
     public function verifyPdf($token)
     {
-        $uuid = self::decryptToken($token);
-
-        if (!$uuid) {
-            abort(404, 'Member data not found. Verification token is invalid.');
-        }
-
         $member = Anggota::with(['karyawan', 'jabatan'])
-            ->where('uuid', $uuid)
+            ->where('qr_token', $token)
             ->first();
 
+        // Fallback for old encrypted token
         if (!$member) {
-            abort(404, 'Member data not found.');
+            $uuid = self::decryptToken($token);
+            if ($uuid) {
+                $member = Anggota::with(['karyawan', 'jabatan'])
+                    ->where('uuid', $uuid)
+                    ->first();
+            }
+        }
+
+        if (!$member) {
+            abort(404, 'Member data not found. Verification token is invalid.');
         }
 
         $cardData = $this->buildCardData($member);
@@ -264,7 +267,7 @@ class CardController extends Controller
         }
 
         // Build encrypted verification URL — QR contains ONLY this encrypted token
-        $encryptedToken = self::encryptToken($member->uuid);
+        $encryptedToken = $member->verify_token;
         $verifyUrl = url('/verify/' . $encryptedToken);
 
         // Generate QR Code as base64 SVG for PDF embedding (no Imagick dependency)

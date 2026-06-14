@@ -6,6 +6,7 @@ use App\Models\RiwayatAnggota;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Exports\HistoryExport;
 
 class HistoryController extends Controller
 {
@@ -49,7 +50,7 @@ class HistoryController extends Controller
 
     public function exportExcel(Request $request)
     {
-        return (new \App\Exports\HistoryExport())->export();
+        return (new HistoryExport())->export();
     }
     
     public function exportPdf(Request $request)

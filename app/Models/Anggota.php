@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 
 class Anggota extends Model
 {
@@ -18,7 +20,17 @@ class Anggota extends Model
         'status',
         'disetujui_pada',
         'tanda_tangan',
+        'qr_token',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($anggota) {
+            if (empty($anggota->qr_token)) {
+                $anggota->qr_token = Str::random(12);
+            }
+        });
+    }
 
     protected $casts = [
         'disetujui_pada' => 'datetime',
@@ -44,4 +56,13 @@ class Anggota extends Model
     public function getRoleAttribute() { return $this->jabatan; }
     public function getMemberRoleIdAttribute() { return $this->jabatan_id; }
     public function getSignImageAttribute() { return $this->tanda_tangan; }
+
+    public function getVerifyTokenAttribute()
+    {
+        if (!$this->qr_token) {
+            $this->qr_token = Str::random(12);
+            $this->saveQuietly();
+        }
+        return $this->qr_token;
+    }
 }

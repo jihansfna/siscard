@@ -59,4 +59,9 @@ class Karyawan extends Model
     {
         return $this->aktif ? 'Aktif' : 'Non Aktif';
     }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'badge', 'badge');
+    }
 }

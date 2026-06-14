@@ -247,7 +247,7 @@
                                                     </div>
 
                                                     {{-- Pertanyaan Keamanan --}}
-                                                    @php $userRecord = \App\Models\User::where('badge', $employee->badge)->first(); @endphp
+                                                    @php $userRecord = $employee->user; @endphp
                                                     <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
                                                         <div class="flex items-center gap-2 mb-4">
                                                             <x-heroicon-o-shield-check class="w-5 h-5 text-primary-600" />
@@ -347,18 +347,18 @@
                     </div>
                 @endif
 
-                <form action="{{ route('dashboard.employees.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6 form-with-loading" id="addEmployeeForm">
+                <form action="{{ route('dashboard.employees.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6 form-with-loading" id="addEmployeeForm" onsubmit="return validateAddEmployeeForm(event, this)">
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2 group">
                             <label for="badge" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Badge ID <span class="text-red-500">*</span></label>
-                            <input id="badge" name="badge" type="text" value="{{ old('badge') }}" placeholder="Contoh: 12345" required autocomplete="off"
+                            <input id="badge" name="badge" type="text" value="{{ old('badge') }}" placeholder="Contoh: 12345" autocomplete="off"
                                 class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
                         </div>
 
                         <div class="space-y-2 group">
                             <label for="nama" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Nama Lengkap <span class="text-red-500">*</span></label>
-                            <input id="nama" name="nama" type="text" value="{{ old('nama') }}" placeholder="Nama Karyawan" required 
+                            <input id="nama" name="nama" type="text" value="{{ old('nama') }}" placeholder="Nama Karyawan" 
                                 class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
                         </div>
 
@@ -463,6 +463,36 @@
         </div>
     </div>
     <script>
+        function validateAddEmployeeForm(e, form) {
+            const badge = form.querySelector('input[name="badge"]').value.trim();
+            const nama = form.querySelector('input[name="nama"]').value.trim();
+            
+            if (!badge || !nama) {
+                e.preventDefault();
+                
+                if (typeof window.showToast === 'function') {
+                    window.showToast('Gagal!', 'Mohon lengkapi Badge ID dan Nama Lengkap!', 'error');
+                } else {
+                    alert('Mohon lengkapi Badge ID dan Nama Lengkap!');
+                }
+                
+                setTimeout(() => {
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+                        const text = submitBtn.querySelector('.btn-text');
+                        const spinner = submitBtn.querySelector('.btn-spinner');
+                        if (text) text.innerText = 'Simpan Karyawan';
+                        if (spinner) spinner.classList.add('hidden');
+                    }
+                }, 500);
+                
+                return false;
+            }
+            return true;
+        }
+
         function toggleSelectAllEmployees(source) {
             const checkboxes = document.querySelectorAll('.employee-checkbox');
             checkboxes.forEach(cb => cb.checked = source.checked);

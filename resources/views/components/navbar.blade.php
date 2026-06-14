@@ -30,7 +30,7 @@
 
     @php
     $user = Auth::user();
-    $employee = $user ? \App\Models\Karyawan::where('badge', $user->badge)->first() : null;
+    $employee = $user ? $user->karyawan : null;
     @endphp
 
     <!-- Right Profile Section with Dropdown -->

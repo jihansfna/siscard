@@ -9,6 +9,7 @@ use App\Models\Karyawan;
 use App\Models\Anggota;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use App\Services\FonnteService;
 
 class FeedbackController extends Controller
 {
@@ -37,7 +38,7 @@ class FeedbackController extends Controller
     }
 
     // ADMIN: Mark feedback as completed with remark
-    public function complete(Request $request, Saran $feedback, \App\Services\FonnteService $fonnte)
+    public function complete(Request $request, Saran $feedback, FonnteService $fonnte)
     {
         $request->validate([
             'catatan' => 'required|string',

@@ -117,7 +117,7 @@
                             <div id="qrCodeLoading" class="absolute inset-0 bg-gray-50 flex items-center justify-center z-10">
                                 <svg class="animate-spin w-8 h-8 text-primary-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                             </div>
-                            <img src="{{ route('qr.image', ['data' => url('/verify/' . \App\Http\Controllers\CardController::encryptToken($member->uuid))]) }}" alt="QR Code Verifikasi" class="w-full h-full object-contain opacity-0 transition-opacity duration-300 relative z-20" onload="document.getElementById('qrCodeLoading')?.remove(); this.classList.remove('opacity-0');">
+                            <img src="{{ route('qr.image', ['data' => url('/verify/' . $member->verify_token)]) }}" alt="QR Code Verifikasi" class="w-full h-full object-contain opacity-0 transition-opacity duration-300 relative z-20" onload="document.getElementById('qrCodeLoading')?.remove(); this.classList.remove('opacity-0');">
                         @else
                             <div class="w-full h-full bg-gray-50 flex items-center justify-center text-gray-400 text-xs font-medium">QR Code</div>
                         @endif
@@ -366,7 +366,7 @@
                     </div>
                 </div>
                 
-                @if($feedbacks instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                @if(method_exists($feedbacks, 'total'))
                 <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4">
                     <div class="text-sm text-gray-500 dark:text-gray-400">
                         Showing <span class="font-bold text-gray-900 dark:text-white">{{ $feedbacks->firstItem() ?? 0 }}</span> to <span class="font-bold text-gray-900 dark:text-white">{{ $feedbacks->lastItem() ?? 0 }}</span> of <span class="font-bold text-gray-900 dark:text-white">{{ $feedbacks->total() }}</span> results

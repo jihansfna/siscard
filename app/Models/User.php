@@ -60,6 +60,11 @@ class User extends Authenticatable
         return $this->hasMany(RiwayatAnggota::class, 'pelaku_id');
     }
 
+    public function karyawan()
+    {
+        return $this->belongsTo(Karyawan::class, 'badge', 'badge');
+    }
+
     // Accessors for backward compatibility with English views
     public function getNameAttribute() { return $this->nama; }
     public function getRoleAttribute() { return $this->peran; }

@@ -148,7 +148,7 @@
                                             'role' => $member->jabatan->nama ?? 'Anggota',
                                             'member_role_id' => $member->jabatan_id,
                                             'sign_image' => $member->tanda_tangan,
-                                            'verify_token' => \App\Http\Controllers\CardController::encryptToken($member->uuid),
+                                            'verify_token' => $member->verify_token,
                                             'card_download_url' => route('dashboard.members.card.download', $member->id),
                                             'update_url' => route('dashboard.members.update', $member->id),
                                             'logs_url' => route('dashboard.members.logs', $member->id),
@@ -190,7 +190,7 @@
                     <x-heroicon-o-x-mark class="w-6 h-6" />
                 </button>
             </div>
-            <form action="{{ route('dashboard.members.store') }}" method="POST" id="addMemberForm" class="flex flex-col overflow-hidden form-with-loading">
+            <form action="{{ route('dashboard.members.store') }}" method="POST" id="addMemberForm" class="flex flex-col overflow-hidden form-with-loading" onsubmit="return validateAddMemberForm(event, this)">
                 @csrf
                 <div class="p-6 overflow-y-auto">
                     <div class="mb-4">
@@ -259,7 +259,7 @@
                         Batal
                     </button>
                     <button type="submit" class="px-6 py-2.5 text-sm font-bold bg-primary-600 hover:bg-primary-700 text-white rounded-xl shadow-lg shadow-primary-600/20 transition-all flex items-center gap-2">
-                        <span class="btn-text">Tambah Terpilih</span>
+                        <span class="btn-text">Tambah Anggota</span>
                         <svg class="btn-spinner animate-spin h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -444,6 +444,36 @@
             
             currentAvailPage = 1;
             initAvailPagination();
+        }
+
+        function validateAddMemberForm(e, form) {
+            const checked = form.querySelectorAll('.employee-checkbox:checked');
+            if (checked.length === 0) {
+                e.preventDefault();
+                
+                // Show notification
+                if (typeof window.showToast === 'function') {
+                    window.showToast('Gagal!', 'Pilih karyawan terlebih dahulu!', 'error');
+                } else {
+                    alert('Pilih karyawan terlebih dahulu!');
+                }
+                
+                // Keep the loading effect briefly, then reset so user can try again
+                setTimeout(() => {
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+                        const text = submitBtn.querySelector('.btn-text');
+                        const spinner = submitBtn.querySelector('.btn-spinner');
+                        if (text) text.innerText = 'Tambah Anggota';
+                        if (spinner) spinner.classList.add('hidden');
+                    }
+                }, 500);
+                
+                return false;
+            }
+            return true;
         }
 
         function toggleSelectAllMembers(source) {

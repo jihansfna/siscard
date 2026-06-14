@@ -103,7 +103,7 @@ class MasterEmployeeController extends Controller
             'nomor_telp' => 'nullable|string|max:20',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'pertanyaan_rahasia' => 'nullable|string|max:500',
-            'jawaban_rahasia' => 'nullable|string|max:255|required_with:pertanyaan_rahasia',
+            'jawaban_rahasia' => 'nullable|string|max:255',
         ], [
             'badge.required' => 'Badge ID wajib diisi.',
             'badge.unique' => 'Badge ID sudah terdaftar.',
@@ -115,7 +115,6 @@ class MasterEmployeeController extends Controller
             'foto.max' => 'Ukuran foto maksimal 2MB.',
             'pertanyaan_rahasia.max' => 'Pertanyaan rahasia maksimal 500 karakter.',
             'jawaban_rahasia.max' => 'Jawaban rahasia maksimal 255 karakter.',
-            'jawaban_rahasia.required_with' => 'Jawaban rahasia wajib diisi jika pertanyaan rahasia diisi.',
         ]);
 
         if ($request->hasFile('foto')) {
@@ -130,11 +129,20 @@ class MasterEmployeeController extends Controller
         $jawabanRahasia = $validated['jawaban_rahasia'] ?? null;
         unset($validated['pertanyaan_rahasia'], $validated['jawaban_rahasia']);
 
+        $user = User::where('badge', $employee->badge)->first();
+
+        // Custom validation for security question update
+        if ($pertanyaanRahasia) {
+            $isNewQuestion = !$user || $user->pertanyaan_rahasia !== $pertanyaanRahasia;
+            if ($isNewQuestion && empty($jawabanRahasia)) {
+                return back()->withErrors(['jawaban_rahasia' => 'Jawaban rahasia wajib diisi jika Anda mengatur atau mengubah pertanyaan rahasia.'])->withInput();
+            }
+        }
+
         $oldBadge = $employee->badge;
         $employee->update($validated);
 
         // Update associated user account if it exists
-        $user = User::where('badge', $oldBadge)->first();
         if ($user) {
             $userUpdate = [
                 'badge' => $validated['badge'],

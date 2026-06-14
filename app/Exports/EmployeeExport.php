@@ -8,6 +8,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Color;
 
 class EmployeeExport
 {
@@ -117,7 +118,7 @@ class EmployeeExport
         $sheet->setCellValue('I2', '15/06/1990');
         $sheet->setCellValue('J2', 'Jl. Contoh No. 123');
 
-        $sheet->getStyle('A2:J2')->getFont()->setItalic(true)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FF888888'));
+        $sheet->getStyle('A2:J2')->getFont()->setItalic(true)->setColor(new Color('FF888888'));
 
         foreach ($columns as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);

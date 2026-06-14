@@ -18,6 +18,8 @@ return new class extends Migration
                 ->unique()
                 ->default(DB::raw('(UUID())'));
 
+            $table->string('qr_token', 15)->unique()->nullable();
+
             $table->foreignId('karyawan_id')
                 ->constrained('karyawan')
                 ->cascadeOnDelete();

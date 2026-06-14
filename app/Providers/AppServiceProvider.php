@@ -5,6 +5,9 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
+use App\Models\Karyawan;
+use App\Models\Anggota;
+use App\Models\Saran;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,8 +32,8 @@ class AppServiceProvider extends ServiceProvider
         }
 
         // Route model bindings: map URL parameters to Indonesian model classes
-        Route::model('employee', \App\Models\Karyawan::class);
-        Route::model('member', \App\Models\Anggota::class);
-        Route::model('feedback', \App\Models\Saran::class);
+        Route::model('employee', Karyawan::class);
+        Route::model('member', Anggota::class);
+        Route::model('feedback', Saran::class);
     }
 }

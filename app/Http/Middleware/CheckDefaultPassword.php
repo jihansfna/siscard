@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckDefaultPassword
@@ -21,9 +22,9 @@ class CheckDefaultPassword
 
         // If the user is logged in and their password is the default 'P4ssword'
         if ($user && Hash::check('P4ssword', $user->password)) {
-            \Illuminate\Support\Facades\View::share('isDefaultPassword', true);
+            View::share('isDefaultPassword', true);
         } else {
-            \Illuminate\Support\Facades\View::share('isDefaultPassword', false);
+            View::share('isDefaultPassword', false);
         }
 
         return $next($request);

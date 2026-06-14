@@ -168,6 +168,8 @@ class MemberController extends Controller
         $request->validate([
             'employee_ids' => 'required|array',
             'employee_ids.*' => 'exists:karyawan,id',
+        ], [
+            'employee_ids.required' => 'Sistem menampilkan pesan validasi bahwa karyawan belum dipilih'
         ]);
 
         $today = now()->toDateString();
