@@ -20,20 +20,6 @@
             position: relative;
         }
 
-        /* Watermark */
-        .watermark {
-            position: fixed;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-35deg);
-            font-size: 72pt;
-            color: rgba(5, 150, 105, 0.06);
-            font-weight: 900;
-            letter-spacing: 12pt;
-            z-index: 0;
-            white-space: nowrap;
-        }
-
         .content {
             position: relative;
             z-index: 1;
@@ -249,8 +235,6 @@
     </style>
 </head>
 <body>
-    <div class="watermark">VERIFIED SPSI</div>
-
     <div class="content">
         <!-- Header with logos -->
         <table class="header-table" cellpadding="0" cellspacing="0">
