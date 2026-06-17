@@ -158,8 +158,12 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
                                 <x-heroicon-o-key class="w-5 h-5" />
                             </div>
-                            <input id="security_answer" type="password" placeholder="Masukkan jawaban keamanan Anda" required maxlength="255"
-                                class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
+                            <input id="security_answer" type="password" placeholder="Masukkan jawaban keamanan Anda" required maxlength="255" autocomplete="new-password"
+                                class="w-full pl-10 pr-14 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
+                            <button type="button" onclick="togglePasswordVisibility('security_answer', this)" class="absolute inset-y-0 right-0 px-4 flex items-center justify-center text-gray-400 hover:text-primary-600 focus:outline-none transition-colors rounded-r-xl">
+                                <x-heroicon-o-eye class="w-5 h-5 eye-icon" />
+                                <x-heroicon-o-eye-slash class="w-5 h-5 eye-slash-icon hidden" />
+                            </button>
                         </div>
                     </div>
 
@@ -191,8 +195,12 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
                                 <x-heroicon-o-lock-closed class="w-5 h-5" />
                             </div>
-                            <input id="new_password" type="password" placeholder="Minimal 8 karakter, huruf besar, kecil & angka" required 
-                                class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
+                            <input id="new_password" type="password" placeholder="Minimal 8 karakter, huruf besar, kecil & angka" required autocomplete="new-password"
+                                class="w-full pl-10 pr-14 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
+                            <button type="button" onclick="togglePasswordVisibility('new_password', this)" class="absolute inset-y-0 right-0 px-4 flex items-center justify-center text-gray-400 hover:text-primary-600 focus:outline-none transition-colors rounded-r-xl">
+                                <x-heroicon-o-eye class="w-5 h-5 eye-icon" />
+                                <x-heroicon-o-eye-slash class="w-5 h-5 eye-slash-icon hidden" />
+                            </button>
                         </div>
                     </div>
 
@@ -202,8 +210,12 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
                                 <x-heroicon-o-lock-closed class="w-5 h-5" />
                             </div>
-                            <input id="new_password_confirmation" type="password" placeholder="Ulangi kata sandi baru" required 
-                                class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
+                            <input id="new_password_confirmation" type="password" placeholder="Ulangi kata sandi baru" required autocomplete="new-password"
+                                class="w-full pl-10 pr-14 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all text-sm">
+                            <button type="button" onclick="togglePasswordVisibility('new_password_confirmation', this)" class="absolute inset-y-0 right-0 px-4 flex items-center justify-center text-gray-400 hover:text-primary-600 focus:outline-none transition-colors rounded-r-xl">
+                                <x-heroicon-o-eye class="w-5 h-5 eye-icon" />
+                                <x-heroicon-o-eye-slash class="w-5 h-5 eye-slash-icon hidden" />
+                            </button>
                         </div>
                     </div>
 
@@ -382,20 +394,25 @@
             this.classList.remove('opacity-75');
         });
 
-        // Toggle Password Visibility
-        document.getElementById('toggle-password').addEventListener('click', function() {
-            const passwordInput = document.getElementById('password');
-            const eyeIcon = document.getElementById('eye-icon');
-            const eyeSlashIcon = document.getElementById('eye-slash-icon');
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const eyeIcon = btn.querySelector('.eye-icon') || document.getElementById('eye-icon');
+            const eyeSlashIcon = btn.querySelector('.eye-slash-icon') || document.getElementById('eye-slash-icon');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
                 eyeIcon.classList.add('hidden');
                 eyeSlashIcon.classList.remove('hidden');
             } else {
-                passwordInput.type = 'password';
+                input.type = 'password';
                 eyeIcon.classList.remove('hidden');
                 eyeSlashIcon.classList.add('hidden');
             }
+        }
+
+        // Toggle Password Visibility for main login
+        document.getElementById('toggle-password').addEventListener('click', function() {
+            togglePasswordVisibility('password', this);
         });
 
         // Form Submit Loading State - Login

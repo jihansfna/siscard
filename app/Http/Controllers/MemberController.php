@@ -201,7 +201,6 @@ class MemberController extends Controller
                 'karyawan_id' => $empId,
                 'jabatan_id' => $defaultRole->id,
                 'status' => 'pending',
-                'aktif' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];

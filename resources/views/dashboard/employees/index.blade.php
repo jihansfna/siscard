@@ -277,9 +277,15 @@
 
                                                             <div class="space-y-2 group">
                                                                 <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Jawaban Rahasia</label>
-                                                                <input name="jawaban_rahasia" type="password" autocomplete="new-password"
-                                                                    placeholder="{{ ($userRecord && $userRecord->jawaban_rahasia) ? 'Kosongkan jika tidak ingin mengubah' : 'Masukkan jawaban rahasia' }}" maxlength="255"
-                                                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                                                <div class="relative">
+                                                                    <input id="jawaban_rahasia_edit_{{ $employee->id }}" name="jawaban_rahasia" type="password" autocomplete="new-password" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly');"
+                                                                        placeholder="{{ ($userRecord && $userRecord->jawaban_rahasia) ? 'Kosongkan jika tidak ingin mengubah' : 'Masukkan jawaban rahasia' }}" maxlength="255"
+                                                                        class="w-full px-4 pr-12 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                                                    <button type="button" onclick="togglePasswordVisibility('jawaban_rahasia_edit_{{ $employee->id }}', this)" class="absolute inset-y-0 right-0 px-4 flex items-center justify-center text-gray-400 hover:text-primary-600 focus:outline-none transition-colors rounded-r-xl">
+                                                                        <x-heroicon-o-eye class="w-5 h-5 eye-icon" />
+                                                                        <x-heroicon-o-eye-slash class="w-5 h-5 eye-slash-icon hidden" />
+                                                                    </button>
+                                                                </div>
                                                                 @if ($userRecord && $userRecord->jawaban_rahasia)
                                                                     <p class="text-xs text-gray-400 mt-1">Jawaban tersimpan terenkripsi. Isi ulang hanya jika ingin mengubah.</p>
                                                                 @endif
@@ -440,9 +446,15 @@
 
                             <div class="space-y-2 group">
                                 <label for="jawaban_rahasia" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Jawaban Rahasia</label>
-                                <input id="jawaban_rahasia" name="jawaban_rahasia" type="password" value="{{ old('jawaban_rahasia') }}" autocomplete="new-password"
-                                    placeholder="Masukkan jawaban rahasia" maxlength="255"
-                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                <div class="relative">
+                                    <input id="jawaban_rahasia" name="jawaban_rahasia" type="password" value="{{ old('jawaban_rahasia') }}" autocomplete="new-password" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly');"
+                                        placeholder="Masukkan jawaban rahasia" maxlength="255"
+                                        class="w-full px-4 pr-12 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white dark:focus:bg-[#2A2A2A] transition-all text-sm dark:text-white dark:placeholder-gray-500">
+                                    <button type="button" onclick="togglePasswordVisibility('jawaban_rahasia', this)" class="absolute inset-y-0 right-0 px-4 flex items-center justify-center text-gray-400 hover:text-primary-600 focus:outline-none transition-colors rounded-r-xl">
+                                        <x-heroicon-o-eye class="w-5 h-5 eye-icon" />
+                                        <x-heroicon-o-eye-slash class="w-5 h-5 eye-slash-icon hidden" />
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -658,6 +670,22 @@
                 document.getElementById('exportDropdown').classList.add('hidden');
             }
         });
+
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const eyeIcon = btn.querySelector('.eye-icon');
+            const eyeSlashIcon = btn.querySelector('.eye-slash-icon');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeIcon.classList.add('hidden');
+                eyeSlashIcon.classList.remove('hidden');
+            } else {
+                input.type = 'password';
+                eyeIcon.classList.remove('hidden');
+                eyeSlashIcon.classList.add('hidden');
+            }
+        }
 
         function closeImportModal() {
             document.getElementById('importEmployeeModal').classList.add('hidden');

@@ -180,7 +180,11 @@
                 
                 // Only process forms with the 'form-with-loading' class
                 if (form.classList.contains('form-with-loading')) {
-                    const submitBtn = form.querySelector('button[type="submit"]');
+                    // Find button inside the form, or outside with matching form attribute
+                    let submitBtn = form.querySelector('button[type="submit"]');
+                    if (!submitBtn && form.id) {
+                        submitBtn = document.querySelector(`button[type="submit"][form="${form.id}"]`);
+                    }
                     
                     if (submitBtn) {
                         const text = submitBtn.querySelector('.btn-text');
@@ -188,11 +192,21 @@
                         const spinner = submitBtn.querySelector('.btn-spinner');
                         
                         // Disable button to prevent multiple submissions
-                        submitBtn.disabled = true;
-                        submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+                        // Wait a tiny bit before disabling so the form data includes the button value if needed
+                        setTimeout(() => {
+                            submitBtn.disabled = true;
+                            submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+                        }, 10);
                         
                         // Show loading state if elements exist
-                        if (text) text.innerText = 'Memuat...';
+                        if (text) {
+                            const originalText = text.innerText;
+                            if (originalText.includes('Simpan') || originalText.includes('Perbarui')) {
+                                text.innerText = 'Menyimpan...';
+                            } else {
+                                text.innerText = 'Memuat...';
+                            }
+                        }
                         if (icon) icon.classList.add('hidden');
                         if (spinner) spinner.classList.remove('hidden');
                     }
@@ -413,16 +427,34 @@
                         @else
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Kata Sandi Saat Ini</label>
-                                <input type="password" name="current_password" required class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50 dark:bg-gray-900 dark:text-white">
+                                <div class="relative">
+                                    <input type="password" id="current_password_modal" name="current_password" required autocomplete="current-password" class="w-full px-4 pr-12 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50 dark:bg-gray-900 dark:text-white">
+                                    <button type="button" onclick="toggleAppPasswordVisibility('current_password_modal', this)" class="absolute inset-y-0 right-0 px-3 flex items-center justify-center text-gray-400 hover:text-primary-600 focus:outline-none transition-colors rounded-r-lg">
+                                        <x-heroicon-o-eye class="w-5 h-5 eye-icon" />
+                                        <x-heroicon-o-eye-slash class="w-5 h-5 eye-slash-icon hidden" />
+                                    </button>
+                                </div>
                             </div>
                         @endif
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Kata Sandi Baru</label>
-                            <input type="password" name="new_password" required minlength="8" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50 dark:bg-gray-900 dark:text-white">
+                            <div class="relative">
+                                <input type="password" id="new_password_modal" name="new_password" required minlength="8" autocomplete="new-password" class="w-full px-4 pr-12 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50 dark:bg-gray-900 dark:text-white">
+                                <button type="button" onclick="toggleAppPasswordVisibility('new_password_modal', this)" class="absolute inset-y-0 right-0 px-3 flex items-center justify-center text-gray-400 hover:text-primary-600 focus:outline-none transition-colors rounded-r-lg">
+                                    <x-heroicon-o-eye class="w-5 h-5 eye-icon" />
+                                    <x-heroicon-o-eye-slash class="w-5 h-5 eye-slash-icon hidden" />
+                                </button>
+                            </div>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Konfirmasi Kata Sandi Baru</label>
-                            <input type="password" name="new_password_confirmation" required minlength="8" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50 dark:bg-gray-900 dark:text-white">
+                            <div class="relative">
+                                <input type="password" id="new_password_confirmation_modal" name="new_password_confirmation" required minlength="8" autocomplete="new-password" class="w-full px-4 pr-12 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50 dark:bg-gray-900 dark:text-white">
+                                <button type="button" onclick="toggleAppPasswordVisibility('new_password_confirmation_modal', this)" class="absolute inset-y-0 right-0 px-3 flex items-center justify-center text-gray-400 hover:text-primary-600 focus:outline-none transition-colors rounded-r-lg">
+                                    <x-heroicon-o-eye class="w-5 h-5 eye-icon" />
+                                    <x-heroicon-o-eye-slash class="w-5 h-5 eye-slash-icon hidden" />
+                                </button>
+                            </div>
                             <p class="text-xs text-gray-500 mt-2">Kata sandi minimal 8 karakter dan mengandung huruf besar, huruf kecil, dan angka</p>
                         </div>
                         
@@ -457,6 +489,22 @@
                 modal.classList.remove('flex');
                 document.getElementById('changePasswordForm').reset();
                 document.getElementById('passwordClientError').classList.add('hidden');
+            }
+            
+            function toggleAppPasswordVisibility(inputId, btn) {
+                const input = document.getElementById(inputId);
+                const eyeIcon = btn.querySelector('.eye-icon');
+                const eyeSlashIcon = btn.querySelector('.eye-slash-icon');
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    eyeIcon.classList.add('hidden');
+                    eyeSlashIcon.classList.remove('hidden');
+                } else {
+                    input.type = 'password';
+                    eyeIcon.classList.remove('hidden');
+                    eyeSlashIcon.classList.add('hidden');
+                }
             }
 
             document.addEventListener('DOMContentLoaded', function() {
