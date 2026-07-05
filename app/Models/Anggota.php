@@ -65,4 +65,12 @@ class Anggota extends Model
         }
         return $this->qr_token;
     }
+
+    public function getEffectiveStatusAttribute()
+    {
+        if ($this->relationLoaded('karyawan') && $this->karyawan && !$this->karyawan->aktif) {
+            return 'inactive';
+        }
+        return $this->attributes['status'] ?? null;
+    }
 }

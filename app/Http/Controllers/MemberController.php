@@ -34,7 +34,23 @@ class MemberController extends Controller
                     'Tidak Aktif' => 'inactive'
                 ];
                 if (isset($statusMap[$status])) {
-                    $query->where('status', $statusMap[$status]);
+                    if ($statusMap[$status] === 'inactive') {
+                        $query->where(function($q) {
+                            $q->where('status', 'inactive')
+                              ->orWhereHas('karyawan', function($q2) {
+                                  $q2->whereNotNull('tanggal_keluar')
+                                     ->where('tanggal_keluar', '<=', today());
+                              });
+                        });
+                    } else {
+                        $query->where('status', $statusMap[$status])
+                              ->whereHas('karyawan', function($q2) {
+                                  $q2->where(function($q3) {
+                                      $q3->whereNull('tanggal_keluar')
+                                         ->orWhere('tanggal_keluar', '>', today());
+                                  });
+                              });
+                    }
                 }
             })
             ->orderBy('updated_at', $sortDirection)

@@ -46,7 +46,7 @@ class MemberExport
             $sheet->setCellValue("E{$row}", $member->karyawan->jabatan ?? '-');
             $sheet->setCellValue("F{$row}", $member->karyawan->line ?? '-');
             $sheet->setCellValue("G{$row}", $member->jabatan->nama ?? 'Member');
-            $sheet->setCellValue("H{$row}", ucfirst($member->status));
+            $sheet->setCellValue("H{$row}", ucfirst($member->effective_status));
             $sheet->setCellValue("I{$row}", $member->created_at?->format('d/m/Y H:i'));
 
             if ($index % 2 === 0) {

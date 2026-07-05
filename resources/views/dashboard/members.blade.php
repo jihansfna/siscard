@@ -118,16 +118,16 @@
                                     </span>
                                 </td>
                                 <td class="px-4 py-3">
-                                    @if($member->status == 'registered')
+                                    @if($member->effective_status == 'registered')
                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Terdaftar</span>
-                                    @elseif($member->status == 'pending')
+                                    @elseif($member->effective_status == 'pending')
                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">Menunggu Verifikasi</span>
-                                    @elseif($member->status == 'inactive')
+                                    @elseif($member->effective_status == 'inactive')
                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-400">Tidak Aktif</span>
-                                    @elseif($member->status == 'rejected')
+                                    @elseif($member->effective_status == 'rejected')
                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">Ditolak</span>
                                     @else
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-400">{{ ucfirst($member->status) }}</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-400">{{ ucfirst($member->effective_status) }}</span>
                                     @endif
                                 </td>
                                 <td class="px-4 py-3">
@@ -136,7 +136,7 @@
                                             'id' => $member->id,
                                             'name' => $member->karyawan->nama,
                                             'badge' => $member->karyawan->badge,
-                                            'status' => $member->status,
+                                            'status' => $member->effective_status,
                                             'uuid' => $member->uuid,
                                             'created_at' => $member->created_at->format('d F Y, H:i'),
                                             'added_by' => 'Admin',
@@ -633,7 +633,7 @@
                 
                 // Set custom message based on status
                 if (member.status === 'pending') {
-                    msgText.textContent = 'Menunggu konfirmasi admin. Kartu digital belum dapat dibuat.';
+                    msgText.textContent = 'Menunggu konfirmasi karyawan. Kartu digital belum dapat dibuat.';
                     msgContainer.className = 'mb-4 p-4 border rounded-xl text-sm font-semibold flex items-center gap-3 bg-blue-50 border-blue-200 text-blue-800';
                 } else if (member.status === 'inactive') {
                     msgText.textContent = 'Anggota tidak aktif. Akses kartu digital dicabut.';

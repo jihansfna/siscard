@@ -59,12 +59,12 @@
                 <td>{{ $member->karyawan->jabatan ?? '-' }}</td>
                 <td>{{ $member->jabatan->nama ?? 'Member' }}</td>
                 <td>
-                    @if($member->status == 'registered')
+                    @if($member->effective_status == 'registered')
                         <span class="status-registered">Registered</span>
-                    @elseif($member->status == 'pending')
+                    @elseif($member->effective_status == 'pending')
                         <span class="status-pending">Pending</span>
                     @else
-                        <span class="status-inactive">{{ ucfirst($member->status) }}</span>
+                        <span class="status-inactive">{{ ucfirst($member->effective_status) }}</span>
                     @endif
                 </td>
                 <td>{{ $member->created_at?->format('d/m/Y H:i') }}</td>
