@@ -7,9 +7,6 @@
     <!-- Dashboard Container -->
     <div class="text-gray-800 dark:text-gray-200 transition-colors">
 
-        {{-- ═══════════════════════════════════════════════════════
-             RINGKASAN
-        ═══════════════════════════════════════════════════════ --}}
         <h2 class="text-xs font-bold tracking-widest text-gray-400 dark:text-gray-500 uppercase mb-4">Ringkasan</h2>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
@@ -42,7 +39,7 @@
                         <p class="text-sm text-gray-500 dark:text-gray-400 font-medium leading-tight">Pending Verifikasi</p>
                         <p class="text-3xl font-extrabold text-gray-900 dark:text-white leading-tight mt-1">{{ $pendingMembers }}</p>
                         <span class="inline-flex items-center mt-1.5 text-[11px] font-bold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 px-2 py-0.5 rounded-md">
-                            Avg {{ $avgVerificationDays }} hari
+                            Rata-rata {{ $avgVerificationDays }} hari
                         </span>
                     </div>
                 </div>
@@ -71,16 +68,10 @@
             </div>
         </div>
 
-        {{-- ═══════════════════════════════════════════════════════
-             GRAFIK & STATISTIK
-        ═══════════════════════════════════════════════════════ --}}
         <h2 class="text-xs font-bold tracking-widest text-gray-400 dark:text-gray-500 uppercase mb-4">Grafik & Statistik</h2>
 
         <div class="grid grid-cols-1 xl:grid-cols-5 gap-4">
 
-            {{-- ──────────────────────────────────────────────────
-                 LEFT: Pertumbuhan Anggota (Bar Chart) - 3 cols
-            ────────────────────────────────────────────────── --}}
             <div class="xl:col-span-3 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-sm dark:shadow-none flex flex-col">
                 {{-- Header --}}
                 <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
@@ -107,9 +98,6 @@
                 </div>
             </div>
 
-            {{-- ──────────────────────────────────────────────────
-                 RIGHT COLUMN - 2 cols
-            ────────────────────────────────────────────────── --}}
             <div class="xl:col-span-2 flex flex-col gap-4">
 
                 {{-- Aktivitas Kartu Digital (Line Chart) --}}
@@ -173,9 +161,6 @@
         </div>
     </div>
 
-    {{-- ═══════════════════════════════════════════════════════
-         APEXCHARTS SCRIPTS
-    ═══════════════════════════════════════════════════════ --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Detect dark mode
@@ -186,7 +171,6 @@
             const tooltipBg   = isDark ? '#1F2937' : '#FFFFFF';
             const tooltipText = isDark ? '#F3F4F6' : '#1F2937';
 
-            // ─── Bar Chart: Pertumbuhan Anggota ──────────────────
             const growthOptions = {
                 series: [{
                     name: 'Anggota baru',
@@ -251,7 +235,6 @@
             const growthChart = new ApexCharts(document.querySelector('#growthChart'), growthOptions);
             growthChart.render();
 
-            // ─── Line Chart: Aktivitas Kartu Digital ─────────────
             const activityOptions = {
                 series: [{
                     name: 'Download kartu',
@@ -316,7 +299,6 @@
             const activityChart = new ApexCharts(document.querySelector('#activityChart'), activityOptions);
             activityChart.render();
 
-            // ─── Animate Progress Bars on Load ───────────────────
             const progressBars = document.querySelectorAll('[style*="width:"]');
             progressBars.forEach(function(bar) {
                 const target = bar.style.width;

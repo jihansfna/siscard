@@ -13,7 +13,6 @@ use App\Http\Controllers\UserController;
 
 Route::redirect('/', '/login');
 
-// --- Guest routes (hanya bisa diakses jika belum login) ---
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
@@ -26,18 +25,15 @@ Route::middleware('guest')->group(function () {
     Route::post('/password/reset', [AuthController::class, 'resetPassword'])->name('password.reset.submit');
 });
 
-// --- Public route: QR verification (no auth needed) ---
 Route::get('/verify/{token}', [CardController::class, 'verify'])->name('card.verify')->where('token', '[A-Za-z0-9_\-]+');
 Route::get('/verify/{token}/pdf', [CardController::class, 'verifyPdf'])->name('card.verify.pdf')->where('token', '[A-Za-z0-9_\-]+');
 Route::get('/qr-image', [CardController::class, 'qrImage'])->name('qr.image');
 
-// --- Auth route (hanya bisa diakses jika sudah login) ---
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::post('/password/change', [AuthController::class, 'changePassword'])->name('password.change');
 });
 
-// --- Admin routes (role: admin / HRD) ---
 Route::middleware(['auth', 'role:admin', 'check.default.password'])->prefix('dashboard')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -80,7 +76,6 @@ Route::middleware(['auth', 'role:admin', 'check.default.password'])->prefix('das
     Route::get('/export/history/pdf', [HistoryController::class, 'exportPdf'])->name('dashboard.export.history.pdf');
 });
 
-// --- User routes (role: user / Employee) ---
 Route::middleware(['auth', 'role:user', 'check.default.password'])->prefix('home')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('user.home');
     Route::post('/confirm-membership/{id}', [UserController::class, 'confirmMembership'])->name('user.confirm_membership');

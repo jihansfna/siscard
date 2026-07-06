@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Storage;
 
 class ExportImportController extends Controller
 {
-    // ==================== EMPLOYEE ====================
 
     public function exportEmployeesExcel()
     {
@@ -72,7 +71,6 @@ class ExportImportController extends Controller
         }
     }
 
-    // ==================== MEMBER ====================
 
     public function exportMembersExcel()
     {
@@ -88,7 +86,6 @@ class ExportImportController extends Controller
         return $pdf->download('members_' . date('Y-m-d_His') . '.pdf');
     }
 
-    // ==================== FEEDBACK ====================
 
     public function exportFeedbacksExcel()
     {

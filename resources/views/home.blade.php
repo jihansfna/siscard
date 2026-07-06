@@ -61,7 +61,6 @@
         </div>
     @endif
 
-    {{-- ═══ PROFILE + DIGITAL CARD ═══ --}}
     <div class="grid gap-6 md:grid-cols-3 mb-6 {{ $accessStatus !== 'registered' ? 'blur-md pointer-events-none select-none opacity-50' : '' }}">
         {{-- Profile Card --}}
         <div class="md:col-span-1 min-w-0">
@@ -666,7 +665,6 @@
         });
     </script>
 
-    {{-- ═══ FOOTER ═══ --}}
     <footer class="mt-10 pt-6 border-t border-gray-100 dark:border-gray-800">
         <div class="flex justify-center items-center">
             <p class="text-xs text-gray-400 dark:text-gray-500 text-center">

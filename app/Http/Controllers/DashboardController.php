@@ -13,7 +13,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // ─── RINGKASAN CARDS ─────────────────────────────────────
 
         // 1. Total Anggota Aktif
         $totalActiveMembers = Anggota::where('status', 'registered')->count();
@@ -33,7 +32,6 @@ class DashboardController extends Controller
         // 3. Aduan Belum Selesai
         $pendingFeedbacks = Saran::where('status', 'Waiting')->count();
 
-        // ─── GRAFIK: PERTUMBUHAN ANGGOTA (6 BULAN TERAKHIR) ──────
 
         $monthlyGrowth = [];
         for ($i = 5; $i >= 0; $i--) {
@@ -66,7 +64,6 @@ class DashboardController extends Controller
         $sixMonthsAgo = Carbon::now()->subMonths(5)->startOfMonth();
         $growthPeriodLabel = $sixMonthsAgo->translatedFormat('M') . ' – ' . $now->translatedFormat('M Y');
 
-        // ─── GRAFIK: AKTIVITAS KARTU DIGITAL (30 HARI TERAKHIR) ──
 
         $activityDownloads = [];
         $activityScans = [];
@@ -87,7 +84,6 @@ class DashboardController extends Controller
             $activityScans[] = $scans;
         }
 
-        // ─── STATUS ANGGOTA (PROGRESS BARS) ──────────────────────
 
         $allMembers = Anggota::count();
         if ($allMembers > 0) {

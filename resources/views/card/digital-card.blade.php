@@ -36,7 +36,6 @@
             page-break-after: always;
         }
 
-        /* ===== FRONT VIEW ===== */
         .front-header {
             text-align: center;
             line-height: 1;
@@ -115,7 +114,6 @@
             margin-top: 4pt;
         }
 
-        /* ===== BACK VIEW ===== */
         .back-header {
             width: 100%;
             border-bottom: 0.5pt solid #eee;
@@ -194,9 +192,7 @@
 </head>
 <body>
 
-    <!-- ========================================== -->
     <!-- FRONT VIEW (PAGE 1)                        -->
-    <!-- ========================================== -->
     <div class="card page-break">
         <div class="front-header">
             <div class="title-1">KARTU ANGGOTA</div>
@@ -239,9 +235,7 @@
         </table>
     </div>
 
-    <!-- ========================================== -->
     <!-- BACK VIEW (PAGE 2)                         -->
-    <!-- ========================================== -->
     <div class="card">
         <!-- Header -->
         <table class="back-header" cellpadding="0" cellspacing="0">
