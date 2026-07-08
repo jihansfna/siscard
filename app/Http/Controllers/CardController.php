@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Barryvdh\DomPDF\Facade\Pdf;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Carbon\Carbon;
 
 class CardController extends Controller
 {
@@ -161,6 +162,17 @@ class CardController extends Controller
             ]);
         }
 
+        $karyawan = $member->karyawan;
+        $isInactive = strtolower($member->status) !== 'registered' || 
+                      ($karyawan && !$karyawan->aktif);
+
+        if ($isInactive) {
+            return view('card.verify', [
+                'verified' => false,
+                'message' => 'Verifikasi ditolak. Kartu digital ini sudah tidak aktif karena keanggotaan dinonaktifkan atau masa kerja karyawan telah berakhir.',
+            ]);
+        }
+
         RiwayatAnggota::create([
             'anggota_id' => $member->id,
             'pelaku_id' => null, // Public scan
@@ -224,6 +236,14 @@ class CardController extends Controller
 
         if (!$member) {
             abort(404, 'Member data not found. Verification token is invalid.');
+        }
+
+        $karyawan = $member->karyawan;
+        $isInactive = strtolower($member->status) !== 'registered' || 
+                      ($karyawan && !$karyawan->aktif);
+
+        if ($isInactive) {
+            abort(403, 'QR Code ditolak. Kartu digital sudah tidak aktif karena keanggotaan dinonaktifkan.');
         }
 
         $cardData = $this->buildCardData($member);

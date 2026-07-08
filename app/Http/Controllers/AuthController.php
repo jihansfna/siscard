@@ -36,19 +36,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Show the registration form.
-     */
-    public function showRegisterForm()
-    {
-        if (Auth::check()) {
-            return redirect()->route($this->homeRoute(Auth::user()));
-        }
-        
-        return view('register');
-    }
-
-    /**
-     * Handle a registration request (Web & API).
+     * Handle a registration request (API Only).
      */
     public function register(Request $request)
     {
@@ -73,23 +61,24 @@ class AuthController extends Controller
             'peran'    => $validated['peran'] ?? 'user',
         ]);
 
-        $isApi = $request->expectsJson() || $request->isJson() || $request->wantsJson();
+        // Otomatis menambahkan ke data Karyawan jika badge belum terdaftar
+        Karyawan::firstOrCreate(
+            ['badge' => $validated['badge']],
+            [
+                'nama' => $validated['nama'],
+                'departemen' => '-',
+                'line' => '-',
+                'jabatan' => '-',
+            ]
+        );
 
-        if ($isApi) {
-            $token = $user->createToken('user-token')->plainTextToken;
+        $token = $user->createToken('user-token')->plainTextToken;
 
-            return response()->json([
-                'message' => 'Pengguna berhasil didaftarkan',
-                'user'    => $user,
-                'token'   => $token,
-            ], 201);
-        }
-
-        Auth::login($user);
-        $request->session()->regenerate();
-
-        return redirect()->route($this->homeRoute($user))
-            ->with('success', 'Pendaftaran berhasil! Selamat datang, ' . $user->nama . '.');
+        return response()->json([
+            'message' => 'Pengguna berhasil didaftarkan',
+            'user'    => $user,
+            'token'   => $token,
+        ], 201);
     }
 
     /**

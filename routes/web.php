@@ -16,10 +16,7 @@ Route::redirect('/', '/login');
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-
-    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-    Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
-    
+      
     Route::post('/password/verify-badge', [AuthController::class, 'verifyBadge'])->name('password.verify_badge');
     Route::post('/password/verify-answer', [AuthController::class, 'verifySecurityAnswer'])->name('password.verify_answer');
     Route::post('/password/reset', [AuthController::class, 'resetPassword'])->name('password.reset.submit');
@@ -76,7 +73,7 @@ Route::middleware(['auth', 'role:admin', 'check.default.password'])->prefix('das
     Route::get('/export/history/pdf', [HistoryController::class, 'exportPdf'])->name('dashboard.export.history.pdf');
 });
 
-Route::middleware(['auth', 'role:user', 'check.default.password'])->prefix('home')->group(function () {
+Route::middleware(['auth', 'role:user,admin', 'check.default.password'])->prefix('home')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('user.home');
     Route::post('/confirm-membership/{id}', [UserController::class, 'confirmMembership'])->name('user.confirm_membership');
     Route::post('/feedbacks', [FeedbackController::class, 'store'])->name('user.feedbacks.store');

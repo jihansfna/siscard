@@ -11,7 +11,7 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
 
-            {{-- Card 1 – Total Anggota Aktif --}}
+            {{-- Card 1 Total Anggota Aktif --}}
             <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-5 hover:shadow-lg dark:hover:shadow-gray-900/40 transition-all duration-300 shadow-sm dark:shadow-none group">
                 <div class="flex items-start gap-4">
                     <div class="w-11 h-11 rounded-xl bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -45,7 +45,7 @@
                 </div>
             </div>
 
-            {{-- Card 4 – Aduan Belum Selesai --}}
+            {{-- Card 4 Aduan Belum Selesai --}}
             <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-5 hover:shadow-lg dark:hover:shadow-gray-900/40 transition-all duration-300 shadow-sm dark:shadow-none group">
                 <div class="flex items-start gap-4">
                     <div class="w-11 h-11 rounded-xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
