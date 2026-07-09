@@ -27,7 +27,7 @@ class FeedbackController extends Controller
                        ->orWhere('badge', 'like', "%{$q}%");
                 });
             })
-            ->when($status && $status !== 'All Status', function($query) use ($status) {
+            ->when($status && $status !== 'Semua Status', function($query) use ($status) {
                 $query->where('status', $status);
             })
             ->orderBy('updated_at', $sort)

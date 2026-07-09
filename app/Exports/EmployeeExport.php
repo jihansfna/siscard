@@ -12,9 +12,29 @@ use PhpOffice\PhpSpreadsheet\Style\Color;
 
 class EmployeeExport
 {
+    protected $filters;
+
+    public function __construct(array $filters = [])
+    {
+        $this->filters = $filters;
+    }
+
+    /**
+     * Build the query with applied filters (shared between Excel and PDF).
+     */
+    public static function buildQuery(array $filters = [])
+    {
+        $q = $filters['q'] ?? null;
+
+        return Karyawan::when($q, function ($query, $search) {
+            return $query->where('nama', 'like', "%{$search}%")
+                         ->orWhere('badge', 'like', "%{$search}%");
+        })->orderBy('created_at', 'asc');
+    }
+
     public function export()
     {
-        $employees = Karyawan::orderBy('created_at', 'asc')->get();
+        $employees = self::buildQuery($this->filters)->get();
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Karyawan');

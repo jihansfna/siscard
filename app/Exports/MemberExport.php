@@ -11,9 +11,62 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class MemberExport
 {
+    protected $filters;
+
+    public function __construct(array $filters = [])
+    {
+        $this->filters = $filters;
+    }
+
+    /**
+     * Build the query with applied filters (shared between Excel and PDF).
+     */
+    public static function buildQuery(array $filters = [])
+    {
+        $q = $filters['q'] ?? null;
+        $status = $filters['status'] ?? null;
+        $sort = $filters['sort'] ?? 'desc';
+        $sortDirection = $sort === 'asc' ? 'asc' : 'desc';
+
+        return Anggota::with(['karyawan', 'jabatan'])
+            ->when($q, function($query, $q) {
+                $query->whereHas('karyawan', function($q2) use ($q) {
+                    $q2->where('nama', 'like', "%{$q}%")
+                       ->orWhere('badge', 'like', "%{$q}%");
+                });
+            })
+            ->when($status && $status !== 'Semua Status', function($query) use ($status) {
+                $statusMap = [
+                    'Anggota Terdaftar' => 'registered',
+                    'Menunggu Verifikasi' => 'pending',
+                    'Tidak Aktif' => 'inactive'
+                ];
+                if (isset($statusMap[$status])) {
+                    if ($statusMap[$status] === 'inactive') {
+                        $query->where(function($q) {
+                            $q->where('status', 'inactive')
+                              ->orWhereHas('karyawan', function($q2) {
+                                  $q2->whereNotNull('tanggal_keluar')
+                                     ->where('tanggal_keluar', '<=', today());
+                              });
+                        });
+                    } else {
+                        $query->where('status', $statusMap[$status])
+                              ->whereHas('karyawan', function($q2) {
+                                  $q2->where(function($q3) {
+                                      $q3->whereNull('tanggal_keluar')
+                                         ->orWhere('tanggal_keluar', '>', today());
+                                  });
+                              });
+                    }
+                }
+            })
+            ->orderBy('updated_at', $sortDirection);
+    }
+
     public function export()
     {
-        $members = Anggota::with(['karyawan', 'jabatan'])->orderBy('created_at', 'asc')->get();
+        $members = self::buildQuery($this->filters)->get();
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Anggota');

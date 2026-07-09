@@ -11,9 +11,38 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class FeedbackExport
 {
+    protected $filters;
+
+    public function __construct(array $filters = [])
+    {
+        $this->filters = $filters;
+    }
+
+    /**
+     * Build the query with applied filters (shared between Excel and PDF).
+     */
+    public static function buildQuery(array $filters = [])
+    {
+        $q = $filters['q'] ?? null;
+        $status = $filters['status'] ?? null;
+        $sort = $filters['sort'] ?? 'desc';
+
+        return Saran::with('anggota.karyawan')
+            ->when($q, function($query, $q) {
+                $query->whereHas('anggota.karyawan', function($q2) use ($q) {
+                    $q2->where('nama', 'like', "%{$q}%")
+                       ->orWhere('badge', 'like', "%{$q}%");
+                });
+            })
+            ->when($status && $status !== 'Semua Status', function($query) use ($status) {
+                $query->where('status', $status);
+            })
+            ->orderBy('updated_at', $sort);
+    }
+
     public function export()
     {
-        $feedbacks = Saran::with('anggota.karyawan')->orderBy('created_at', 'asc')->get();
+        $feedbacks = self::buildQuery($this->filters)->get();
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Saran');

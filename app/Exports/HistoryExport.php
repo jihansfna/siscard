@@ -11,9 +11,55 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class HistoryExport
 {
+    protected $filters;
+
+    public function __construct(array $filters = [])
+    {
+        $this->filters = $filters;
+    }
+
+    /**
+     * Build the query with applied filters (shared between Excel and PDF).
+     */
+    public static function buildQuery(array $filters = [])
+    {
+        $query = RiwayatAnggota::with(['anggota.karyawan', 'pelaku'])->latest();
+
+        $search = $filters['q'] ?? null;
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('aktivitas', 'like', "%{$search}%")
+                  ->orWhere('deskripsi', 'like', "%{$search}%")
+                  ->orWhereHas('pelaku', function($q) use ($search) {
+                      $q->where('nama', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('anggota.karyawan', function($q) use ($search) {
+                      $q->where('nama', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $activity = $filters['activity'] ?? null;
+        if ($activity && $activity !== 'Semua Aktivitas') {
+            $query->where('aktivitas', $activity);
+        }
+
+        $actor = $filters['actor'] ?? null;
+        if ($actor && $actor !== 'Semua Pelaku') {
+            $query->where('pelaku_id', $actor);
+        }
+
+        $date = $filters['date'] ?? null;
+        if ($date) {
+            $query->whereDate('created_at', $date);
+        }
+
+        return $query;
+    }
+
     public function export()
     {
-        $logs = RiwayatAnggota::with(['anggota.karyawan', 'pelaku'])->orderBy('created_at', 'desc')->get();
+        $logs = self::buildQuery($this->filters)->get();
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Riwayat Log');

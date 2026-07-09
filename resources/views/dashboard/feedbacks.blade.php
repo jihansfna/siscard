@@ -37,11 +37,11 @@
                         <x-heroicon-o-chevron-down class="w-3 h-3" />
                     </button>
                     <div id="exportDropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 py-1 z-50 hidden transition-all">
-                        <a href="{{ route('dashboard.export.feedbacks.excel') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">
+                        <a href="{{ route('dashboard.export.feedbacks.excel', request()->only(['q', 'status', 'sort'])) }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">
                             <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM9.5 11.5l2 3.5-2 3.5h1.5l1.25-2.5L13.5 18.5H15l-2-3.5 2-3.5h-1.5l-1.25 2.5-1.25-2.5H9.5z"/></svg>
                             <span>Ekspor Excel</span>
                         </a>
-                        <a href="{{ route('dashboard.export.feedbacks.pdf') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">
+                        <a href="{{ route('dashboard.export.feedbacks.pdf', request()->only(['q', 'status', 'sort'])) }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors">
                             <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM10.5 11c-.83 0-1.5.67-1.5 1.5v4c0 .83.67 1.5 1.5 1.5h3c.83 0 1.5-.67 1.5-1.5v-4c0-.83-.67-1.5-1.5-1.5h-3z"/></svg>
                             <span>Ekspor PDF</span>
                         </a>
@@ -347,7 +347,7 @@
                         <div class="relative custom-dropdown-container">
                             <input type="hidden" name="status" id="fbStatusInput" value="{{ request('status', 'Semua Status') }}">
                             <button type="button" onclick="toggleCustomDropdown('fbStatusMenu')" class="w-full flex items-center justify-between pl-4 pr-3 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors text-gray-700 dark:text-white cursor-pointer shadow-sm">
-                                <span id="fbStatusBtnText">{{ request('status', 'Semua Status') }}</span>
+                                <span id="fbStatusBtnText">{{ request('status') === 'Waiting' ? 'Menunggu' : (request('status') === 'Completed' ? 'Selesai' : 'Semua Status') }}</span>
                                 <svg class="w-4 h-4 text-gray-400 pointer-events-none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>
                             </button>
                             <div id="fbStatusMenu" class="custom-dropdown-menu absolute z-50 hidden mt-1.5 w-full bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-lg">

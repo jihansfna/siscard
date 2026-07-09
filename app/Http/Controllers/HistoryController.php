@@ -50,12 +50,14 @@ class HistoryController extends Controller
 
     public function exportExcel(Request $request)
     {
-        return (new HistoryExport())->export();
+        $filters = $request->only(['q', 'activity', 'actor', 'date']);
+        return (new HistoryExport($filters))->export();
     }
     
     public function exportPdf(Request $request)
     {
-        $logs = RiwayatAnggota::with(['anggota.karyawan', 'pelaku'])->latest()->get();
+        $filters = $request->only(['q', 'activity', 'actor', 'date']);
+        $logs = HistoryExport::buildQuery($filters)->get();
         $pdf = Pdf::loadView('exports.history-pdf', compact('logs'));
         $pdf->setPaper('A4', 'landscape');
         return $pdf->download('history_export_' . date('Y-m-d_H-i-s') . '.pdf');

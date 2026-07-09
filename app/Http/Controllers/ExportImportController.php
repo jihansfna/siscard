@@ -16,14 +16,15 @@ use Illuminate\Support\Facades\Storage;
 class ExportImportController extends Controller
 {
 
-    public function exportEmployeesExcel()
+    public function exportEmployeesExcel(Request $request)
     {
-        return (new EmployeeExport())->export();
+        $filters = $request->only(['q']);
+        return (new EmployeeExport($filters))->export();
     }
 
-    public function exportEmployeesPdf()
+    public function exportEmployeesPdf(Request $request)
     {
-        $employees = Karyawan::orderBy('created_at', 'asc')->get();
+        $employees = EmployeeExport::buildQuery($request->only(['q']))->get();
         $pdf = Pdf::loadView('exports.employees-pdf', compact('employees'))
             ->setPaper('a4', 'landscape');
         
@@ -72,14 +73,16 @@ class ExportImportController extends Controller
     }
 
 
-    public function exportMembersExcel()
+    public function exportMembersExcel(Request $request)
     {
-        return (new MemberExport())->export();
+        $filters = $request->only(['q', 'status', 'sort']);
+        return (new MemberExport($filters))->export();
     }
 
-    public function exportMembersPdf()
+    public function exportMembersPdf(Request $request)
     {
-        $members = Anggota::with(['karyawan', 'jabatan'])->orderBy('created_at', 'asc')->get();
+        $filters = $request->only(['q', 'status', 'sort']);
+        $members = MemberExport::buildQuery($filters)->get();
         $pdf = Pdf::loadView('exports.members-pdf', compact('members'))
             ->setPaper('a4', 'landscape');
 
@@ -87,14 +90,16 @@ class ExportImportController extends Controller
     }
 
 
-    public function exportFeedbacksExcel()
+    public function exportFeedbacksExcel(Request $request)
     {
-        return (new FeedbackExport())->export();
+        $filters = $request->only(['q', 'status', 'sort']);
+        return (new FeedbackExport($filters))->export();
     }
 
-    public function exportFeedbacksPdf()
+    public function exportFeedbacksPdf(Request $request)
     {
-        $feedbacks = Saran::with('anggota.karyawan')->orderBy('created_at', 'asc')->get();
+        $filters = $request->only(['q', 'status', 'sort']);
+        $feedbacks = FeedbackExport::buildQuery($filters)->get();
         $pdf = Pdf::loadView('exports.feedbacks-pdf', compact('feedbacks'))
             ->setPaper('a4', 'landscape');
 
