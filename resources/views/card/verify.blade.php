@@ -328,7 +328,7 @@
     <div class="card">
         <div class="card-header">
             <div class="logos">
-                <img src="{{ asset('logo_lem_spsi.jpg') }}" alt="Logo LEM SPSI">
+                <img src="{{ asset('logo_lem_spsi.png') }}" alt="Logo LEM SPSI">
                 <img src="{{ asset('logo_kspsi.png') }}" alt="Logo KSPSI">
             </div>
             <h1>VERIFIKASI KEANGGOTAAN SPSI</h1>

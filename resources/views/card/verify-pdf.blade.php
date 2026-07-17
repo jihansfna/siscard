@@ -6,8 +6,8 @@
     <title>Verifikasi Anggota SPSI - {{ $employee->name }}</title>
     <style>
         @page {
-            size: A4 portrait;
-            margin: 20mm 18mm 20mm 18mm;
+            size: 85.6mm 135mm;
+            margin: 0;
         }
 
         body {
@@ -15,164 +15,177 @@
             padding: 0;
             font-family: 'Helvetica', 'Arial', sans-serif;
             color: #1a1a1a;
-            font-size: 11pt;
-            line-height: 1.4;
-            position: relative;
+            font-size: 7pt;
+            line-height: 1.3;
         }
 
-        .content {
+        .badge {
+            width: 100%;
             position: relative;
-            z-index: 1;
+            overflow: hidden;
+            background: #ffffff;
         }
 
         /* Header */
+        .badge-header {
+            background-color: #15803d;
+            padding: 10pt 12pt 20pt 12pt;
+        }
         .header-table {
             width: 100%;
-            margin-bottom: 8pt;
             border-collapse: collapse;
         }
-        .header-logo {
-            width: 50pt;
+        .header-logo-cell {
+            width: 32pt;
             vertical-align: middle;
         }
-        .header-logo img {
-            width: 45pt;
-            height: 45pt;
-            border-radius: 50%;
-            object-fit: contain;
+        .header-logo-cell img {
+            width: 28pt;
+            height: 28pt;
         }
-        .header-text {
+        .header-text-cell {
             text-align: center;
             vertical-align: middle;
-            line-height: 1.3;
         }
-        .header-text .h1 {
-            font-size: 12pt;
+        .header-line-1 {
+            font-size: 6pt;
             font-weight: bold;
-            color: #1a1a1a;
+            color: #d1fae5;
             letter-spacing: 0.5pt;
         }
-        .header-text .h2 {
-            font-size: 13pt;
+        .header-line-2 {
+            font-size: 8pt;
             font-weight: bold;
-            color: #1a1a1a;
+            color: #ffffff;
+            letter-spacing: 0.3pt;
+            margin-top: 1pt;
         }
-        .header-text .h3 {
-            font-size: 14pt;
+        .header-line-3 {
+            font-size: 10pt;
             font-weight: bold;
-            color: #1a1a1a;
+            color: #ffffff;
+            letter-spacing: 0.3pt;
+            margin-top: 1pt;
         }
 
-        .header-divider {
-            border: none;
-            border-top: 2pt solid #1a1a1a;
-            margin: 10pt 0 20pt 0;
-        }
-
-        /* Photo section */
+        /* Photo */
         .photo-section {
             text-align: center;
-            margin-bottom: 16pt;
+            margin-top: -14pt;
+            margin-bottom: 5pt;
         }
-        .photo-wrapper {
-            width: 100pt;
-            height: 120pt;
-            margin: 0 auto;
-            background-color: #dc2626;
-            border: 2pt solid #e5e7eb;
-            border-radius: 6pt;
-            overflow: hidden;
-            display: inline-block;
-            background-size: cover;
-            background-position: center top;
-            background-repeat: no-repeat;
+        .photo-img {
+            width: 65pt;
+            height: 65pt;
+            border: 2pt solid #15803d;
+            border-radius: 8pt;
+            object-fit: cover;
         }
         .photo-fallback {
-            line-height: 120pt;
-            color: white;
-            font-size: 36pt;
+            width: 65pt;
+            height: 65pt;
+            border: 2pt solid #15803d;
+            border-radius: 8pt;
+            background-color: #15803d;
+            color: #ffffff;
+            font-size: 24pt;
             font-weight: bold;
             text-align: center;
+            line-height: 65pt;
+            display: inline-block;
         }
 
-        /* Member name */
-        .member-name {
+        /* Name */
+        .name-section {
             text-align: center;
-            font-size: 20pt;
+            padding: 0 10pt;
+            margin-bottom: 3pt;
+        }
+        .member-name {
+            font-size: 11pt;
             font-weight: bold;
             color: #1a1a1a;
-            margin: 14pt 0 4pt 0;
-            letter-spacing: 0.5pt;
+            letter-spacing: 0.3pt;
+            margin-bottom: 1pt;
         }
         .member-kta {
-            text-align: center;
-            font-size: 11pt;
+            font-size: 6.5pt;
             color: #6b7280;
-            margin-bottom: 20pt;
         }
 
-        /* Info table */
-        .info-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 6pt;
+        /* Status */
+        .status-row {
+            text-align: center;
+            margin-bottom: 5pt;
         }
-        .info-table td {
-            padding: 6pt 0;
-            vertical-align: top;
-        }
-        .info-label {
-            font-size: 9pt;
-            font-weight: 600;
-            color: #9ca3af;
-            text-transform: uppercase;
-            letter-spacing: 0.8pt;
-            padding-bottom: 2pt;
-        }
-        .info-value {
-            font-size: 11pt;
-            font-weight: bold;
-            color: #1f2937;
-        }
-        .info-cell {
-            width: 50%;
-            padding: 6pt 4pt;
-            vertical-align: top;
-        }
-
-        /* Status badge */
         .status-badge {
             display: inline-block;
-            padding: 3pt 10pt;
-            border-radius: 10pt;
-            font-size: 10pt;
+            padding: 2pt 10pt;
+            font-size: 6pt;
             font-weight: bold;
             background-color: #ecfdf5;
             color: #059669;
-            border: 1pt solid #a7f3d0;
+            border: 0.5pt solid #a7f3d0;
+            border-radius: 4pt;
+            letter-spacing: 0.3pt;
+        }
+
+        /* Accent */
+        .accent-wrapper {
+            text-align: center;
+            margin-bottom: 4pt;
+        }
+        .accent-line {
+            display: inline-block;
+            width: 28pt;
+            height: 1.5pt;
+            background-color: #15803d;
+        }
+
+        /* Info */
+        .info-section {
+            padding: 0 12pt;
+            margin-bottom: 2pt;
+        }
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .info-table td {
+            vertical-align: top;
+            padding: 2pt 2pt;
+            text-align: center;
+        }
+        .info-label {
+            font-size: 4.5pt;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.4pt;
+            font-weight: 600;
+            margin-bottom: 0.5pt;
+        }
+        .info-value {
+            font-size: 6pt;
+            font-weight: bold;
+            color: #1f2937;
         }
 
         /* Divider */
-        .section-divider {
+        .info-divider {
             border: none;
-            border-top: 1pt solid #e5e7eb;
-            margin: 14pt 0;
+            border-top: 0.5pt solid #e5e7eb;
+            margin: 10pt 12pt;
         }
 
-        /* Address full width */
-        .full-row {
-            padding: 6pt 0;
-        }
-
-        /* Signature section */
+        /* Signatures */
         .sig-section {
-            margin-top: 30pt;
+            padding: 0 12pt;
         }
         .sig-location {
             text-align: center;
-            font-size: 10pt;
-            font-weight: bold;
-            margin-bottom: 6pt;
+            font-size: 5.5pt;
+            color: #6b7280;
+            margin-bottom: 1pt;
         }
         .sig-table {
             width: 100%;
@@ -182,174 +195,168 @@
             width: 50%;
             text-align: center;
             vertical-align: top;
-            padding: 0 10pt;
-        }
-        .sig-stamp-cell {
-            width: 0%;
-            text-align: center;
-            vertical-align: middle;
+            padding: 0 3pt;
         }
         .sig-img-container {
-            height: 40pt;
+            height: 18pt;
             display: block;
-            margin: 4pt auto;
+            margin: 1pt auto;
         }
         .sig-img {
-            max-height: 36pt;
-            max-width: 80pt;
+            max-height: 16pt;
+            max-width: 46pt;
             display: block;
             margin: 0 auto;
         }
         .sig-name {
-            font-size: 8pt;
+            font-size: 5pt;
             font-weight: bold;
             color: #1a1a1a;
-            margin-top: 2pt;
         }
         .sig-line {
-            border-bottom: 1pt solid #1a1a1a;
-            width: 80%;
-            margin: 2pt auto;
+            border-bottom: 0.5pt solid #1a1a1a;
+            width: 70%;
+            margin: 1pt auto;
         }
         .sig-role {
-            font-size: 7pt;
+            font-size: 4.5pt;
             color: #6b7280;
         }
 
-
-
-        /* Footer verification */
-        .verify-footer {
-            margin-top: 30pt;
-            padding-top: 10pt;
-            border-top: 1pt solid #e5e7eb;
+        /* Footer */
+        .badge-footer {
+            background-color: #15803d;
             text-align: center;
+            padding: 4pt 8pt;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
         }
-        .verify-text {
-            font-size: 9pt;
-            color: #6b7280;
+        .footer-verified {
+            font-size: 5pt;
+            font-weight: bold;
+            color: #ffffff;
+            letter-spacing: 0.3pt;
+            margin-bottom: 0.5pt;
         }
-        .verify-text strong {
-            color: #059669;
+        .footer-meta {
+            font-size: 4pt;
+            color: #d1fae5;
         }
     </style>
 </head>
 <body>
-    <div class="content">
-        <!-- Header with logos -->
-        <table class="header-table" cellpadding="0" cellspacing="0">
-            <tr>
-                <td class="header-logo" style="text-align: left;">
-                    @if($logoLemSpsi)
-                        <img src="{{ $logoLemSpsi }}" alt="Logo LEM SPSI">
-                    @endif
-                </td>
-                <td class="header-text">
-                    <div class="h1">PIMPINAN UNIT KERJA</div>
-                    <div class="h2">SP LEM SPSI</div>
-                    <div class="h3">PT XYZ</div>
-                </td>
-                <td class="header-logo" style="text-align: right;">
-                    @if($logoKspsi)
-                        <img src="{{ $logoKspsi }}" alt="Logo KSPSI">
-                    @endif
-                </td>
-            </tr>
-        </table>
-
-        <hr class="header-divider">
-
-        <!-- Photo -->
-        <div class="photo-section">
-            @if($photo)
-                <div class="photo-wrapper" style="background-image: url('{{ $photo }}');"></div>
-            @else
-                <div class="photo-wrapper">
-                    <div class="photo-fallback">{{ strtoupper(substr($employee->name, 0, 1)) }}</div>
-                </div>
-            @endif
-        </div>
-
-        <!-- Member Name -->
-        <div class="member-name">{{ strtoupper($employee->name) }}</div>
-        <div class="member-kta">No. KTA : {{ $employee->badge }}</div>
-
-        <hr class="section-divider">
-
-        <!-- Info Grid -->
-        <table class="info-table" cellpadding="0" cellspacing="0">
-            <tr>
-                <td class="info-cell">
-                    <div class="info-label">Place and Date of Birth</div>
-                    <div class="info-value">{{ $employee->birth_place ?? '-' }}, {{ $employee->birth_date ? $employee->birth_date->format('d F Y') : '-' }}</div>
-                </td>
-                <td class="info-cell">
-                    <div class="info-label">Status</div>
-                    <div class="info-value"><span class="status-badge">Registered Member</span></div>
-                </td>
-            </tr>
-            <tr>
-                <td class="info-cell">
-                    <div class="info-label">Join Date</div>
-                    <div class="info-value">{{ $employee->join_date ? $employee->join_date->format('d F Y') : '-' }}</div>
-                </td>
-                <td class="info-cell">
-                    <div class="info-label">PUK</div>
-                    <div class="info-value">PT XYZ</div>
-                </td>
-            </tr>
-        </table>
-
-        <table class="info-table" cellpadding="0" cellspacing="0">
-            <tr>
-                <td style="padding: 6pt 4pt;">
-                    <div class="info-label">Address</div>
-                    <div class="info-value">{{ $employee->address ?? '-' }}</div>
-                </td>
-            </tr>
-        </table>
-
-        <!-- Signatures -->
-        <div class="sig-section">
-            <table style="width: 100%;" cellpadding="0" cellspacing="0">
+    <div class="badge">
+        <!-- Header -->
+        <div class="badge-header">
+            <table class="header-table" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td style="width: 40%;"></td>
-                    <td style="width: 60%; vertical-align: top;">
-                        <div class="sig-location">Batam,</div>
-                        <table class="sig-table" cellpadding="0" cellspacing="0">
-                            <tr>
-                                <td class="sig-cell">
-                                    <div class="sig-img-container">
-                                        @if($ketuaSign)
-                                            <img src="{{ $ketuaSign }}" class="sig-img" alt="TTD Ketua">
-                                        @endif
-                                    </div>
-                                    <div class="sig-name">{{ $ketuaName }}</div>
-                                    <div class="sig-line"></div>
-                                    <div class="sig-role">Ketua</div>
-                                </td>
-                                <td class="sig-cell">
-                                    <div class="sig-img-container">
-                                        @if($sekretarisSign)
-                                            <img src="{{ $sekretarisSign }}" class="sig-img" alt="TTD Sekretaris">
-                                        @endif
-                                    </div>
-                                    <div class="sig-name">{{ $sekretarisName }}</div>
-                                    <div class="sig-line"></div>
-                                    <div class="sig-role">Sekretaris</div>
-                                </td>
-                            </tr>
-                        </table>
+                    <td class="header-logo-cell" style="text-align: left;">
+                        @if($logoLemSpsi)
+                            <img src="{{ $logoLemSpsi }}" alt="Logo LEM SPSI">
+                        @endif
+                    </td>
+                    <td class="header-text-cell">
+                        <div class="header-line-1">PIMPINAN UNIT KERJA</div>
+                        <div class="header-line-2">SP LEM SPSI</div>
+                        <div class="header-line-3">PT XYZ</div>
+                    </td>
+                    <td class="header-logo-cell" style="text-align: right;">
+                        @if($logoKspsi)
+                            <img src="{{ $logoKspsi }}" alt="Logo KSPSI">
+                        @endif
                     </td>
                 </tr>
             </table>
         </div>
 
-        <!-- Footer Verification Info -->
-        <div class="verify-footer">
-            <p class="verify-text">
-                <strong>Verified from SPSI Registry</strong> &bull; Scan time: {{ $scanTime }} &bull; Token: {{ $token }}
-            </p>
+        <!-- Photo -->
+        <div class="photo-section">
+            @if($photo)
+                <img src="{{ $photo }}" alt="Foto {{ $employee->name }}" class="photo-img">
+            @else
+                <div class="photo-fallback">{{ strtoupper(substr($employee->name, 0, 1)) }}</div>
+            @endif
+        </div>
+
+        <!-- Name -->
+        <div class="name-section">
+            <div class="member-name">{{ strtoupper($employee->name) }}</div>
+            <div class="member-kta">No. KTA : {{ $employee->badge }}</div>
+        </div>
+
+        <!-- Status -->
+        <div class="status-row">
+            <span class="status-badge">REGISTERED MEMBER</span>
+        </div>
+
+        <!-- Accent -->
+        <div class="accent-wrapper">
+            <div class="accent-line"></div>
+        </div>
+
+        <!-- Info -->
+        <div class="info-section">
+            <table class="info-table" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td style="width: 50%;">
+                        <div class="info-label">Tempat/Tgl Lahir</div>
+                        <div class="info-value">{{ $employee->birth_place ?? '-' }}, {{ $employee->birth_date ? $employee->birth_date->format('d M Y') : '-' }}</div>
+                    </td>
+                    <td style="width: 50%;">
+                        <div class="info-label">Tanggal Bergabung</div>
+                        <div class="info-value">{{ $employee->join_date ? $employee->join_date->format('d M Y') : '-' }}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="info-label">PUK</div>
+                        <div class="info-value">PT XYZ</div>
+                    </td>
+                    <td>
+                        <div class="info-label">Alamat</div>
+                        <div class="info-value">{{ $employee->address ?? '-' }}</div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <hr class="info-divider">
+
+        <!-- Signatures -->
+        <div class="sig-section">
+            <div class="sig-location">Batam,</div>
+            <table class="sig-table" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td class="sig-cell">
+                        <div class="sig-img-container">
+                            @if($ketuaSign)
+                                <img src="{{ $ketuaSign }}" class="sig-img" alt="TTD Ketua">
+                            @endif
+                        </div>
+                        <div class="sig-name">{{ $ketuaName }}</div>
+                        <div class="sig-line"></div>
+                        <div class="sig-role">Ketua</div>
+                    </td>
+                    <td class="sig-cell">
+                        <div class="sig-img-container">
+                            @if($sekretarisSign)
+                                <img src="{{ $sekretarisSign }}" class="sig-img" alt="TTD Sekretaris">
+                            @endif
+                        </div>
+                        <div class="sig-name">{{ $sekretarisName }}</div>
+                        <div class="sig-line"></div>
+                        <div class="sig-role">Sekretaris</div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="badge-footer">
+            <div class="footer-verified">Verified from SPSI Registry</div>
+            <div class="footer-meta">Scan: {{ $scanTime }} &bull; Token: {{ $token }}</div>
         </div>
     </div>
 </body>

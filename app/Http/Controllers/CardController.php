@@ -183,7 +183,7 @@ class CardController extends Controller
         $cardData = $this->buildCardData($member);
 
         $pdf = Pdf::loadView('card.verify-pdf', $cardData);
-        $pdf->setPaper('A4', 'portrait');
+        $pdf->setPaper([0, 0, 242.65, 382.68]);
 
         $filename = 'Verifikasi_SPSI_' . str_replace(' ', '_', $member->karyawan->nama) . '.pdf';
 
@@ -249,7 +249,7 @@ class CardController extends Controller
         $cardData = $this->buildCardData($member);
 
         $pdf = Pdf::loadView('card.verify-pdf', $cardData);
-        $pdf->setPaper('A4', 'portrait');
+        $pdf->setPaper([0, 0, 242.65, 382.68]);
 
         $filename = 'Verifikasi_SPSI_' . str_replace(' ', '_', $member->karyawan->nama) . '.pdf';
 
@@ -299,7 +299,7 @@ class CardController extends Controller
 
         // Logo paths (as base64 for PDF embedding)
         $logoKspsiPath = public_path('logo_kspsi.png');
-        $logoLemSpsiPath = public_path('logo_lem_spsi.jpg');
+        $logoLemSpsiPath = public_path('logo_lem_spsi.png');
 
         $logoKspsiBase64 = '';
         $logoLemSpsiBase64 = '';
@@ -308,7 +308,7 @@ class CardController extends Controller
             $logoKspsiBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoKspsiPath));
         }
         if (file_exists($logoLemSpsiPath)) {
-            $logoLemSpsiBase64 = 'data:image/jpeg;base64,' . base64_encode(file_get_contents($logoLemSpsiPath));
+            $logoLemSpsiBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoLemSpsiPath));
         }
 
         // Employee photo
